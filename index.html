@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>bool: The Online Circuit Builder</title>
+	<link rel = "stylesheet" type="text/css" href="style/toolbar.css">
+	<link rel = "stylesheet" type="text/css" href="style/workspace.css">
+	<script src = "script/grid.js"></script>
+	<script src = "script/components.js"></script>
+</head>
+
+
+<body>
+	<div class = "toolbar"> <!-- Toolbar -->
+		<ul>
+			<li class="dropdown">
+				<a href="" class="dropbtn">Authenticate</a>
+				<div class="dropdown-content">
+		  			<a href="#">Login/Logout</a>
+		  			<a href="#">Exit</a>
+				</div>
+			</li>
+			<li class="dropdown">
+				<a href="" class="dropbtn">File</a>
+				<div class="dropdown-content">
+		  			<a href="#">New</a>
+		  			<a href="#">Save</a>
+		  			<a href="#">Load</a>
+		  			<a href="#">Submit</a>
+		  			<a href="#">Run</a>
+				</div>
+			</li>
+			<li class="dropdown">
+			<a href="" class="dropbtn">Edit</a>
+				<div class="dropdown-content">
+		  			<a href="#">Undo  ctrl-z</a>
+		  			<a href="#">Redo  ctrl-y</a>
+		  			<a href="#">Cut   ctrl-x</a>
+		  			<a href="#">Copy  ctrl-c</a>
+		  			<a href="#">Paste ctrl-v</a>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<div class = "workspace">
+		<div class = "grid"> <!-- Grid interface --> 
+
+			<canvas class = "grid-render">
+				
+			</canvas>
+			
+		</div>
+
+		<div class = "cmenu"> <!-- Component menu -->
+
+			<div class = "twobytwo">
+				<img src="img/cmenu-and.png">
+				<img src="img/cmenu-xor.png">
+				<img src="img/cmenu-or.png">
+				<img src="img/cmenu-not.png">
+				<img src="img/cmenu-nand.png">
+				<img src="img/cmenu-nor.png">
+			</div>
+
+			<div class = "onebyone">
+				<img src="img/cmenu-plus.png">
+				<img src="img/cmenu-minus.png">
+				<img src="img/cmenu-t.png">
+				<img src="img/cmenu-l.png">
+			</div>
+
+			<div class = "twobytwo">
+				<img src="img/cmenu-onbox.png">
+				<img src="img/cmenu-printbox.png">
+				<img src="img/cmenu-varbox.png">
+			</div>
+			
+		</div>
+
+		<div class = "console"> <!-- Console -->
+			
+
+		</div>
+
+	</div>
+</body>
+
+
+</html> 
