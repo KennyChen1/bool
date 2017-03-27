@@ -19,6 +19,8 @@ body{
 .workspace .grid{
 	position: absolute;
 
+	overflow: auto;
+
 	height: calc(100% - 300px);
 	width: calc(100% - 210px - 30px);
 

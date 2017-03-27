@@ -6,8 +6,13 @@
 	<title>bool: The Online Circuit Builder</title>
 	<link rel = "stylesheet" type="text/css" href="style/toolbar.css">
 	<link rel = "stylesheet" type="text/css" href="style/workspace.css">
-	<script src = "script/grid.js"></script>
+
+	<script src = "script/jquery-3.2.0.min.js"></script> <!-- jQuery import -->
+	<script src="script/jquery-ui.min.js"></script>
+
 	<script src = "script/components.js"></script>
+	<script src = "script/grid.js"></script>
+
 </head>
 
 
@@ -46,11 +51,24 @@
 
 	<div class = "workspace">
 		<div class = "grid"> <!-- Grid interface --> 
+			<div id="draggable" class="ui-widget-content">
+			  <p>Original</p>
+			</div>
+			 
+			<div id="draggable2" class="ui-widget-content">
+			  <p>Semi-transparent clone</p>
+			</div>
+			 
+			<div id="draggable3" class="ui-widget-content">
+			  <p>Custom helper (in combination with cursorAt)</p>
+			</div>
 
-			<canvas class = "grid-render">
-				
-			</canvas>
-			
+
+
+			<!--
+			<canvas class = "grid-render"></canvas>
+			-->
+
 		</div>
 
 		<div class = "cmenu"> <!-- Component menu -->

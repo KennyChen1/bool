@@ -47,6 +47,17 @@ function component(
 	this.height = height;
 	this.x = x;
 	this.y = y;
+
+	this.print = function print(){
+		console.log("type: "+type);
+		console.log("label;: "+label);
+		console.log("inputs: "+inputs);
+		console.log("outputs: "+outputs);
+		console.log("direction: "+direction);
+		console.log("delay: "+delay);
+		console.log("size, (w,h): ("+width+" ,"+height+")");
+		console.log("location (x,y): "+x+" ,"+y+")");
+	}
 }
 
 function and_gate(label, width, height, x, y){
@@ -63,6 +74,8 @@ function and_gate(label, width, height, x, y){
 		y,					//y
 		null				//print message
 	);
+
+	return temp;
 }
 
 function or_gate(label, width, height, x, y){
@@ -79,6 +92,8 @@ function or_gate(label, width, height, x, y){
 		y,					//y
 		null				//print message
 	);
+
+	return temp;
 }
 
 function xor_gate(label, width, height, x, y){
@@ -95,6 +110,8 @@ function xor_gate(label, width, height, x, y){
 		y,					//y
 		null				//print message
 	);
+
+	return temp;
 }
 
 function not_gate(label, width, height, x, y){
@@ -111,6 +128,8 @@ function not_gate(label, width, height, x, y){
 		y,					//y
 		null				//print message
 	);
+
+	return temp;
 }
 
 function not_gate(label, width, height, x, y){
@@ -127,6 +146,8 @@ function not_gate(label, width, height, x, y){
 		y,					//y
 		null				//print message
 	);
+
+	return temp;
 }
 
 function l_wire(label, width, height, x, y){
@@ -143,6 +164,8 @@ function l_wire(label, width, height, x, y){
 		y,					//y
 		null				//print message
 	);
+
+	return temp;
 }
 
 function i_wire(label, width, height, x, y){
@@ -159,6 +182,8 @@ function i_wire(label, width, height, x, y){
 		y,					//y
 		null				//print message
 	);
+
+	return temp;
 }
 
 function t_wire(label, width, height, x, y){
@@ -175,6 +200,8 @@ function t_wire(label, width, height, x, y){
 		y,					//y
 		null				//print message
 	);
+
+	return temp;
 }
 
 function cross_wire(label, width, height, x, y){
@@ -191,6 +218,8 @@ function cross_wire(label, width, height, x, y){
 		y,						//y
 		null					//print message
 	);
+
+	return temp;
 }
 
 function print_box(label, width, height, x, y, message){
@@ -207,6 +236,8 @@ function print_box(label, width, height, x, y, message){
 		y,						//y
 		message					//print message
 	);
+
+	return temp;
 }
 
 function on_box(label, width, height, x, y){
@@ -223,6 +254,8 @@ function on_box(label, width, height, x, y){
 		y,						//y
 		null					//print message
 	);
+
+	return temp;
 }
 
 function var_box(label, width, height, x, y){
@@ -239,4 +272,6 @@ function var_box(label, width, height, x, y){
 		y,						//y
 		null					//print message
 	);
+
+	return temp;
 }
