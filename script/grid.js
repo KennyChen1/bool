@@ -1,5 +1,12 @@
 var grid = [];
 
+
+// Padding
+var p = 10;
+
+
+
+
 $(document).ready(function(){
 
     grid.push(and_gate("first", 10,10,100,100));

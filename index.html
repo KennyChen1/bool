@@ -12,6 +12,8 @@
 
 	<script src = "script/components.js"></script>
 	<script src = "script/grid.js"></script>
+	<script src = "script/kinetic-v5.1.0/kinetic-v5.1.0.js"></script>
+	<script src = "script/kinetic-v5.1.0/kinetic-v5.1.0.min.js"></script>
 
 </head>
 
@@ -51,6 +53,7 @@
 
 	<div class = "workspace">
 		<div class = "grid"> <!-- Grid interface --> 
+			<!--
 			<div id="draggable" class="ui-widget-content">
 			  <p>Original</p>
 			</div>
@@ -63,23 +66,22 @@
 			  <p>Custom helper (in combination with cursorAt)</p>
 			</div>
 
-
-
-			<!--
-			<canvas class = "grid-render"></canvas>
 			-->
+			<canvas id = "grid-render" width="2000" height="2000">
+				
+			</canvas>
 
 		</div>
 
 		<div class = "cmenu"> <!-- Component menu -->
 
 			<div class = "twobytwo">
-				<img src="img/cmenu-and.png">
-				<img src="img/cmenu-xor.png">
-				<img src="img/cmenu-or.png">
-				<img src="img/cmenu-not.png">
-				<img src="img/cmenu-nand.png">
-				<img src="img/cmenu-nor.png">
+				<img class = "2b2" src="img/cmenu-and.png">
+				<img class = "2b2" src="img/cmenu-xor.png">
+				<img class = "2b2" src="img/cmenu-or.png">
+				<img class = "2b2" src="img/cmenu-not.png">
+				<img class = "2b2" src="img/cmenu-nand.png">
+				<img class = "2b2" src="img/cmenu-nor.png">
 			</div>
 
 			<div class = "onebyone">
@@ -105,5 +107,6 @@
 	</div>
 </body>
 
+<script  src = "script/canvas.js"></script>
 
 </html> 
