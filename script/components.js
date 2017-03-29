@@ -61,6 +61,38 @@ function component(
 		console.log("size, (w,h): ("+width+" ,"+height+")");
 		console.log("location (x,y): "+x+" ,"+y+")");
 	}
+
+	//gets all locations where component is located
+	this.locations = function locations(){
+		var ret = [];
+		var cl = {
+			x: this.x,
+			y: this.y
+		};
+		ret.push(cl)
+
+		var ol;
+
+		if(this.width > 1 || this.height > 1){
+			if(direction == UP || direction == DOWN){
+				ol = {
+					x: this.x + 1,
+					y: this.y
+				};
+			}
+			else{
+				ol = {
+					x: this.x,
+					y: this.y + 1
+				};
+			}
+
+			ret.push(ol);
+		}
+
+		return ret;
+
+	}
 }
 
 function and_gate(label, x, y){

@@ -8,7 +8,6 @@ var cw; //Canvas width
 var ch; //Canvas height
 
 setCanvasSize();
-drawBoard();
 
 //Camera attributes
 var camera = {
@@ -22,6 +21,8 @@ var camera = {
     y: Math.floor(ch/box) + 1
   }
 };
+
+drawBoard();
 
 $(document).keydown(function(e){
   switch(e.which) {
@@ -53,6 +54,8 @@ $(window).on("resize", function(){
   updateGridInterface();
   console.log("redrew everything!!!")
 });
+
+
 
 function withinCameraView(x,y){
   return x >= camera.begin.x && x <= camera.end.x && y >= camera.begin.y && y <= camera.end.y;
@@ -126,7 +129,23 @@ function setCanvasSize(){
   ch = canvas.height;
 }
 
+function drawNumbers(){
+  context.clearText
+
+  context.font="10px Georgia";
+
+  for(var x = camera.begin.x; x <= camera.end.x; x++) {
+    context.fillText(""+x, box * (x - camera.begin.x) + (box/2), box/5);
+  }
+
+  for(var y = camera.begin.y; y <= camera.end.y; y++) {
+    context.fillText(""+y, box/5, box * (y - camera.begin.y) + (box/2));
+  }
+}
+
 function drawBoard(){
+  drawNumbers();
+
   for(var x = 0; x <= cw; x += 50) {
       context.moveTo(0.5 + x + p, p);
       context.lineTo(0.5 + x + p, ch + p);
@@ -141,15 +160,8 @@ function drawBoard(){
   context.stroke();
 }
 
-function drawOnCanvas(x, y, imagePath){
-  var image = new Kinetic.Image({
-    draggable : false
-  });
-  var imageObj = new Image();
-  imageObj.src = imagePath;
-  imageObj.onload = function(){
-    context.drawImage(imageObj, x, y)
-  }
+function drawOnCanvas(x, y, image){
+  context.drawImage(image, x, y);
 }
 
 function drawComponents(){
@@ -170,40 +182,6 @@ function updateGridInterface(){
   drawComponents();
 }
 
-
-
-
-var dragSrcEl = null;
-//image
-doms = document.getElementsByClassName("c-icon");
-
-for(i = 0; i < doms.length; i++){
-	doms[i].addEventListener('dragstart',function(e){
-       dragSrcEl = this;
-
-       console.log(this.id)
-	});
-}
-
-canvas.addEventListener('dragover',function(e){
-    e.preventDefault(); // !!important
-});
-
-//insert image to stage
-canvas.addEventListener('drop',function(e){
-
-  var mp = getMousePos(canvas,e);
-
-  var gridPos = calculateGridXY(mp.x,mp.y);
-
-  addToGrid(dragSrcEl.id, gridPos.x, gridPos.y);
-  drawBoard();
-  console.log(grid)
-  drawComponents();
-
-});
-
-
 function getMousePos(canvas, evt) {
   var rect = canvas.getBoundingClientRect();
     
@@ -216,6 +194,39 @@ function getMousePos(canvas, evt) {
 function calculateGridXY(x,y){
   return{
     x: camera.begin.x + Math.floor(x/50),
-    y: camera.begin.y + Math.floor(y/50),
+    y: camera.begin.y + Math.floor(y/50)
   };
 }
+
+
+var dragSrcEl = null;
+//image
+doms = document.getElementsByClassName("c-icon");
+
+for(i = 0; i < doms.length; i++){
+  doms[i].addEventListener('dragstart',function(e){
+    dragSrcEl = this;
+    e.dataTransfer.setDragImage(getImageByComponentType(this.id),0,0);
+  });
+}
+
+canvas.addEventListener('dragover',function(e){
+    e.preventDefault(); // !!important
+});
+
+
+canvas.addEventListener('drop',function(e){
+
+  var mp = getMousePos(canvas,e);
+  var gridPos = calculateGridXY(mp.x,mp.y);
+
+  console.log("gridPos!!!!");
+  console.log(gridPos)
+
+  if(!doesComponentExist(gridPos.x,gridPos.y)){
+    console.log(grid);
+    addToGrid(dragSrcEl.id, gridPos.x, gridPos.y);
+    updateGridInterface();
+  }
+
+});
