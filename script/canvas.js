@@ -160,8 +160,56 @@ function drawBoard(){
   context.stroke();
 }
 
-function drawOnCanvas(x, y, image){
+function drawOnCanvas(x, y, image, direction){
   context.drawImage(image, x, y);
+}
+
+function directionToRadian(direction){
+  var degree;
+  if(direction == UP){
+    degree = 0;
+  }
+  else if(direction == RIGHT){
+     degree = 90
+  }
+  else if(direction == DOWN){
+    degree = 180
+  }
+  else if(direction == LEFT){
+    degree = 270
+  }
+  return degree * Math.PI / 180;
+}
+
+function rotateCoords(x, y, width, height, direction){
+  var cw = width;
+  var ch = height;
+  cx = y;
+  cy = x
+
+  switch(direction){
+     case RIGHT: //90
+          cw = height;
+          ch = width;
+          cy = y + (height * (-1));
+          break;
+     case DOWN: //180
+          cx = width * (-1);
+          cy = y + (height * (-1));
+          break;
+     case LEFT: //270
+          cw = height;
+          ch = width;
+          cx = x + (width * (-1));
+          break;
+  }
+
+  return {
+    x: cx,
+    y: cy,
+    width: cw,
+    height: ch
+  };
 }
 
 function drawComponents(){
@@ -170,7 +218,7 @@ function drawComponents(){
 
     if(withinCameraView(curr.x, curr.y)){
       var imgDraw = getImageByComponentType(curr.type);
-      drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw);
+      drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction);
       console.log(imgDraw);
     }
   }
