@@ -4,6 +4,9 @@ var OR_GATE_COMPONENT = "OR";
 var XOR_GATE_COMPONENT = "XOR";
 var NOT_GATE_COMPONENT = "NOT";
 
+var NAND_GATE_COMPONENT = "NAND";
+var NOR_GATE_COMPONENT = "NOR";
+
 // Circuit Passthroughs/Wires
 var L_WIRE_COMPONENT = "L"; 			// L
 var I_WIRE_COMPONENT = "I"; 			// |
@@ -60,7 +63,7 @@ function component(
 	}
 }
 
-function and_gate(label, width, height, x, y){
+function and_gate(label, x, y){
 	var temp = new component(
 		AND_GATE_COMPONENT, //type
 		label, 				//label
@@ -68,8 +71,8 @@ function and_gate(label, width, height, x, y){
 		1, 					//outputs
 		UP,					//direction
 		0, 					//delay
-		width, 				//width
-		height, 			//height
+		2, 					//width
+		1, 					//height
 		x, 					//x
 		y,					//y
 		null				//print message
@@ -78,7 +81,7 @@ function and_gate(label, width, height, x, y){
 	return temp;
 }
 
-function or_gate(label, width, height, x, y){
+function or_gate(label, x, y){
 	var temp = new component(
 		OR_GATE_COMPONENT, //type
 		label, 				//label
@@ -86,8 +89,8 @@ function or_gate(label, width, height, x, y){
 		1, 					//outputs
 		UP,					//direction
 		0, 					//delay
-		width, 				//width
-		height, 			//height
+		2,	 				//width
+		1,		 			//height
 		x, 					//x
 		y,					//y
 		null				//print message
@@ -96,7 +99,7 @@ function or_gate(label, width, height, x, y){
 	return temp;
 }
 
-function xor_gate(label, width, height, x, y){
+function xor_gate(label, x, y){
 	var temp = new component(
 		XOR_GATE_COMPONENT, //type
 		label, 				//label
@@ -104,8 +107,8 @@ function xor_gate(label, width, height, x, y){
 		1, 					//outputs
 		UP,					//direction
 		0, 					//delay
-		width, 				//width
-		height, 			//height
+		2,	 				//width
+		1,		 			//height
 		x, 					//x
 		y,					//y
 		null				//print message
@@ -114,7 +117,7 @@ function xor_gate(label, width, height, x, y){
 	return temp;
 }
 
-function not_gate(label, width, height, x, y){
+function not_gate(label, x, y){
 	var temp = new component(
 		NOT_GATE_COMPONENT, //type
 		label, 				//label
@@ -122,8 +125,8 @@ function not_gate(label, width, height, x, y){
 		1, 					//outputs
 		UP,					//direction
 		0, 					//delay
-		width, 				//width
-		height, 			//height
+		2,	 				//width
+		1,		 			//height
 		x, 					//x
 		y,					//y
 		null				//print message
@@ -132,7 +135,7 @@ function not_gate(label, width, height, x, y){
 	return temp;
 }
 
-function not_gate(label, width, height, x, y){
+function not_gate(label, x, y){
 	var temp = new component(
 		NOT_GATE_COMPONENT, //type
 		label, 				//label
@@ -140,8 +143,8 @@ function not_gate(label, width, height, x, y){
 		1, 					//outputs
 		UP,					//direction
 		0, 					//delay
-		width, 				//width
-		height, 			//height
+		1,	 				//width
+		1,		 			//height
 		x, 					//x
 		y,					//y
 		null				//print message
@@ -150,7 +153,7 @@ function not_gate(label, width, height, x, y){
 	return temp;
 }
 
-function l_wire(label, width, height, x, y){
+function l_wire(label, x, y){
 	var temp = new component(
 		L_WIRE_COMPONENT,	//type
 		label, 				//label
@@ -158,8 +161,8 @@ function l_wire(label, width, height, x, y){
 		1, 					//outputs
 		UP,					//direction
 		0, 					//delay
-		width, 				//width
-		height, 			//height
+		1,	 				//width
+		1,		 			//height
 		x, 					//x
 		y,					//y
 		null				//print message
@@ -168,7 +171,7 @@ function l_wire(label, width, height, x, y){
 	return temp;
 }
 
-function i_wire(label, width, height, x, y){
+function i_wire(label, x, y){
 	var temp = new component(
 		I_WIRE_COMPONENT,	//type
 		label, 				//label
@@ -176,8 +179,8 @@ function i_wire(label, width, height, x, y){
 		1, 					//outputs
 		UP,					//direction
 		0, 					//delay
-		width, 				//width
-		height, 			//height
+		1, 					//width
+		1, 					//height
 		x, 					//x
 		y,					//y
 		null				//print message
@@ -186,7 +189,7 @@ function i_wire(label, width, height, x, y){
 	return temp;
 }
 
-function t_wire(label, width, height, x, y){
+function t_wire(label, x, y){
 	var temp = new component(
 		T_WIRE_COMPONENT,	//type
 		label, 				//label
@@ -194,8 +197,8 @@ function t_wire(label, width, height, x, y){
 		2, 					//outputs
 		UP,					//direction
 		0, 					//delay
-		width, 				//width
-		height, 			//height
+		1, 					//width
+		1, 					//height
 		x, 					//x
 		y,					//y
 		null				//print message
@@ -204,7 +207,7 @@ function t_wire(label, width, height, x, y){
 	return temp;
 }
 
-function cross_wire(label, width, height, x, y){
+function cross_wire(label, x, y){
 	var temp = new component(
 		CROSS_WIRE_COMPONENT,	//type
 		label, 					//label
@@ -212,8 +215,8 @@ function cross_wire(label, width, height, x, y){
 		3, 						//outputs
 		UP,						//direction
 		0, 						//delay
-		width, 					//width
-		height, 				//height
+		1, 						//width
+		1, 						//height
 		x, 						//x
 		y,						//y
 		null					//print message
@@ -222,7 +225,7 @@ function cross_wire(label, width, height, x, y){
 	return temp;
 }
 
-function print_box(label, width, height, x, y, message){
+function print_box(label, x, y, message){
 	var temp = new component(
 		PRINT_BOX_COMPONENT,	//type
 		label, 					//label
@@ -230,8 +233,8 @@ function print_box(label, width, height, x, y, message){
 		1, 						//outputs
 		UP,						//direction
 		0, 						//delay
-		width, 					//width
-		height, 				//height
+		1, 						//width
+		1,						//height
 		x, 						//x
 		y,						//y
 		message					//print message
@@ -240,7 +243,7 @@ function print_box(label, width, height, x, y, message){
 	return temp;
 }
 
-function on_box(label, width, height, x, y){
+function on_box(label, x, y){
 	var temp = new component(
 		ON_BOX_COMPONENT,		//type
 		label, 					//label
@@ -248,8 +251,8 @@ function on_box(label, width, height, x, y){
 		4, 						//outputs
 		UP,						//direction
 		0, 						//delay
-		width, 					//width
-		height, 				//height
+		1, 						//width
+		1, 						//height
 		x, 						//x
 		y,						//y
 		null					//print message
@@ -258,7 +261,7 @@ function on_box(label, width, height, x, y){
 	return temp;
 }
 
-function var_box(label, width, height, x, y){
+function var_box(label, x, y){
 	var temp = new component(
 		VAR_BOX_COMPONENT,		//type
 		label, 					//label
@@ -266,8 +269,8 @@ function var_box(label, width, height, x, y){
 		4, 						//outputs
 		UP,						//direction
 		0, 						//delay
-		width, 					//width
-		height, 				//height
+		1, 						//width
+		1,		 				//height
 		x, 						//x
 		y,						//y
 		null					//print message

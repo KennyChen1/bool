@@ -9,11 +9,12 @@
 
 	<script src = "script/jquery-3.2.0.min.js"></script> <!-- jQuery import -->
 	<script src="script/jquery-ui.min.js"></script>
+	<script src = "script/kinetic-v5.1.0/kinetic-v5.1.0.js"></script>
+	<script src = "script/kinetic-v5.1.0/kinetic-v5.1.0.min.js"></script>
+
 
 	<script src = "script/components.js"></script>
 	<script src = "script/grid.js"></script>
-	<script src = "script/kinetic-v5.1.0/kinetic-v5.1.0.js"></script>
-	<script src = "script/kinetic-v5.1.0/kinetic-v5.1.0.min.js"></script>
 
 </head>
 
@@ -67,7 +68,7 @@
 			</div>
 
 			-->
-			<canvas id = "grid-render" width="2000" height="2000">
+			<canvas id = "grid-render">
 				
 			</canvas>
 
@@ -76,25 +77,25 @@
 		<div class = "cmenu"> <!-- Component menu -->
 
 			<div class = "twobytwo">
-				<img class = "2b2" src="img/cmenu-and.png">
-				<img class = "2b2" src="img/cmenu-xor.png">
-				<img class = "2b2" src="img/cmenu-or.png">
-				<img class = "2b2" src="img/cmenu-not.png">
-				<img class = "2b2" src="img/cmenu-nand.png">
-				<img class = "2b2" src="img/cmenu-nor.png">
+				<img class = "c-icon" src="img/cmenu-and.png" id = "AND">
+				<img class = "c-icon" src="img/cmenu-xor.png" id = "XOR">
+				<img class = "c-icon" src="img/cmenu-or.png" id = "OR">
+				<img class = "c-icon" src="img/cmenu-not.png" id = "NOT">
+				<!--<img class = "c-icon" src="img/cmenu-nand.png" id = "NAND">
+				<img class = "c-icon" src="img/cmenu-nor.png" id = "NOR">-->
 			</div>
 
 			<div class = "onebyone">
-				<img src="img/cmenu-plus.png">
-				<img src="img/cmenu-minus.png">
-				<img src="img/cmenu-t.png">
-				<img src="img/cmenu-l.png">
+				<img class = "c-icon" src="img/cmenu-plus.png" id = "CROSS">
+				<img class = "c-icon" src="img/cmenu-minus.png" id = "I">
+				<img class = "c-icon" src="img/cmenu-t.png" id = "T">
+				<img class = "c-icon" src="img/cmenu-l.png" id = "L">
 			</div>
 
 			<div class = "twobytwo">
-				<img src="img/cmenu-onbox.png">
-				<img src="img/cmenu-printbox.png">
-				<img src="img/cmenu-varbox.png">
+				<img class = "c-icon" src="img/cmenu-onbox.png" id = "ON">
+				<img class = "c-icon" src="img/cmenu-printbox.png" id = "PRINT">
+				<img class = "c-icon" src="img/cmenu-varbox.png" id = "VAR">
 			</div>
 			
 		</div>
@@ -105,8 +106,9 @@
 		</div>
 
 	</div>
-</body>
 
-<script  src = "script/canvas.js"></script>
+	<script src = "script/canvas.js"></script>
+
+</body>
 
 </html> 

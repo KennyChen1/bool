@@ -1,81 +1,221 @@
+// JS file for rendering Grid interface
 
-// Box width
-var bw = 2000;
-// Box height
-var bh = 500;
+//Canvas attributes
+var grid; //grid containing canvas
+var canvas = document.getElementById("grid-render");; //canvas
+var context; //canvas context
+var cw; //Canvas width
+var ch; //Canvas height
 
-var canvas = document.getElementById("grid-render");
-var context = canvas.getContext("2d");
-function drawBoard(){
-for (var x = 0; x <= bw; x += 50) {
-    context.moveTo(0.5 + x + p, p);
-    context.lineTo(0.5 + x + p, bh + p);
-}
-
-
-for (var x = 0; x <= bh; x += 50) {
-    context.moveTo(p, 0.5 + x + p);
-    context.lineTo(bw + p, 0.5 + x + p);
-}
-
-context.strokeStyle = "black";
-context.stroke();
-}
-
+setCanvasSize();
 drawBoard();
 
+//Camera attributes
+var camera = {
+  begin: {
+    x: 0,
+    y: 0
+  },
+
+  end: {
+    x: Math.floor(cw/box) + 1,
+    y: Math.floor(ch/box) + 1
+  }
+};
+
+$(document).keydown(function(e){
+  switch(e.which) {
+    case 37: 
+      moveCamera(LEFT, 1);// left
+      break;
+
+    case 38: 
+      moveCamera(UP, 1);// up
+      break;
+
+    case 39: 
+      moveCamera(RIGHT, 1);// right
+      break;
+
+    case 40: 
+      moveCamera(DOWN, 1);// down
+      break;
+
+    default: 
+      return; // exit this handler for other keys
+  }
+  e.preventDefault(); // prevent the default action (scroll / move caret)
+});
+
+$(window).on("resize", function(){
+  setCanvasSize();
+  refreshCameraOnResize();
+  updateGridInterface();
+  console.log("redrew everything!!!")
+});
+
+function withinCameraView(x,y){
+  return x >= camera.begin.x && x <= camera.end.x && y >= camera.begin.y && y <= camera.end.y;
+}
+
+function getCameraLocation(x,y){
+  var nx = x - camera.begin.x;
+  var ny = y - camera.begin.y;
+
+  var cx = nx * box;
+  var cy = nx * box;
+
+  return {x: cx, y: cy};
+}
+
+function moveCamera(direction, amount){
+  if((direction == LEFT && camera.begin.x == 0) || (direction == UP && camera.begin.y == 0)) {
+    console.log("LEFT OR UP DIRECTION: Cannot move camera into negative coordinate");
+  }
+  else{
+    switch(direction){
+      case UP: 
+        camera.begin.y -= amount;
+        camera.end.y -= amount;
+        break;
+
+      case DOWN: 
+        camera.begin.y += amount;
+        camera.end.y += amount;
+        break;
+
+      case LEFT:
+        camera.begin.x -= amount;
+        camera.end.x -= amount;
+        break;
+
+      case RIGHT:
+        camera.begin.x += amount;
+        camera.end.x += amount;
+        break;
+
+      default: 
+        console.log("Failed to move camera, no direction!");
+        break;
+    }
+
+    updateGridInterface();
+
+    console.log(camera)
+  }
+}
+
+function refreshCameraOnResize(){
+
+    var ex = Math.floor(cw/box) + 1;
+    var ey = Math.floor(ch/box) + 1;
+
+    camera.end.x = camera.begin.x + ex;
+    camera.end.y = camera.begin.y + ey;
+}
+
+function setCanvasSize(){
+  gridWindow = document.getElementsByClassName("grid")[0];
+
+  canvas.width = gridWindow.offsetWidth;
+  canvas.height = gridWindow.offsetHeight;
+
+  context = canvas.getContext("2d");
+
+  cw = canvas.width;
+  ch = canvas.height;
+}
+
+function drawBoard(){
+  for(var x = 0; x <= cw; x += 50) {
+      context.moveTo(0.5 + x + p, p);
+      context.lineTo(0.5 + x + p, ch + p);
+  }
+
+  for(var y = 0; y <= ch; y += 50) {
+      context.moveTo(p, 0.5 + y + p);
+      context.lineTo(cw + p, 0.5 + y + p);
+  }
+
+  context.strokeStyle = "black";
+  context.stroke();
+}
+
+function drawOnCanvas(x, y, imagePath){
+  var image = new Kinetic.Image({
+    draggable : false
+  });
+  var imageObj = new Image();
+  imageObj.src = imagePath;
+  imageObj.onload = function(){
+    context.drawImage(imageObj, x, y)
+  }
+}
+
+function drawComponents(){
+  for(var i=0; i<grid.length; i++){
+    var curr = grid[i];
+
+    if(withinCameraView(curr.x, curr.y)){
+      var imgDraw = getImageByComponentType(curr.type);
+      drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw);
+      console.log(imgDraw);
+    }
+  }
+}
+
+function updateGridInterface(){
+  context.clearRect(0,0, cw, ch);
+  drawBoard();
+  drawComponents();
+}
 
 
 
 
 var dragSrcEl = null;
 //image
-doms = document.getElementsByClassName("2b2");
+doms = document.getElementsByClassName("c-icon");
 
 for(i = 0; i < doms.length; i++){
 	doms[i].addEventListener('dragstart',function(e){
        dragSrcEl = this;
 
-       console.log(this)
+       console.log(this.id)
 	});
-
 }
 
-
-var con = document.getElementById("grid-render");
-con.addEventListener('dragover',function(e){
+canvas.addEventListener('dragover',function(e){
     e.preventDefault(); // !!important
 });
+
 //insert image to stage
-con.addEventListener('drop',function(e){
+canvas.addEventListener('drop',function(e){
 
-    var image = new Kinetic.Image({
-       draggable : true
-    });
-    imageObj = new Image();
-    imageObj.src = dragSrcEl.src;
-    imageObj.onload = function(){
-    	x = Math.floor((mousePos.x-10)/50)*50+10
-    	y = Math.floor((mousePos.y-10)/50)*50+10
-        context.drawImage(imageObj, x, y)
-        drawBoard();
-        console.log(grid)
-    };
- });
+  var mp = getMousePos(canvas,e);
+
+  var gridPos = calculateGridXY(mp.x,mp.y);
+
+  addToGrid(dragSrcEl.id, gridPos.x, gridPos.y);
+  drawBoard();
+  console.log(grid)
+  drawComponents();
+
+});
 
 
-
-var mousePos 
 function getMousePos(canvas, evt) {
-        var rect = canvas.getBoundingClientRect();
-        return {
-          x: evt.clientX - rect.left,
-          y: evt.clientY - rect.top
-        };
-      }
+  var rect = canvas.getBoundingClientRect();
+    
+  return {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top
+  };
+}
 
-con.addEventListener('drop', function(evt) {
-        mousePos = getMousePos(canvas, evt);
-        var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-        console.log(message)
-      }, false);
+function calculateGridXY(x,y){
+  return{
+    x: camera.begin.x + Math.floor(x/50),
+    y: camera.begin.y + Math.floor(y/50),
+  };
+}

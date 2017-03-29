@@ -1,0 +1,9 @@
+Things to do for UI
+	Camera - fin
+	Drag components to grid - fin
+	Drag on grid 
+	Highlight
+	Tooltip
+	Single rotation
+	Delete
+	Check if there is already an object on grid(if there is, cannot place object in same spot)

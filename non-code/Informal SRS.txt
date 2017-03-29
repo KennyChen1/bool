@@ -1,0 +1,345 @@
+Components
+
+	Logic Gates
+		> OR Gate 	
+			- label
+			- 2 inputs
+			- 1 output
+			- directional
+			- time delay
+			- size = 2x1
+			- location (x,y)
+
+		> AND Gate 
+			- label	
+		 	- 2 inputs
+			- 1 output
+			- directional
+			- time delay
+			- size = 2x1
+			- location (x,y)
+
+		> XOR Gate 	
+			- label
+		 	- 2 inputs
+			- 1 output
+			- directional
+			- time delay
+			- size = 2x1
+			- location (x,y)
+
+		> NOT Gate
+			- label 	
+			- 1 input
+			- 1 output
+			- directional
+			- time delay
+			- size = 1x1
+			- location (x,y)
+
+	Combination Logic Gates
+		> NOR Gate -- NOT Gate + OR Gate chained together
+			- psuedo-component (made of 2 or more existing gates)
+			- will be made into seperate gates when compiling
+
+		> NAND Gate -- NOT Gate + AND Gate chained together
+			- psuedo-component (made of 2 or more existing gates)
+			- will be made into seperate gates when compiling
+			
+	Circuit Passthroughs
+		> L Circuit 
+			- label
+			- 1 input
+			- 1 output
+			- directional
+			- time delay
+			- size = 1x1	
+			- location (x,y)
+
+		> | Circuit 
+			- label
+			- 1 input
+			- 1 output
+			- directional
+			- time delay
+			- size = 1x1
+			- location (x,y)
+
+		> + Bracket 
+			- label
+			- 1 input
+			- 3 outputs
+			- directional
+			- time delay
+			- size = 1x1
+			- location (x,y)
+
+		> T Circuit 
+			- label
+			- 1 input
+			- 2 outputs
+			- directional
+			- time delay
+			- size = 1x1
+			- location (x,y)
+
+	Blackboxes 
+		> Print Box
+			- label
+			- 1 input
+			- 1 output
+			- directional
+			- time delay
+			- size = 1x1
+			- location (x,y)
+			- print message(into console)
+
+		> On Box
+			- label
+			- 0 input
+			- 4 outputs (always 1)
+			- non-directional
+			- time delay
+			- size = 1x1
+			- location (x,y)
+
+		> Variable Box -> display labels on the block
+			- label
+			- 0 input(only inputted from console or a column of the truth table)
+			- 4 outputs 
+			- non-directional
+			- time delay
+			- size = 1x1
+			- location (x,y)
+
+Interface
+	Splash Screen
+		Big picture of Logo
+			-> copyright and group information
+
+		Login button
+			-> brings to Login screen then after authenticated bring you to Main Workspace
+
+		Work Anonymously/Offline
+			-> brings you to Main Workspace
+
+	Main Workspace
+		Name
+			> Shows the name and allows owner to update the name
+
+		Grid
+			> Where all the components are dragged to
+			> Scrollable
+			> Size = 1000x1000
+
+			> Right click on any component on the grid will bring up an interface to modify
+				- change the label of the component 
+				- the delay of the component
+				- delete the component
+				- rotate the component
+				- print block ONLY: add print message
+
+				- also highlights the component
+					-> when you HIGHLIGHT a component: 
+						* right click unhighlights and only selects the square you are clicking on
+						* left click anywhere and it unhighlights
+						* resizing window unhighlights
+
+			> Right click and drag will
+				- highlight the component you are currently on and any components in the box from where you mouse started clicking to where your mouse ended clicked.
+					- right click and drag at (0,0) and release at (10,10). all components of that 10x10 square are now highlighted
+
+			> Left click and drag on any component will
+				- allow you to move the component to any other location not currently occupied
+
+		Component Menu
+			> Where all the available components will be to be dragged from
+
+			> Left click and drag any component to the Grid and set it down to create a circuit
+
+		Toolbar
+			> Authenticate 
+				-> Login - prompted login page(Google authentication)
+				-> Logout(same button as login - Logs you out and makes you anonymous)
+				-> Exit - goes to profile or splash screen
+
+			> File			
+				-> New - Opens another workspace in a new tab
+				-> Save - saves to desktop
+				-> Load - loads from desktop
+				-> Submit - submits to our datastore/your profile
+					- Submitting options
+						-> Public -- has #public tag
+							> Everyone can view
+							> Nobody but owner can edit
+						-> Private -- does NOT have #public tag
+							> Only shared people can view
+							> Nobody but owner can edit
+						-> Tags
+							> set any tags you like, can be used to search for Circuit
+						-> Name of Circuit(only needed if nothing in Name interface)
+				-> Run - run the circuit manually. recompiles and evaluates the entire circuit
+			> Edit
+				-> Undo - goes back to last step
+				-> Redo - goes forward a step
+				-> Cut - deletes everything in highlighted section
+				-> Copy - copies highlighted section to clipboard
+				-> Paste - pastes clipboard into highlighted section(starting from top-left most block)
+
+				-> Rotate - rotates clipboard by 90 degrees clockwise
+				
+		Console
+			> Contains any debugging information
+				-> If a compiler error happens, will be printed here
+				-> Any event that happens, rather than having a prompt, will be printed here
+				-> Any information on the workspace will be printed here
+				-> Any information related to saving, loading, submitting, and exiting WILL NOT be printed here and will be a POP-UP prompt
+
+			> Boolean equations
+				-> Allows you to type in a boolean equation and it will generate a circuit corresponding to that boolean equation
+					-> After pressing generate the circuit will be saved to the clipboard
+					-> Now you can paste the circuit to whereever you highlight
+
+				-> Allows you to highlight a circuit and evaluate the boolean expression of that circuit
+					-> Highlight the circuit
+					-> Press generate expression
+					-> Will replace the expression in the text-box with the expression of the circuit
+
+			> Truth Table Information
+				-> Generates a truth table based on the number of variable-boxes in a circuit
+					-> Highlight the circuit you wish to analyze with a truth table
+					-> Generates truth table
+					-> Click on each row and it will analyze the output by evaluating the circuit based on the columns
+						- by setting the corresponding value in each column into each of the variable blocks then evaluating it.
+
+					> When you click on a column, it will highlight which variable-box it is mapped to
+
+				-> Generate Circuit based on truth table
+					-> Prompts window a table to enter 1s and 0s
+						> Add column button
+						> Add row button
+						> Generate circuit button 
+							-> Builds circuit based on truth table and puts in clipboard
+						> All boxes on the table default to 0
+							-> Left click on a box to set the value to 1
+							-> Left click again to set the value to 0
+
+	Profile
+		Profile name and Utilities (on the top)
+			> Logo
+			> New
+				-> Opens a blank Main Workspace
+			> Search Bar
+				-> Depending on which page you are on, searchs through all results and finds circuit based on 
+					- name
+					- tag
+			> Notifications
+				-> alerts when something is shared with 
+				-> tooltip that shows all notifications
+			> Upload
+				-> Prompts File Manager and allows you to select which file you wish to upload
+			> Profile Name/Logout
+				-> Brings you to Splash Screen
+
+		Navigation tab (on the left)
+			> All Circuits
+			> Profile - own saved circuit in the cloud/datastore
+			> Shared with me - Any circuits that were shared with you
+			> Public - All circuits set with public tag
+
+		List of Circuits
+			> Depends which tab you are on
+				-> shows all Circuits that are viewable to you 
+					* (defaults to this when you open page)
+				-> only shows Circuits which you are owner of
+				-> only shows Circuits that were shared with you
+				-> only shows Circuits that are tagged with #public
+
+			-> Dragging a file with the correct extension into the List of Circuits interface will automatically upload the file to the datastore (with you as the owner)
+
+			> Each Circuit listing has
+				-> Open (double click on listing)
+				-> Delete (prompts asking if you are SURE you want to delete)
+				-> Get Shareable Link
+				-> Share Option
+				-> Clone as owner(if not you Circuit) - copies Circuit file and puts into your account
+
+	Quizlets
+		Uses same page as workspace with an objective in the console
+			->
+
+Actors
+	Admins
+		-> View Any Circuits on datastore
+		-> Delete Any Circuit on datastore
+		-> View Any Profile on datastore
+		-> Delete Any Profile on datastore
+		-> Create Circuit (just like any other user)
+
+	Circuit Owners
+		-> View
+			> Shared Circuits
+			> Owned Circuits
+			> #public Circuits
+
+		-> Edit
+			> Owned Circuits
+
+		-> Delete
+			> Owned Circuit
+
+		-> Create Circuit
+
+		-> Share
+			> Any Circuit they can view, they can share
+
+	Circuit Viewers
+		-> View
+			> Shared Circuits
+			> Owned Circuits
+			> #public Circuits
+
+		-> Share
+			> Any Circuit they can view, they can share
+
+
+On every new drop/removal of a component -- Circuit Compiler
+	-> GUI/Grid calls compiler to recompile the workspace
+	-> compiler looks at workspace data structure
+	-> compilers then executes all circuit structures
+		-> if all delays are zero, updates immediately
+		-> if any delays are set, updates on each component's run completion(so when each delay finishs, it sends an update to GUI/Grid)
+
+
+Issues that need to be resolved but not for scope of Project
+	-> When 2+ people are editting, may result in conflict 
+	-> This is fine because for the scope of the project, we WILL NOT implement multiple users being able to edit a shared Circuit
+
+Jobs -- Phase 1
+	Reef 	-> Make GUI drag-and-drop Interface in HTML/CSS
+	Kenny 	-> Organize all visible Grid components into a nice data structure
+	Nelson 	-> Write compiler algorithm
+	Mike 	-> **Responsible for all artwork & help Reef with HTML/CSS** 
+
+Phase Breakdown
+	Phase 1
+		> Splash Screen
+		> Build the Grid
+		> All components except for variable-box
+		> Components window
+		> Console for print-box
+		> Circuit Compiler
+
+	Phase 2
+		> All Tool features
+		> Basic Profile page (purely holds all the Circuits you own, no sharing etc)
+
+	Phase 3
+		> Rest of the Console features
+
+	Phase 4
+		> Profile page features
+
+	Phase 5(after Course)
+		> Universal set conversion
+		> Quizlets based on circuits
