@@ -4,29 +4,54 @@ var p = 0; //padding
 
 var box = 50 //size of each grid box = 50x50
 
+var selected = {
+  begin: {
+    x: 0,
+    y: 0
+  },
+
+  size: {
+    width: 0,
+    height: 0
+  }
+}
+
 
 $(document).ready(function(){
 
 });
 
-function doesComponentExist(x,y){
-  for(var i=0;i<grid.length;i++){
-    var curr = grid[i];
-    var locations = curr.locations();
+function canComponentBePlaced(toPlace){
+
+  for(var w=0;w<toPlace.locations().length;w++){
+    var x = (toPlace.locations()[w]).x;
+    var y = (toPlace.locations()[w]).y;
+
+    console.log(toPlace);
+    console.log(x);
+    console.log(y);
+    console.log(toPlace.locations());
+    console.log(y);
 
 
-    for(var j=0;j<locations.length;j++){
-      var cl = locations[j];
-      if(x == cl.x && y == cl.y){
-        return true;
+    for(var i=0;i<grid.length;i++){
+      var curr = grid[i];
+      var locations = curr.locations();
+
+
+      for(var j=0;j<locations.length;j++){
+        var cl = locations[j];
+        if(x == cl.x && y == cl.y){
+          return true;
+        }
       }
     }
-  }
+  } 
 
   return false;
 }
 
-function addToGrid(comp,x,y){
+function getComponentByType(comp,x,y){
   var toPush;
   //gates
   if(comp === AND_GATE_COMPONENT){
@@ -67,5 +92,9 @@ function addToGrid(comp,x,y){
     toPush = var_box(null,x,y);
   }
 
-  grid.push(toPush);
+  return toPush;
+}
+
+function addToGrid(comp){
+  grid.push(comp);
 }

@@ -1,7 +1,7 @@
 // JS file for rendering Grid interface
 
 //Canvas attributes
-var grid; //grid containing canvas
+var gridWindow; //grid containing canvas
 var canvas = document.getElementById("grid-render");; //canvas
 var context; //canvas context
 var cw; //Canvas width
@@ -23,38 +23,6 @@ var camera = {
 };
 
 drawBoard();
-
-$(document).keydown(function(e){
-  switch(e.which) {
-    case 37: 
-      moveCamera(LEFT, 1);// left
-      break;
-
-    case 38: 
-      moveCamera(UP, 1);// up
-      break;
-
-    case 39: 
-      moveCamera(RIGHT, 1);// right
-      break;
-
-    case 40: 
-      moveCamera(DOWN, 1);// down
-      break;
-
-    default: 
-      return; // exit this handler for other keys
-  }
-  e.preventDefault(); // prevent the default action (scroll / move caret)
-});
-
-$(window).on("resize", function(){
-  setCanvasSize();
-  refreshCameraOnResize();
-  updateGridInterface();
-  console.log("redrew everything!!!")
-});
-
 
 
 function withinCameraView(x,y){
@@ -219,8 +187,17 @@ function drawComponents(){
     if(withinCameraView(curr.x, curr.y)){
       var imgDraw = getImageByComponentType(curr.type);
       drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction);
-      console.log(imgDraw);
     }
+  }
+}
+
+function drawSelected(){
+  if(selected.size.width > 0 && selected.size.height > 0){
+    context.globalAlpha = 0.2;
+    context.fillStyle = "yellow";
+    context.fillRect((selected.begin.x - camera.begin.x) * box, (selected.begin.y - camera.begin.y) * box, selected.size.width * box, selected.size.height * box);
+    context.globalAlpha = 1.0;
+    context.fillStyle =  "black";
   }
 }
 
@@ -228,6 +205,7 @@ function updateGridInterface(){
   context.clearRect(0,0, cw, ch);
   drawBoard();
   drawComponents();
+  drawSelected();
 }
 
 function getMousePos(canvas, evt) {
@@ -247,34 +225,73 @@ function calculateGridXY(x,y){
 }
 
 
-var dragSrcEl = null;
-//image
-doms = document.getElementsByClassName("c-icon");
 
-for(i = 0; i < doms.length; i++){
-  doms[i].addEventListener('dragstart',function(e){
-    dragSrcEl = this;
-    e.dataTransfer.setDragImage(getImageByComponentType(this.id),0,0);
-  });
-}
+// Drag and drop functionality
+  var dragSrcEl = null;
+  //image
+  doms = document.getElementsByClassName("c-icon");
 
-canvas.addEventListener('dragover',function(e){
-    e.preventDefault(); // !!important
-});
-
-
-canvas.addEventListener('drop',function(e){
-
-  var mp = getMousePos(canvas,e);
-  var gridPos = calculateGridXY(mp.x,mp.y);
-
-  console.log("gridPos!!!!");
-  console.log(gridPos)
-
-  if(!doesComponentExist(gridPos.x,gridPos.y)){
-    console.log(grid);
-    addToGrid(dragSrcEl.id, gridPos.x, gridPos.y);
-    updateGridInterface();
+  for(i = 0; i < doms.length; i++){
+    doms[i].addEventListener('dragstart',function(e){
+      dragSrcEl = this;
+      e.dataTransfer.setDragImage(getImageByComponentType(this.id),0,0);
+    });
   }
 
+  canvas.addEventListener('dragover',function(e){
+      e.preventDefault(); // !!important
+  });
+
+
+  canvas.addEventListener('drop',function(e){
+
+    var mp = getMousePos(canvas,e);
+    var gridPos = calculateGridXY(mp.x,mp.y);
+
+    console.log("gridPos!!!!");
+    console.log(gridPos)
+
+    var toPlace = getComponentByType(dragSrcEl.id, gridPos.x, gridPos.y);
+    console.log(toPlace);
+    console.log(toPlace.locations());
+
+    if(!canComponentBePlaced(toPlace)){
+      console.log(grid);
+      addToGrid(toPlace);
+      updateGridInterface();
+    }
+
+  });
+
+// Camera movement
+$(document).keydown(function(e){
+  switch(e.which) {
+    case 37: 
+      moveCamera(LEFT, 1);// left
+      break;
+
+    case 38: 
+      moveCamera(UP, 1);// up
+      break;
+
+    case 39: 
+      moveCamera(RIGHT, 1);// right
+      break;
+
+    case 40: 
+      moveCamera(DOWN, 1);// down
+      break;
+
+    default: 
+      return; // exit this handler for other keys
+  }
+  e.preventDefault(); // prevent the default action (scroll / move caret)
+});
+
+// resize grid on window resize
+$(window).on("resize", function(){
+  setCanvasSize();
+  refreshCameraOnResize();
+  updateGridInterface();
+  console.log("redrew everything!!!")
 });
