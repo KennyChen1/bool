@@ -26,6 +26,14 @@ function hasSignalGeneratoringComponent(list){
     return false;
 }
 
+/* checks if the location was visited before 
+* list - list of visited locations
+* location - {x, y} location to check if its visited
+*/
+function hasVisited(list, location){
+
+}
+
 /* find all islands of a circuit on the grid */
 function findAllIslands(grid){
     for (var i = 0; i < grid.length; i++){
