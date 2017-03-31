@@ -40,7 +40,7 @@ function moveComponent(fromX, fromY, toX, toY){
     return true;
   }
   else{
-    console.log("cannot be placed");
+    //console.log("cannot be placed");
     curr.x = fromX;
     curr.y = fromY; 
     grid.push(curr);
@@ -65,12 +65,12 @@ function canComponentBeRotated(toRotate){
       var gotten = grid.splice(i,1)[0];
       var tdir = gotten.direction;
       gotten.rotate();
-      console.log(gotten);
+      //console.log(gotten);
       var ret = canComponentBePlaced(gotten);
 
-      console.log(gotten);
+      //console.log(gotten);
 
-      console.log(ret);
+      //console.log(ret);
 
       gotten.direction = tdir;
       grid.push(gotten);
@@ -110,10 +110,10 @@ function getAtGrid(x,y){
     var curr = grid[i];
     var cl = curr.locations();
 
-    console.log(cl);
+    //console.log(cl);
 
     for(var j=0;j<cl.length;j++){
-      console.log(j)
+      //console.log(j)
       if(cl[j].x == x && cl[j].y == y){
         return curr;
       }

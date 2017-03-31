@@ -17,7 +17,7 @@ function changeSelected(begin, end){
 	selected.begin.x = begin.x + camera.begin.x;
 	selected.begin.y = begin.y + camera.begin.y;
 
-	console.log(selected.size.width+" "+selected.size.height);
+	//console.log(selected.size.width+" "+selected.size.height);
 }
 
 function resetSelected(){
@@ -69,8 +69,8 @@ $("#grid-render").mouseup(function(e){
 			var cdom = calculateGridXY(downMouse.x, downMouse.y);
 			var cupm = calculateGridXY(upMouse.x, upMouse.y);
 
-			console.log(cdom);
-			console.log(cupm);
+			//console.log(cdom);
+			//console.log(cupm);
 
 			moveComponent(cdom.x, cdom.y, cupm.x, cupm.y);
  		}

@@ -72,7 +72,7 @@ function moveCamera(direction, amount){
 
     updateGridInterface();
 
-    console.log(camera)
+    //console.log(camera)
   }
 }
 
@@ -278,15 +278,9 @@ function calculateGridXY(x,y){
     var mp = getMousePos(canvas,e);
     var gridPos = calculateGridXY(mp.x,mp.y);
 
-    console.log("gridPos!!!!");
-    console.log(gridPos)
-
     var toPlace = getComponentByType(dragSrcEl.id, gridPos.x, gridPos.y);
-    console.log(toPlace);
-    console.log(toPlace.locations());
 
     if(canComponentBePlaced(toPlace)){
-      console.log(grid);
       addToGrid(toPlace);
       updateGridInterface();
     }
@@ -323,5 +317,4 @@ $(window).on("resize", function(){
   setCanvasSize();
   refreshCameraOnResize();
   updateGridInterface();
-  console.log("redrew everything!!!")
 });
