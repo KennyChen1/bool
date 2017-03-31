@@ -1,6 +1,9 @@
 var downMouse;
 var upMouse;
 
+function selectedSameSquare(){
+	return selected.size.width == 1 && selected.size.height == 1;
+}
 
 function changeSelected(begin, end){
 	begin.x = Math.floor(begin.x/box);
@@ -14,7 +17,7 @@ function changeSelected(begin, end){
 	selected.begin.x = begin.x + camera.begin.x;
 	selected.begin.y = begin.y + camera.begin.y;
 
-	console.log(selected);
+	console.log(selected.size.width+" "+selected.size.height);
 }
 
 function resetSelected(){
@@ -34,6 +37,15 @@ $("#grid-render").mousedown(function(e){
 	if(e.which === 3){ //rightclick
 		downMouse = getMousePos(canvas,e);
  	}
+ 	if(e.which === 1){ //leftclick
+ 		if((selected.size.width < 1 && selected.size.height < 1) || selectedSameSquare()){ //nothing selected
+ 			closeAttributeEditor();
+ 			downMouse = getMousePos(canvas, e);
+ 		}
+ 		else{
+
+ 		}
+ 	}
 
 });
 
@@ -43,8 +55,32 @@ $("#grid-render").mouseup(function(e){
 
 		changeSelected(downMouse, upMouse);
 
-		updateGridInterface();
+		if(selectedSameSquare()){
+			var pos = $(".grid").offset();
+
+			openAttributeEditor(selected.begin.x, selected.begin.y, upMouse.x * box + pos.left, upMouse.y * box +pos.top);
+		}
 	}
+	if(e.which === 1){
+		if((selected.size.width < 1 && selected.size.height < 1) || selectedSameSquare()){ //nothing selected
+			closeAttributeEditor();
+			upMouse = getMousePos(canvas, e);
+
+			var cdom = calculateGridXY(downMouse.x, downMouse.y);
+			var cupm = calculateGridXY(upMouse.x, upMouse.y);
+
+			console.log(cdom);
+			console.log(cupm);
+
+			moveComponent(cdom.x, cdom.y, cupm.x, cupm.y);
+ 		}
+ 		else{
+
+ 		}
+
+	}
+
+	updateGridInterface();
 });
 
 $("#grid-render").mouseout(function(e){

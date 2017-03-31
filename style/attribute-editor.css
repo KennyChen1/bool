@@ -1,0 +1,66 @@
+.attribute-editor{
+	background-color: green;
+	padding: 0 20px;
+	display: inline-block;
+
+	visibility: hidden;
+	display: inline-block;
+	position: fixed;
+
+	top: 600px;
+	left: 1000px;
+}
+
+.attribute-editor.show{
+	visibility: visible;
+}
+
+
+.attribute-editor .ae-text-box{
+
+}
+
+.attribute-editor .title{
+	text-align: center;
+	font-size: 18px;
+}
+
+.attribute-editor .ae-input{
+	padding: 10px 0;
+	color: black;
+	text-align: right;
+}
+
+.attribute-editor .ae-details{
+	text-align: center;
+}
+
+.attribute-editor .button-container{
+	margin: 30px auto;
+	display: flex;
+	justify-content: space-between;
+}
+
+.attribute-editor .ae-button{
+	float: left;
+	display: flex;
+	justify-content: space-between;
+
+	width: 60px;
+	height: 60px;
+}
+
+.attribute-editor #rotate{
+	background-image: url(../img/attribute-editor/rotate.png);
+}
+
+.attribute-editor #delete{
+	background-image: url(../img/attribute-editor/delete.png);
+
+}
+
+.attribute-editor #save{
+	background-image: url(../img/attribute-editor/save.png);
+
+}
+

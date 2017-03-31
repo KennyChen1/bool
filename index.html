@@ -6,15 +6,15 @@
 	<title>bool: The Online Circuit Builder</title>
 	<link rel = "stylesheet" type="text/css" href="style/toolbar.css">
 	<link rel = "stylesheet" type="text/css" href="style/workspace.css">
+	<link rel = "stylesheet" type="text/css" href="style/attribute-editor.css">
 
 	<script src = "script/jquery-3.2.0.min.js"></script> <!-- jQuery import -->
 	<script src="script/jquery-ui.min.js"></script>
 	<script src = "script/kinetic-v5.1.0/kinetic-v5.1.0.js"></script>
 	<script src = "script/kinetic-v5.1.0/kinetic-v5.1.0.min.js"></script>
-	<script src = "script/images.js"></script>
-
 
 	<script src = "script/components.js"></script>
+	<script src = "script/images.js"></script>
 	<script src = "script/grid.js"></script>
 
 </head>
@@ -24,24 +24,25 @@
 	<div class = "toolbar"> <!-- Toolbar -->
 		<ul>
 			<li class="dropdown">
-				<a href="" class="dropbtn">Authenticate</a>
+				<a href="#" class="dropbtn">Authenticate</a>
 				<div class="dropdown-content">
 		  			<a href="#">Login/Logout</a>
 		  			<a href="#">Exit</a>
 				</div>
 			</li>
 			<li class="dropdown">
-				<a href="" class="dropbtn">File</a>
+				<a href="#" class="dropbtn">File</a>
 				<div class="dropdown-content">
 		  			<a href="#">New</a>
 		  			<a href="#">Save</a>
 		  			<a href="#">Load</a>
 		  			<a href="#">Submit</a>
 		  			<a href="#">Run</a>
+		  			<a href="#">Toggle Dynamic Evaluator</a>
 				</div>
 			</li>
 			<li class="dropdown">
-			<a href="" class="dropbtn">Edit</a>
+			<a href="#" class="dropbtn">Edit</a>
 				<div class="dropdown-content">
 		  			<a href="#">Undo  ctrl-z</a>
 		  			<a href="#">Redo  ctrl-y</a>
@@ -93,7 +94,39 @@
 
 	</div>
 
+	<div class = "attribute-editor"> <!-- Attribute Editor -->
+			<p class = "title">Modify Component Attribute</p>
+
+			<div class = "ae-input" id = "ae-details">
+				<p id = "detail-desc"> 
+					these r the deets 
+				</p>
+			</div>
+
+			<div class = "ae-input" id = "ae-delay">		
+				<span class = "ae-desc">Delay</span>
+				<input id = "ae-delay-text" class = "ae-textbox" type = "text" name = "delay" value = "">
+			</div>
+
+			<div class = "ae-input" id = "ae-print">
+				<span class = "ae-desc">Message</span>
+				<input id = "ae-message-text" class = "ae-textbox" type = "text" name = "print" value = "">		
+			</div>
+
+			<div class = "ae-input" id = "ae-label">
+				<span class = "ae-desc">Label</span> 
+				<input id = "ae-label-text" class = "ae-textbox" type = "text" name = "label" value = "">
+			</div>
+
+			<div class = "button-container">	
+				<div class = "ae-button" id = "rotate"></div>
+				<div class = "ae-button" id = "delete"></div>
+				<div class = "ae-button" id = "save"></div>
+			</div>
+	</div>
+
 	<script src = "script/canvas.js"></script>
+	<script src = "script/attribute-editor.js"></script>
 	<script src = "script/selection.js"></script>
 
 </body>

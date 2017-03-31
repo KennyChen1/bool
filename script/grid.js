@@ -21,17 +21,71 @@ $(document).ready(function(){
 
 });
 
-function canComponentBePlaced(toPlace){
+function moveComponentRelatively(fromX, fromY, amountX, amountY){
+  return moveComponent(fromX, fromY, fromX + amountX, fromY + amountY);
+}
 
+function moveComponent(fromX, fromY, toX, toY){
+  var curr = deleteComponent(fromX, fromY);
+
+  if(curr == null){
+    return false;
+  }
+
+  curr.x = toX;
+  curr.y = toY;
+
+  if(canComponentBePlaced(curr)){
+    grid.push(curr);
+    return true;
+  }
+  else{
+    console.log("cannot be placed");
+    curr.x = fromX;
+    curr.y = fromY; 
+    grid.push(curr);
+    return false;
+  }
+}
+
+function deleteComponent(x,y){
+  for(var i=0;i<grid.length;i++){
+    var curr = grid[i];
+    if(curr.x == x && curr.y == y){
+      return grid.splice(i,1)[0];
+    }
+  }
+
+  return null;
+}
+
+function canComponentBeRotated(toRotate){
+  for(var i=0;i<grid.length;i++){
+    if(toRotate.x == grid[i].x && toRotate.y == grid[i].y){
+      var gotten = grid.splice(i,1)[0];
+      var tdir = gotten.direction;
+      gotten.rotate();
+      console.log(gotten);
+      var ret = canComponentBePlaced(gotten);
+
+      console.log(gotten);
+
+      console.log(ret);
+
+      gotten.direction = tdir;
+      grid.push(gotten);
+
+      return ret;
+    }
+  }
+}
+
+
+
+function canComponentBePlaced(toPlace){
   for(var w=0;w<toPlace.locations().length;w++){
     var x = (toPlace.locations()[w]).x;
     var y = (toPlace.locations()[w]).y;
-
-    console.log(toPlace);
-    console.log(x);
-    console.log(y);
-    console.log(toPlace.locations());
-    console.log(y);
 
 
     for(var i=0;i<grid.length;i++){
@@ -42,13 +96,31 @@ function canComponentBePlaced(toPlace){
       for(var j=0;j<locations.length;j++){
         var cl = locations[j];
         if(x == cl.x && y == cl.y){
-          return true;
+          return false;
         }
       }
     }
   } 
 
-  return false;
+  return true;
+}
+
+function getAtGrid(x,y){
+  for(var i=0;i<grid.length;i++){
+    var curr = grid[i];
+    var cl = curr.locations();
+
+    console.log(cl);
+
+    for(var j=0;j<cl.length;j++){
+      console.log(j)
+      if(cl[j].x == x && cl[j].y == y){
+        return curr;
+      }
+    }
+  }
+
+  return null;
 }
 
 function getComponentByType(comp,x,y){

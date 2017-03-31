@@ -24,6 +24,28 @@ var DOWN = 2;
 var LEFT = 3;
 var RIGHT = 4;
 
+function directionToString(direction){
+	switch(direction){
+		case UP:
+			return "UP";
+			break;
+		case LEFT:
+			return "LEFT";
+			break;
+		case RIGHT:
+			return "RIGHT";
+			break;
+		case DOWN:
+			return "DOWN";
+			break;
+
+		default:
+			console.log("none direction! FUNCTION: directionToString(direction)");
+			return "???";
+			break;
+	}
+}
+
 function component(
 		type, 
 		label, 
@@ -50,6 +72,7 @@ function component(
 	this.height = height;
 	this.x = x;
 	this.y = y;
+	this.active = false;
 
 	this.print = function print(){
 		console.log("type: "+type);
@@ -60,6 +83,24 @@ function component(
 		console.log("delay: "+delay);
 		console.log("size, (w,h): ("+width+" ,"+height+")");
 		console.log("location (x,y): "+x+" ,"+y+")");
+	}
+
+	this.rotate = function rotate(){
+		if(this.direction == UP){
+			this.direction = RIGHT;
+		}
+		else if(this.direction == RIGHT){
+			this.direction = DOWN;
+		}
+		else if(this.direction == DOWN){
+			this.direction = LEFT;
+		}
+		else if(this.direction == LEFT){
+			this.direction = UP;
+		}
+		else{
+			console.log("Error, invalid direction. FUNCTION component.rotate()");
+		}
 	}
 
 	//gets all locations where component is located
@@ -74,7 +115,7 @@ function component(
 		var ol;
 
 		if(this.width > 1 || this.height > 1){
-			if(direction == UP || direction == DOWN){
+			if(this.direction == UP || this.direction == DOWN){
 				ol = {
 					x: this.x + 1,
 					y: this.y
@@ -91,8 +132,24 @@ function component(
 		}
 
 		return ret;
-
 	}
+
+	this.input = [];		// inputs received from previous gate | either 1 or 2 inputs | defaults to 0
+	this.input.push(0);		// input[0] recieves the output of the gate that connects to locations()[0]
+	this.input.push(0);		// input[1] recieves the output of the gate that connects to locations()[1]
+
+	this.reset = function reset(){ //resets component for reevaluation
+		for(var h=0;h<input.length;h++){
+			input[h] = 0;
+		}
+
+		this.active = false;
+	}
+
+	// requires initialization in constructor functions below!
+	this.logic; 	// logic for generating a '1' for output
+	this.output; 	// generates output based on inputs
+	this.use;		// waits delay (if any) then does use case if logic returns true.
 }
 
 function and_gate(label, x, y){

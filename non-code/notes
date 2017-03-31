@@ -1,9 +1,58 @@
 Things to do for UI
 	Camera - fin
 	Drag components to grid - fin
+	Check if there is already an object on grid(if there is, cannot place object in same spot) - fin
+	Highlight - fin
+
 	Drag on grid 
-	Highlight
-	Tooltip
-	Single rotation
-	Delete
-	Check if there is already an object on grid(if there is, cannot place object in same spot)
+	Tooltip - fin
+	Single rotation - fin
+	Delete - fin
+	Console and console menus(debug menu, truth table, boolean equation)
+
+	initialize all component functions that require initialization (output,) 
+
+
+Circuit Compiler/Evaluator
+	-> Scan for any signal generatoring blocks (NOT and ON-box)
+		-> if none, don't evaluate
+
+
+		-> else
+			-> place all grid items onto an array of appropriate size
+				-> seperate each island of circuits (circuits that are connected)
+				-> look again at each island of circuits, scan for any signal generatoring blocks(NOT and ON-box)
+					-> don't evaluate any without signal generatoring blocks
+
+	-> if any piece of circuit is on camera and has circuit generating blocks then evaluate.
+
+	DON'T EVALUATE if
+	-> No signal generatoring blocks in entire grid
+
+	-> specific island of circuits has no signal generating blocks
+	-> if an island of circuits is completely offscreen but has circuit generating blocks
+
+
+	EVALUATE
+		-> find any circuit and backtrack to the beginning (by going opposite the direction the circuit is facing)
+			-> keep track of all the locations you have been to.
+			-> once you reach the beginning (where on any of the 4 sides, you have either visited, there is nothing, or gate logic does not match(double output, double input)).
+				-> record location of beginning into beginningNode array.
+				-> look for any circuit on the island of circuits which you have not visited and find the beginning again.
+
+		-> now we have records all the locations of the beginning nodes -- should only be a gate or box (CANNOT be a wire/passthrough!!!)
+
+		-> build evaluation tree starting from the beginning node, by following directions of each component.
+
+
+	OPEN ISSUES
+		-> if someone makes a clock(circuit with delay that connects to itself) we will run into problems, 
+			-> cannot determine the beginning node
+			-> if we choose one at random might not follow intended order of use.
+
+			-> maybe we could set a origin bias (the one closer to 0,0 always runs first).
+
+	GENERAL
+		-> On finish compilation, push to console "compilation finished, starting evaluation".
+		-> On finish evaluation, push to console  "evaluation completed, circuit should display correct results".
+

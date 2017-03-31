@@ -129,7 +129,37 @@ function drawBoard(){
 }
 
 function drawOnCanvas(x, y, image, direction){
-  context.drawImage(image, x, y);
+  //context.drawImage(image, x, y);
+  context.save();
+
+  context.translate(x, y);
+  
+  context.rotate(directionToRadian(direction));
+  // draw it up and to the left by half the width
+  // and height of the image 
+  //context.drawImage(image, x, y);
+  switch(direction){
+    case UP:
+      context.drawImage(image, 0, 0);
+      break;
+    case RIGHT:
+      context.drawImage(image, 0, -image.height);
+      break;
+    case DOWN:
+      context.drawImage(image, -image.width, -image.height);
+      break;
+    case LEFT:
+      context.drawImage(image, -image.width, 0);
+      break;
+    default:
+      console.log("Error no direction, cannot draw FUNCTION: drawOnCanvas(x,y,image,direction)");
+
+  }
+
+  // and restore the co-ords to how they were when we began
+  context.restore(); 
+
+
 }
 
 function directionToRadian(direction){
@@ -255,7 +285,7 @@ function calculateGridXY(x,y){
     console.log(toPlace);
     console.log(toPlace.locations());
 
-    if(!canComponentBePlaced(toPlace)){
+    if(canComponentBePlaced(toPlace)){
       console.log(grid);
       addToGrid(toPlace);
       updateGridInterface();
