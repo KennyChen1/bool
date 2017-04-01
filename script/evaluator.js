@@ -49,36 +49,50 @@ function findAllIslands(grid){
 
 
     	// if widith is 1 or 2 not checked
-    	if(centerComp.direction == 1 ||centerComp.direction == 2){
-    		// right side up or upside down
-
-    		/*
-    		console.log("x: " + (centerCompLoc[0].x-1) + " " + (centerCompLoc[1].x+1))	// debugging
-    		console.log("y: " + (centerCompLoc[0].y-1) + " " + (centerCompLoc[0].y+1))	// prints the adjacent bounds
-    		*/
+    	// doesn't work with 1 x 1 and rotated 1 x 2s
+    	// so only works in default oritentation or upside down
+    	if(centerComp.direction == 1 ||centerComp.direction == 2){   			// right side up or upside down   		
 
 
-    		for(j = centerCompLoc[0].x-1; j <= centerCompLoc[1].x+1; j++){
-    			for(k = centerCompLoc[0].y-1; k <= centerCompLoc[0].y+1; k++){
-    				if(!(centerCompLoc[0].x == j && centerCompLoc[0].y == k) && !(centerCompLoc[1].x == j && centerCompLoc[1].y == k)){ // is not the center
-    					if(getAtGrid(j, k))	{ // something is found
+    		for(j = centerCompLoc[0].x-1; j <= centerCompLoc[1].x+1; j++){		// x direction to check
+    			for(k = centerCompLoc[0].y-1; k <= centerCompLoc[0].y+1; k++){	// y direction to check
+
+    				// is not the center piece to check from
+    				if(!(centerCompLoc[0].x == j && centerCompLoc[0].y == k) && !(centerCompLoc[1].x == j && centerCompLoc[1].y == k)){ 
+    					if(getAtGrid(j, k))	{ 		// something is found
     						
-    						seenbool = false;
+    						seenbool = false;		// variable/boolean to check if the found piece is not already been seen/added
+
     						// should check if this isn't comp isn't visted yet
     						for(i = 0; i < seen.length; i++){
-    							if(seen[i] === getAtGrid(j, k)){
-									
+    							if(seen[i] === getAtGrid(j, k)){									
 									seenbool = true;
 									break;
     							}
     						}
-    						// should be that when nothing in seen has been found, it is not part of an island
-    						if(seenbool == false){    							
-	    						island[0].push(getAtGrid(j, k));
-	    						seen.push(getAtGrid(j, k))	
-    						}
-    					}		
+
+    						// should be that when nothing in seen has been found, it is not part of any island
+    						if(seenbool == false){
+    							found = false		// boolean/variable to keep track if the center has been found yet in the island
+
+    							// this foor loop is used to determine which island to add too
+    							for(v = 0; v < island.length; v++){			// get the length of how many island
+    								for(w = 0; w < island[v].length; w++){	// get the length of how many components per island
+										if(centerComp === island[v][w]){
+											island[v].push(getAtGrid(j, k));
+											found = true
+											break;
+										}
+									}
+								}
+    								
+							 	if(found == false)
+							 		island.push([getAtGrid(j, k)])			// appends a new island to the list of island							 	
+	    						seen.push(getAtGrid(j, k))					// adds to the seen list to not double add
+							}	// end of seen bool == false
+						}	// end of if(getAtGrid(j, k))
     				} else{
+    					// does condition when there is nothing at this coordinate
     					//console.log(j + " " + k) // the center component
     				}
     				
