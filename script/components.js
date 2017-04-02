@@ -221,7 +221,7 @@ function pushInput(component, pushComponent, pushLocationX, pushLocationY){
 		var pushComponentLoc = pushComponent.locations();
 		for(var i=0;i<pushComponentLoc.length;i++){
 			if(pushLocationX === pushComponentLoc[i].x && pushLocationY === pushComponentLoc[i].y){
-				pushComponent.setInput(component.logic(), i);
+				pushComponent.setInput(component, i);
 			}
 		}
 	}
@@ -322,6 +322,7 @@ function component(
 	this.input = [];			// inputs received from previous gate | either 1 or 2 inputs | defaults to 0
 	this.input.push(false);		// input[0] recieves the output of the gate that connects to locations()[0]
 	this.input.push(false);		// input[1] recieves the output of the gate that connects to locations()[1]
+	this.input.push(false);		// input[2] recieves output from third
 
 	this.reset = function reset(){ //resets component for reevaluation
 		for(var h=0;h<input.length;h++){
@@ -336,8 +337,8 @@ function component(
 	this.output; 	// push output(whatever is generated in logic()) to adjacent logic gate if directions align.
 	this.use;		// waits delay then use case if logic returns true.
 
-	this.setInput = function setInput(value, index){
-		this.input[index] = value;
+	this.setInput = function setInput(otherComponent, index){
+		this.input[index] = otherComponent.logic();
 		this.active = this.logic();
 		this.output();
 	}

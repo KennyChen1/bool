@@ -12,13 +12,14 @@ var selected = {
 }
 
 $(document).ready(function(){
-  var theOtherAnd = getComponentByType(OR_GATE_COMPONENT, 9, 10);
+  var theOtherAnd = getComponentByType(AND_GATE_COMPONENT, 9, 10);
   var theOr = getComponentByType(NOT_GATE_COMPONENT,10,7);
   var theOtherNot = getComponentByType(NOT_GATE_COMPONENT,9,7);
   var awire = getComponentByType(NOT_GATE_COMPONENT, 9,8);
   var bwire = getComponentByType(NOT_GATE_COMPONENT, 10,8); 
   var cwire = getComponentByType(NOT_GATE_COMPONENT, 9,9); 
   var dwire = getComponentByType(NOT_GATE_COMPONENT, 10,11); 
+  var ewire = getComponentByType(NOT_GATE_COMPONENT, 10, 9);
   addToGrid(theOr);
   addToGrid(theOtherAnd);
   addToGrid(theOtherNot);
@@ -26,12 +27,14 @@ $(document).ready(function(){
   addToGrid(bwire);
   addToGrid(cwire);
   addToGrid(dwire);
+  addToGrid(ewire);
   theOr.direction = DOWN;
-  theOtherNot.direction = DOWN;
+  theOtherNot.direction = UP;
   theOtherAnd.direction = DOWN;
   awire.direction = DOWN;
   cwire.direction = DOWN;
   dwire.direction = DOWN;
+  ewire.direction = DOWN;
   console.log(theOr);
   var siggen = findAllSignalGenerating(grid);
   console.log(siggen);
