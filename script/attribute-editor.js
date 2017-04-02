@@ -69,14 +69,14 @@ function saveAttributes(){
 	var tmessage = $(".attribute-editor #ae-message-text").val();
 	var tlabel = $(".attribute-editor #ae-label-text").val();
 
-	if(tdelay != null && tdelay === parseInt(tdelay,10)){
+	if(tdelay != null){
 		currentGridComponent.delay = parseInt(tdelay,10);
 	}
 	if(tmessage != null){
 		currentGridComponent.message = tmessage;
 	}
 	if(tlabel != null){
-		currentGridComponent.tlabel = tlabel;
+		currentGridComponent.label = tlabel;
 	}
 }
 

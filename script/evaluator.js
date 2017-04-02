@@ -26,7 +26,7 @@ function hasSignalGeneratoringComponent(list){
     return false;
 }
 
-function isFindAllSignalGenerating(island){
+function findAllSignalGenerating(island){
 	var signalGenerating = [];
 	
 	for(var i=0;i<island.length;i++){
