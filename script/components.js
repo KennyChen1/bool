@@ -35,7 +35,7 @@ function directionToString(direction){
 		case RIGHT:
 			return "RIGHT";
 			break;
-		case DOWN:
+		case DOWN: 
 			return "DOWN";
 			break;
 
@@ -44,6 +44,42 @@ function directionToString(direction){
 			return "???";
 			break;
 	}
+}
+
+function isSignalGenerating(component){
+	return 
+		component.type === NOT_GATE_COMPONENT ||
+		component.type === ON_BOX_COMPONENT;		
+}
+
+function pushOutput2by1(component){
+	var cl = component.locations();
+
+	var outputLocation; //location where the output comes out of
+	var pushLocationX;  //x location of where the output goes
+	var pushLocationY;	//y location of where the output goes
+
+	var pushComponent;  //gotten grid component of where the pushcomponent is.
+
+	if(component.direction === UP || component.direction === LEFT){
+		outputLocation = cl[0];
+		if(component.direction === UP){	
+			pushLocationX = outputLocation.x;
+			pushLocationY =	outputLocation.y - 1;
+			
+		}
+		else{
+
+		}
+	}
+	else{ //down or right
+		outputLocation = cl[1];
+	}
+
+}
+
+function pushOutput1by1(component){
+
 }
 
 function component(
@@ -166,6 +202,10 @@ function and_gate(label, x, y){
 		y,					//y
 		null				//print message
 	);
+
+	temp.logic = function(){
+		return temp.input[0] && temp.input[1];
+	}
 
 	return temp;
 }

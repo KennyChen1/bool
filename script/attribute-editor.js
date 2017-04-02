@@ -5,10 +5,10 @@ var currentGridComponent;
 
 function openAttributeEditor(x,y, screenX, screenY){
 	var curr = getAtGrid(x,y);
-	console.log(curr);
+	//console.log(curr);
 
 	if(curr != null){
-		console.log("openedattributeeditor");
+		//console.log("openedattributeeditor");
 		var details = curr.type+" @ ("+curr.x+","+curr.y+") | direction: "+directionToString(curr.direction);
 		var delay = ""+curr.delay;
 		var message = "";

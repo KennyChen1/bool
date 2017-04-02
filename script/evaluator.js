@@ -18,12 +18,24 @@ function evaluate(){
 function hasSignalGeneratoringComponent(list){
 
     for (var i = 0; i < list.length; i++){
-        if (list[i].type == NOT_GATE_COMPONENT || list[i].type == ON_BOX_COMPONENT){
+        if (isSignalGenerating(list[i])){
             return true;
         }
     }
 
     return false;
+}
+
+function isFindAllSignalGenerating(island){
+	var signalGenerating = [];
+	
+	for(var i=0;i<island.length;i++){
+		if(isSignalGenerating(island[i])){
+			signalGenerating.push(island[i]);
+		}
+	}
+
+	return signalGenerating;
 }
 
 /* checks if the location was visited before 
@@ -103,10 +115,6 @@ function findAllIslands(grid){
     		console.log("y: " + (centerComp[0].y-1) + " " + (centerComp[1].y+1))
 
     	}	
-
-
-    	
-        
     }
 }
 
