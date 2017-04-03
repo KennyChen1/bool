@@ -577,7 +577,7 @@ function i_wire(label, x, y){
 	}
 
 	temp.output = function(){
-		//todo
+		pushOutput1by1Straight(temp);
 	}
 
 	return temp;
