@@ -5,10 +5,10 @@ var currentGridComponent;
 
 function openAttributeEditor(x,y, screenX, screenY){
 	var curr = getAtGrid(x,y);
-	console.log(curr);
+	//console.log(curr);
 
 	if(curr != null){
-		console.log("openedattributeeditor");
+		//console.log("openedattributeeditor");
 		var details = curr.type+" @ ("+curr.x+","+curr.y+") | direction: "+directionToString(curr.direction);
 		var delay = ""+curr.delay;
 		var message = "";
@@ -69,14 +69,14 @@ function saveAttributes(){
 	var tmessage = $(".attribute-editor #ae-message-text").val();
 	var tlabel = $(".attribute-editor #ae-label-text").val();
 
-	if(tdelay != null && tdelay === parseInt(tdelay,10)){
+	if(tdelay != null){
 		currentGridComponent.delay = parseInt(tdelay,10);
 	}
 	if(tmessage != null){
 		currentGridComponent.message = tmessage;
 	}
 	if(tlabel != null){
-		currentGridComponent.tlabel = tlabel;
+		currentGridComponent.label = tlabel;
 	}
 }
 
