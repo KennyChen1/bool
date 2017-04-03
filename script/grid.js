@@ -1,8 +1,3 @@
-var grid = []; //all components on grid
-
-var p = 0; //padding
-
-var box = 50 //size of each grid box = 50x50
 
 var selected = {
   begin: {
@@ -16,9 +11,82 @@ var selected = {
   }
 }
 
-
 $(document).ready(function(){
+  var theOtherAnd = getComponentByType(AND_GATE_COMPONENT, 9, 10);
+  var theOr = getComponentByType(NOT_GATE_COMPONENT,10,7);
+  var theOtherNot = getComponentByType(NOT_GATE_COMPONENT,9,6);
+  var awire = getComponentByType(I_WIRE_COMPONENT, 9,8);
+  var bwire = getComponentByType(I_WIRE_COMPONENT, 10,8); 
+  var cwire = getComponentByType(NOT_GATE_COMPONENT, 9,9); 
+  var dwire = getComponentByType(NOT_GATE_COMPONENT, 10,11); 
+  var ewire = getComponentByType(NOT_GATE_COMPONENT, 10, 9);
+  var fwire = getComponentByType(NOT_GATE_COMPONENT, 9, 5);
+  var gwire = getComponentByType(I_WIRE_COMPONENT, 9, 7);
+  addToGrid(theOr);
+  addToGrid(theOtherAnd);
+  addToGrid(theOtherNot);
+  addToGrid(awire);
+  addToGrid(bwire);
+  addToGrid(cwire);
+  addToGrid(dwire);
+  addToGrid(ewire);
+  addToGrid(fwire);
+  addToGrid(gwire);
+  theOr.direction = DOWN;
+  theOtherNot.direction = UP;
+  theOtherAnd.direction = DOWN;
+  awire.direction = DOWN;
+  bwire.direction = DOWN;
+  cwire.direction = DOWN;
+  dwire.direction = DOWN;
+  ewire.direction = DOWN;
+  fwire.direction = DOWN;
+  console.log(theOr);
+  var siggen = findAllSignalGenerating(grid);
+  console.log(siggen);
+  for(var i=0;i<siggen.length;i++){
+    siggen[i].output();
+    
+  }
+  console.log(grid);
 
+/*
+  theAnd = getComponentByType(XOR_GATE_COMPONENT, 0, 5);
+  theOr = getComponentByType(NOT_GATE_COMPONENT,1,5);
+  addToGrid(theAnd);
+  addToGrid(theOr);
+  theOr.direction = RIGHT;
+  theAnd.direction = RIGHT;
+  theAnd.input[0] = true;
+  theAnd.input[1] = true;
+  console.log(theOr);
+  theAnd.output();
+  console.log(theOr);
+
+  theAnd = getComponentByType(XOR_GATE_COMPONENT, 4, 5);
+  theOr = getComponentByType(NOT_GATE_COMPONENT,3,6);
+  addToGrid(theAnd);
+  addToGrid(theOr);
+  theOr.direction = LEFT;
+  theAnd.direction = LEFT;
+  theAnd.input[0] = false;
+  theAnd.input[1] = false;
+  console.log(theOr);
+  theAnd.output();
+  console.log(theOr);
+
+  theAnd = getComponentByType(AND_GATE_COMPONENT, 0, 10);
+  theOr = getComponentByType(NOT_GATE_COMPONENT,1,11);
+  addToGrid(theAnd);
+  addToGrid(theOr);
+  theOr.direction = DOWN;
+  theAnd.direction = DOWN;
+  theAnd.input[0] = true;
+  theAnd.input[1] = false;
+  console.log(theOr);
+  theAnd.output();
+  console.log(theOr);
+*/
 });
 
 function moveComponentRelatively(fromX, fromY, amountX, amountY){

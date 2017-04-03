@@ -1,5 +1,8 @@
 // JS file for rendering Grid interface
 
+var p = 0; //padding
+var box = 50 //size of each grid box = 50x50
+
 //Canvas attributes
 var gridWindow; //grid containing canvas
 var canvas = document.getElementById("grid-render");; //canvas
@@ -26,7 +29,19 @@ drawBoard();
 
 
 function withinCameraView(x,y){
-  return x >= camera.begin.x && x <= camera.end.x && y >= camera.begin.y && y <= camera.end.y;
+  var curr = getAtGrid(x,y);
+  var cl = curr.locations();
+
+  for(var i=0;i<cl.length;i++){
+    var x = cl[i].x;
+    var y = cl[i].y;
+
+    if(x >= camera.begin.x && x <= camera.end.x && y >= camera.begin.y && y <= camera.end.y){
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function getCameraLocation(x,y){
@@ -215,7 +230,7 @@ function drawComponents(){
     var curr = grid[i];
 
     if(withinCameraView(curr.x, curr.y)){
-      var imgDraw = getImageByComponentType(curr.type);
+      var imgDraw = getImageByComponentType(curr);
       drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction);
     }
   }
@@ -264,7 +279,8 @@ function calculateGridXY(x,y){
   for(i = 0; i < doms.length; i++){
     doms[i].addEventListener('dragstart',function(e){
       dragSrcEl = this;
-      e.dataTransfer.setDragImage(getImageByComponentType(this.id),0,0);
+      var compType = getComponentByType(this.id);
+      e.dataTransfer.setDragImage(getImageByComponentType(compType), box/2, box/2);
     });
   }
 
