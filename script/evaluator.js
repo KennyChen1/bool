@@ -4,14 +4,24 @@ beginnings = []; // beginning of all circuits
 
 islands = []; //list contain island of circuits(list of circuits)
 
-// makes grid into a runnable tree
-function compile(){
+//evaluates the runnable tree
+function evaluate(){
+	killCircuitEvaluation();
+	resetComponents();
+	var siggen = findAllSignalGenerating(grid);
+	allowCircuitEvaluation();
+  	console.log(siggen);
+  	for(var i=0;i<siggen.length;i++){
+    	siggen[i].output();
+  	}
 
 }
 
-//evaluates the runnable tree
-function evaluate(){
-
+/* resets all components to original values */
+function resetComponents(){
+	for(var i=0;i<grid.length;i++){
+		grid[i].reset();
+	}
 }
 
 /* sees if a grid or island(or any list) has a circuit generating component*/
