@@ -87,3 +87,10 @@ $("#grid-render").mouseout(function(e){
 	resetSelected();
 	updateGridInterface();
 });
+
+$("#grid-render").keypress(function(e){
+	console.log(e.which);
+	if(e.which == 'r'){
+
+	}
+});
