@@ -452,6 +452,9 @@ function component(
 		if(!stopCircuitEvaluation){
 			this.input[index] = otherComponent.logic();
 			this.active = this.logic();
+			if(this.use != null){
+				this.use();
+			}
 			updateGridInterface();
 			var component = this;
 			if(this.delay > 0){
@@ -839,6 +842,12 @@ function print_box(label, x, y, message){
 
 	temp.output = function(){
 		pushOutputWires(temp);
+	}
+
+	temp.use = function(){
+		if(temp.message != null && this.logic() == true){
+			consoleDisplayString(this.message);
+		}
 	}
 
 	return temp;
