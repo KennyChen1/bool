@@ -428,6 +428,8 @@ function component(
 	this.input.push(false);		// input[1] recieves the output of the gate that connects to locations()[1]
 	this.input.push(false);		// input[2] recieves output from third
 
+	this.prevOutput; //previous output
+
 	this.reset = function reset(){ //resets component for reevaluation
 		for(var h=0;h<this.input.length;h++){
 			this.input[h] = false;
@@ -441,6 +443,8 @@ function component(
 		else{
 			this.active = false;
 		}
+
+		this.prevOutput = null;
 	}
 
 	// requires initialization in constructor functions below!
@@ -456,14 +460,18 @@ function component(
 				this.use();
 			}
 			updateGridInterface();
-			var component = this;
-			if(this.delay > 0){
-				setTimeout(function(){
+
+			if(this.prevOutput != this.logic()){
+				this.prevOutput = this.logic();
+				var component = this;
+				if(this.delay > 0){
+					setTimeout(function(){
+						component.output();
+					},this.delay);
+				}
+				else{
 					component.output();
-				},this.delay);
-			}
-			else{
-				component.output();
+				}
 			}
 		}
 	}
@@ -603,8 +611,6 @@ function not_gate(label, x, y){
 		y,					//y
 		null				//print message
 	);
-
-	temp.active = true;
 
 	temp.inputDirection = function(){
 		var arr = [];
