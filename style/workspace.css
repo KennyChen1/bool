@@ -1,6 +1,7 @@
 html{ 
 	width: calc(100% - 20px);
 	height: calc(100% - 20px);
+	overflow: hidden;
 }
 
 body{

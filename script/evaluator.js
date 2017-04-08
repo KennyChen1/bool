@@ -41,7 +41,16 @@ function findAllSignalGenerating(island){
 	
 	for(var i=0;i<island.length;i++){
 		if(isSignalGenerating(island[i])){
-			signalGenerating.push(island[i]);
+			// if(island[i].type === NOT_GATE_COMPONENT){
+			// 	var adj = getAdjacentLocationByDirection(island[i], island[i].inputDirection()[0]);
+			// 	var adjComp = getAtGrid(adj.x, adj.y);
+			// 	if(adjComp == null){
+			// 		signalGenerating.push(island[i]);
+			// 	}
+			// }
+			// else{
+				signalGenerating.push(island[i]);
+			//}
 		}
 	}
 
