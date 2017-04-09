@@ -94,7 +94,7 @@
 
 			<div class = "console-top">
 
-				<div class = "console-trigger" id = "debug-trigger">
+				<div class = "console-trigger on" id = "debug-trigger">
 					<span class = "console-label">Debug</span>
 				</div>
 
@@ -111,12 +111,33 @@
 					<input id = "name-input" class = "name-input-textbox" type = "text" name = "circuit-name" value = "">
 				</div>
 
+				<div id = "clear-console">Clear Debug</div>
+
 			</div>
 
-			<div class = "console-bottom" id = "debug">
+			<div class = "console-bottom show" id = "debug">
 				<p class = "debug-msg"> Welcome to <i>bool</i>! The Online Circuit Builder</p>
+				<div id = "debug-printed">
+
+				</div>
 			</div>
 			
+			<div class = "console-bottom" id = "truth-table">
+				<div class = "build-circuit">
+					<div class = "bool-button">asdasda</div>
+					<div class = "bool-button">asdasads</div>
+				</div>
+				<div id = "table"></div>
+				<div id = "table-buttons"></div>
+			</div>
+
+			<div class = "console-bottom" id = "boolean">
+				<div class = "build-circuit">
+					<div class = "bool-button">asdasda</div>
+					<div class = "bool-button">asdasads</div>
+				</div>
+				<div id = "textbox"></div>
+			</div>
 
 		</div>
 
