@@ -264,9 +264,23 @@ Interface
 				-> Share Option
 				-> Clone as owner(if not you Circuit) - copies Circuit file and puts into your account
 
-	Quizlets
-		Uses same page as workspace with an objective in the console
-			->
+	Quizlets Maker Page
+		> Quizlets will just be normal Circuit files but with certain constraints place on them
+			- Once made through the Maker Page, it will appear as a normal Circuit in your Profile
+			- You can edit the Quizlet, but you cannot add Quizlet constraints to any normally made Circuit(through the Workspace).
+		> Students can clone their professor's Circuit file and try to solve it.
+
+		Layout of Maker Page
+			-> Problem - the objective of this quizlet
+			-> Circuit constraints - any constraints put on the problem solver
+				- Limit amount of circuit components
+				- etc, more to be added
+			-> Correct Answer - can be inputted as
+				- Boolean equation
+				- Circuit (made through Workspace)
+					- Choose Circuit file locally
+					- Choose Circuit from Profile
+			-> Tags
 
 Actors
 	Admins

@@ -1,0 +1,60 @@
+Phase 2
+
+Front-end
+	Workspace
+		Component Manipulation
+			-> Save locally
+			-> Load locally
+			-> Mass Rotation - rotate everything within a selection
+				-> rotate each item individually
+				-> rotate everything relative to the origin of the selection
+			-> Mass deletion - delete everything within a selection
+			-> Mass movement - move everything within a selection
+			-> Components on drag have a transparent image drawn on the cursor
+			-> Undo, Redo, Cut, Copy, Paste
+
+		Layout
+			-> Truth table tab layout
+			-> Boolean equations tab layout
+
+			-> Make another div(similar to Attribute Editor that is for submission)
+
+		Evaluator
+			-> Add 
+				- button(sends a short signal)
+				- switch(sends a constant signal)
+				- crossing (+ shape, allows signal to travel over another signal)
+			-> Evaluation
+				currently -> looks for every signal generating circuit and propagates on them. (depth first traversal on every SGC)
+				changes ->  either breadth first traversal on every SGC or tick based evaluation
+
+	Profile Page
+		Layout - as Wireframe suggests
+
+		Categories - each category displays different things
+			> All Circuits - shows all circuits specified by the categories below
+			> Profile - shows all circuits with the owner as your Google Account
+			> Shared with me - shows all circuits with your Google Account as one of the shared accounts
+			> Public - shows all circuits with the #public tag
+
+
+Back-end
+	Submit - uses the same functions as "load locally" to create a string to send to datastore
+	Login/Logout
+		- if logged in - prompts Authentication Page
+		- if logged out - brings to Splash Screen
+	Exit
+		- if logged in - brings to Profile Page
+		- if logged out - brings to Splash Screen 
+
+
+Datastore
+	Storage Format
+		Circuit
+			- Owner - owner of the circuit
+			- Shared - who can view/clone the circuit
+			- Circuit-content - String which stores the contents of the circuit
+			- Quizlet-constrains - any constraints which the creator has put on this circuit
+			- Tags - any tag that has been given to the circuit(helpful for searching)
+ 
+
