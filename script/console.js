@@ -14,9 +14,9 @@ function hideOthersAndShowSelected(others, selected){
 }
 
 $(document).ready(function(){
-	$(".console .console-trigger").disableSelection();
+	//$(".console .console-trigger").disableSelection();
 
-	$(".console #clear-console").disableSelection();
+	//$(".console #clear-console").disableSelection();
 
 	$(".console #clear-console").mousedown(function(e){
 		$(".console #debug-printed .debug-msg").remove();
