@@ -11,7 +11,13 @@ Front-end
 			-> Mass deletion - delete everything within a selection
 			-> Mass movement - move everything within a selection
 			-> Components on drag have a transparent image drawn on the cursor
-			-> Undo, Redo, Cut, Copy, Paste
+			-> Clipboard
+				- Undo
+				- Redo
+				- Cut
+				- Copy
+				- Paste
+			-> Improvmenets to selection from (10,10) to (0,0).
 
 		Layout
 			-> Truth table tab layout
@@ -53,6 +59,7 @@ Datastore
 		Circuit
 			- Owner - owner of the circuit
 			- Shared - who can view/clone the circuit
+			- Name - name of the Circuit file
 			- Circuit-content - String which stores the contents of the circuit
 			- Quizlet-constrains - any constraints which the creator has put on this circuit
 			- Tags - any tag that has been given to the circuit(helpful for searching)

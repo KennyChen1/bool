@@ -84,8 +84,8 @@ $("#grid-render").mouseup(function(e){
 });
 
 $("#grid-render").mouseout(function(e){
-	resetSelected();
-	updateGridInterface();
+	//resetSelected();
+	//updateGridInterface();
 });
 
 $("#grid-render").keypress(function(e){

@@ -1,0 +1,46 @@
+.console .console-top{
+    padding: 10px;
+    height: 10%;
+    background-color: black;
+}
+
+/*make mouse-event, when you click one of the triggers hide the other 2*/
+.console .console-trigger{
+    margin: 5px;
+    height: 100%;
+    background-color: white;
+    float: left;
+    top: -5px;
+
+}
+
+.console .console-label{
+    padding: 3px;
+}
+
+.console .name-container{
+    float: right;
+    color: white;
+}
+
+
+.console .debug-msg{
+    padding: 0 20px;
+}
+
+
+
+.console .console-bottom{
+    width: 100%;
+    height: 82%;
+    float: left;
+}
+
+
+.console #debug{
+    overflow: auto;
+}
+
+
+
+
