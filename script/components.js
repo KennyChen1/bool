@@ -24,8 +24,6 @@ var DOWN = 2;
 var LEFT = 3;
 var RIGHT = 4;
 
-var grid = []; //all components on grid
-
 var stopCircuitEvaluation = false;
 
 function killCircuitEvaluation(){ //kills the circuit evaluation (DOES NOT PAUSE EVALUATION)
