@@ -11,7 +11,7 @@ var selected = {
   }
 }
 
-$(document).ready(function(){
+$(document).ready(function(){/*
   var theOtherAnd = getComponentByType(AND_GATE_COMPONENT, 9, 10);
   var theOr = getComponentByType(NOT_GATE_COMPONENT,10,7);
   var theOtherNot = getComponentByType(NOT_GATE_COMPONENT,9,6);
@@ -48,7 +48,7 @@ $(document).ready(function(){
     siggen[i].output();
     
   }
-  console.log(grid);
+  console.log(grid);*//*
 
 /*
   theAnd = getComponentByType(XOR_GATE_COMPONENT, 0, 5);
