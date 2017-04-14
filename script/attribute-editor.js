@@ -94,7 +94,7 @@ $(".attribute-editor #delete").mousedown(function(e){
 $(".attribute-editor #rotate").mousedown(function(e){
 	if(canComponentBeRotated(currentGridComponent)){
 		currentGridComponent.rotate();
-		closeAttributeEditor();
+		//closeAttributeEditor();
 		updateGridInterface();
 	}
 });

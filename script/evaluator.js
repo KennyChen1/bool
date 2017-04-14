@@ -4,14 +4,24 @@ beginnings = []; // beginning of all circuits
 
 islands = []; //list contain island of circuits(list of circuits)
 
-// makes grid into a runnable tree
-function compile(){
+//evaluates the runnable tree
+function evaluate(){
+	killCircuitEvaluation();
+	resetComponents();
+	var siggen = findAllSignalGenerating(grid);
+	allowCircuitEvaluation();
+  	console.log(siggen);
+  	for(var i=0;i<siggen.length;i++){
+    	siggen[i].output();
+  	}
 
 }
 
-//evaluates the runnable tree
-function evaluate(){
-
+/* resets all components to original values */
+function resetComponents(){
+	for(var i=0;i<grid.length;i++){
+		grid[i].reset();
+	}
 }
 
 /* sees if a grid or island(or any list) has a circuit generating component*/
@@ -31,7 +41,16 @@ function findAllSignalGenerating(island){
 	
 	for(var i=0;i<island.length;i++){
 		if(isSignalGenerating(island[i])){
-			signalGenerating.push(island[i]);
+			// if(island[i].type === NOT_GATE_COMPONENT){
+			// 	var adj = getAdjacentLocationByDirection(island[i], island[i].inputDirection()[0]);
+			// 	var adjComp = getAtGrid(adj.x, adj.y);
+			// 	if(adjComp == null){
+			// 		signalGenerating.push(island[i]);
+			// 	}
+			// }
+			// else{
+				signalGenerating.push(island[i]);
+			//}
 		}
 	}
 

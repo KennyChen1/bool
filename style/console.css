@@ -1,0 +1,90 @@
+.console .console-top{
+    padding: 10px;
+    height: 10%;
+    border-bottom: 5px solid black;
+    border-width: 90%;
+}
+
+/*make mouse-event, when you click one of the triggers hide the other 2*/
+.console .console-trigger{
+    margin: 0px 5px;
+    padding: 5px 5px;
+    height: 100%;
+    background-color: #A0A0A0;
+    color: white;
+    float: left;
+    border-radius: 5px 5px 0 0;
+}
+
+.console .console-trigger.on{
+    background-color: black;
+}
+
+
+.console .console-label{
+    padding: 3px;
+}
+
+.console .name-container{
+    position: relative;
+    float: right;
+    color: black;
+    padding: 5px 5px;
+    top: -5px;
+    border: 2px solid black;
+    background-color: #A0A0A0;
+}
+
+.console #clear-console{
+    position: relative;
+    float: right;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 5px; 
+    padding: 5px;
+    margin: 0 10px;
+    top: -4px;
+}
+
+.console .debug-msg{
+    padding: 0 20px;
+}
+
+.console .console-bottom{
+    position: absolute;
+    visibility: hidden;
+    width: 100%;
+    height: 80%;
+    float: left;
+}
+
+.console .console-bottom.show{
+    visibility: visible;
+}
+
+.console .console-bottom .build-circuit{
+    width: 20%;
+    margin: 20px;
+}
+
+.console .bool-button{
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 5px; 
+}
+
+.console #debug{
+    overflow: auto;
+}
+
+.console #truth-table{
+
+}
+
+.console #boolean{
+
+}
+
+
+
+

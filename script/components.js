@@ -26,6 +26,16 @@ var RIGHT = 4;
 
 var grid = []; //all components on grid
 
+var stopCircuitEvaluation = false;
+
+function killCircuitEvaluation(){ //kills the circuit evaluation (DOES NOT PAUSE EVALUATION)
+	stopCircuitEvaluation = true;
+}
+
+function allowCircuitEvaluation(){ //allow circuit to be reevaluated
+	stopCircuitEvaluation = false;
+}
+
 function directionToString(direction){
 	switch(direction){
 		case UP:
@@ -122,6 +132,7 @@ function canPushInput(inputArr, outputArr, noMatchOutputArr){
 	for(var i=0;i<inputArr.length;i++){
 		for(var j=0;j<outputArr.length;j++){
 			if(inputDirectionMatchOutputDirection(inputArr[i], outputArr[j])){
+				noMatchOutputArr.push(inputArr[i]);
 				return true;
 			}
 		}
@@ -217,14 +228,101 @@ function pushOutput1by1Straight(component){
 }
 
 function pushInput(component, pushComponent, pushLocationX, pushLocationY){
-	if(pushComponent != null && canPushInput(pushComponent.inputDirection(), component.outputDirection())){
+	var outputDirectionToDelete = []; 
+	//A->B | A is pushing an input to B
+	//B's input direction(where its recieving input) is the B's output direction to delete
+	if(pushComponent != null && canPushInput(pushComponent.inputDirection(), component.outputDirection(), outputDirectionToDelete)){
 		var pushComponentLoc = pushComponent.locations();
 		for(var i=0;i<pushComponentLoc.length;i++){
 			if(pushLocationX === pushComponentLoc[i].x && pushLocationY === pushComponentLoc[i].y){
-				pushComponent.setInput(component, i);
+				pushComponent.outputDirectionsToDelete.push(outputDirectionToDelete[0]);
+				
+				if(isWire(pushComponent)){
+					pushComponent.setInput(component, outputDirectionToDelete[0]-1);
+				}
+				else{
+					pushComponent.setInput(component, i);
+				}
 			}
 		}
 	}
+}
+
+function deleteUnneededOutputs(outputs, outputsToDelete){
+	for(var j=0;j<outputsToDelete.length;j++){
+		var anOutput = outputs.indexOf(outputsToDelete[j])
+		if(anOutput > -1){
+			outputs.splice(anOutput, 1);
+		}
+	}
+}
+
+function getAdjacentLocationByDirection(location, direction){
+	var pushLocationX;
+	var pushLocationY;
+
+	if(direction === UP){//up
+		pushLocationX = location.x;
+		pushLocationY =	location.y - 1;
+	}
+	else if(direction === RIGHT){//right
+		pushLocationX = location.x + 1;
+		pushLocationY =	location.y;
+	}
+	else if(direction === DOWN){//down
+		pushLocationX = location.x;
+		pushLocationY =	location.y + 1;
+	}
+	else if(direction === LEFT){//left
+		pushLocationX = location.x - 1;
+		pushLocationY =	location.y;
+	}
+	else{
+		console.log("Error in getAdjacentLocationByDirection(direction). direction is invalid!");
+	}
+
+	return {x: pushLocationX, y: pushLocationY};
+}
+
+function pushOutputWires(component){
+	var compOutDir = component.outputDirection();
+	var toPush;
+	for(var i=0;i<compOutDir.length;i++){
+		var toPushCoords = getAdjacentLocationByDirection(component.locations()[0], compOutDir[i]);
+		toPush = getAtGrid(toPushCoords.x, toPushCoords.y);
+
+		if(toPush != null){
+			var toPushInDir = toPush.inputDirection();
+			var toPushLocations = toPush.locations();
+			for(var j=0;j<toPushInDir.length;j++){
+				for(var k=0;k<toPushLocations.length;k++){
+					var toPushPrevCoords = getAdjacentLocationByDirection(toPushLocations[k], toPushInDir[j]); //input blocks of any gate block
+					var toPushPrev = getAtGrid(toPushPrevCoords.x, toPushPrevCoords.y);
+					if(toPushPrev != null && toPushPrev.equals(component)){
+						var outputDirectionToDelete = [];
+						//canPushInput(toPush.inputDirection(), component.outputDirection(), outputDirectionToDelete);
+
+						//for(var p=0;p<outputDirectionToDelete.length;p++){
+						//	toPush.outputDirectionsToDelete.push(outputDirectionToDelete[p]);
+						//}
+
+						toPush.outputDirectionsToDelete.push(toPushInDir[j]);
+
+						if(isWire(toPush)){
+							toPush.setInput(component, toPushInDir[j]-1);
+						}
+						else{
+							toPush.setInput(component, k);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+function isWire(component){
+	return component.type === I_WIRE_COMPONENT || component.type === L_WIRE_COMPONENT || component.type === T_WIRE_COMPONENT || component.type === CROSS_WIRE_COMPONENT;
 }
 
 
@@ -316,6 +414,12 @@ function component(
 		return ret;
 	}
 
+	this.equals = function equal(otherComponent){
+		return this.x === otherComponent.x && this.y === otherComponent.y && this.type === otherComponent.type;
+	}
+
+	this.outputDirectionsToDelete = [];
+
 	this.inputDirection; //directions where input can be accepted. NOT-gate facing UP will have an input direction of DOWN
 	this.outputDirection; //directions where output will be pushed to. NOT-gate facing UP will have an output direction of UP
 
@@ -324,12 +428,23 @@ function component(
 	this.input.push(false);		// input[1] recieves the output of the gate that connects to locations()[1]
 	this.input.push(false);		// input[2] recieves output from third
 
+	this.prevOutput; //previous output
+
 	this.reset = function reset(){ //resets component for reevaluation
-		for(var h=0;h<input.length;h++){
-			input[h] = false;
+		for(var h=0;h<this.input.length;h++){
+			this.input[h] = false;
 		}
 
-		this.active = false;
+		this.outputDirectionsToDelete.splice(0, this.outputDirectionsToDelete.length); 
+
+		if(this.type === NOT_GATE_COMPONENT || this.type === ON_BOX_COMPONENT){
+			this.active = true;
+		}
+		else{
+			this.active = false;
+		}
+
+		this.prevOutput = null;
 	}
 
 	// requires initialization in constructor functions below!
@@ -338,10 +453,30 @@ function component(
 	this.use;		// waits delay then use case if logic returns true.
 
 	this.setInput = function setInput(otherComponent, index){
-		this.input[index] = otherComponent.logic();
-		this.active = this.logic();
-		this.output();
+		if(!stopCircuitEvaluation){
+			this.input[index] = otherComponent.logic();
+			this.active = this.logic();
+			if(this.use != null){
+				this.use();
+			}
+			updateGridInterface();
+
+			if(this.prevOutput != this.logic()){
+				this.prevOutput = this.logic();
+				var component = this;
+				if(this.delay > 0){
+					setTimeout(function(){
+						component.output();
+					},this.delay);
+				}
+				else{
+					component.output();
+				}
+			}
+		}
 	}
+
+
 }
 
 function and_gate(label, x, y){
@@ -477,8 +612,6 @@ function not_gate(label, x, y){
 		null				//print message
 	);
 
-	temp.active = true;
-
 	temp.inputDirection = function(){
 		var arr = [];
 		arr.push(flip(temp.direction));
@@ -528,15 +661,18 @@ function l_wire(label, x, y){
 		var arr = [];
 		arr.push(clockwise(temp.direction));
 		arr.push(temp.direction);
+
+		deleteUnneededOutputs(arr, temp.outputDirectionsToDelete);
+
 		return arr;
 	}
 
 	temp.logic = function(){
-		return temp.input[0];
+		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
 	}
 
 	temp.output = function(){
-		//todo
+		pushOutputWires(temp);
 	}
 
 
@@ -560,7 +696,7 @@ function i_wire(label, x, y){
 
 	temp.inputDirection = function(){
 		var arr = [];
-		arr.push(flip(temp.direction));
+		//arr.push(flip(temp.direction));
 		arr.push(temp.direction);
 		return arr
 	}
@@ -568,16 +704,18 @@ function i_wire(label, x, y){
 	temp.outputDirection = function(){
 		var arr = [];
 		arr.push(flip(temp.direction));
-		arr.push(temp.direction);
+		//arr.push(temp.direction);
+
+		deleteUnneededOutputs(arr, temp.outputDirectionsToDelete);
 		return arr;
 	}
 
 	temp.logic = function(){
-		return temp.input[0];
+		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
 	}
 
 	temp.output = function(){
-		pushOutput1by1Straight(temp);
+		pushOutputWires(temp);
 	}
 
 	return temp;
@@ -598,6 +736,32 @@ function t_wire(label, x, y){
 		null				//print message
 	);
 
+	temp.inputDirection = function(){
+		var arr = [];
+		arr.push(temp.direction);
+		arr.push(clockwise(temp.direction));
+		arr.push(counterClockwise(temp.direction));
+		return arr
+	}
+
+	temp.outputDirection = function(){
+		var arr = [];
+		arr.push(temp.direction);
+		arr.push(clockwise(temp.direction));
+		arr.push(counterClockwise(temp.direction));
+
+		deleteUnneededOutputs(arr, temp.outputDirectionsToDelete);
+		return arr;
+	}
+
+	temp.logic = function(){
+		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
+	}
+
+	temp.output = function(){
+		pushOutputWires(temp);
+	}
+
 	return temp;
 }
 
@@ -615,6 +779,34 @@ function cross_wire(label, x, y){
 		y,						//y
 		null					//print message
 	);
+
+	temp.inputDirection = function(){
+		var arr = [];
+		arr.push(flip(temp.direction));
+		arr.push(temp.direction);
+		arr.push(clockwise(temp.direction));
+		arr.push(counterClockwise(temp.direction));
+		return arr
+	}
+
+	temp.outputDirection = function(){
+		var arr = [];
+		arr.push(flip(temp.direction));
+		arr.push(temp.direction);
+		arr.push(clockwise(temp.direction));
+		arr.push(counterClockwise(temp.direction));
+
+		deleteUnneededOutputs(arr, temp.outputDirectionsToDelete);
+		return arr;
+	}
+
+	temp.logic = function(){
+		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
+	}
+
+	temp.output = function(){
+		pushOutputWires(temp);
+	}
 
 	return temp;
 }
@@ -634,6 +826,36 @@ function print_box(label, x, y, message){
 		message					//print message
 	);
 
+	temp.inputDirection = function(){
+		var arr = [];
+		//arr.push(flip(temp.direction));
+		arr.push(temp.direction);
+		return arr
+	}
+
+	temp.outputDirection = function(){
+		var arr = [];
+		arr.push(flip(temp.direction));
+		//arr.push(temp.direction);
+
+		deleteUnneededOutputs(arr, temp.outputDirectionsToDelete);
+		return arr;
+	}
+
+	temp.logic = function(){
+		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
+	}
+
+	temp.output = function(){
+		pushOutputWires(temp);
+	}
+
+	temp.use = function(){
+		if(temp.message != null && this.logic() == true){
+			consoleDisplayString(this.message);
+		}
+	}
+
 	return temp;
 }
 
@@ -652,6 +874,29 @@ function on_box(label, x, y){
 		null					//print message
 	);
 
+	temp.inputDirection = function(){
+		var arr = [];
+		return arr
+	}
+
+	temp.outputDirection = function(){
+		var arr = [];
+		arr.push(flip(temp.direction));
+		arr.push(temp.direction);
+		arr.push(clockwise(temp.direction));
+		arr.push(counterClockwise(temp.direction));
+
+		return arr;
+	}
+
+	temp.logic = function(){
+		return true;
+	}
+
+	temp.output = function(){
+		pushOutputWires(temp);
+	}
+
 	return temp;
 }
 
@@ -669,6 +914,29 @@ function var_box(label, x, y){
 		y,						//y
 		null					//print message
 	);
+
+	temp.inputDirection = function(){
+		var arr = [];
+		return arr
+	}
+
+	temp.outputDirection = function(){
+		var arr = [];
+		arr.push(flip(temp.direction));
+		arr.push(temp.direction);
+		arr.push(clockwise(temp.direction));
+		arr.push(counterClockwise(temp.direction));
+
+		return arr;
+	}
+
+	temp.logic = function(){
+		return temp.input[0];
+	}
+
+	temp.output = function(){
+		pushOutputWires(temp);
+	}
 
 	return temp;
 }
