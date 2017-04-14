@@ -66,6 +66,7 @@ function hasVisited(list, location){
 }
 
 /* find all islands of a circuit on the grid */
+// i should check if the current piece will make the two other piece adjacents
 function findAllIslands(grid){
 	island = [];
 	seen = [];
@@ -75,7 +76,11 @@ function findAllIslands(grid){
 
 		centerComp = gridcopy.pop();
 		centerCompLoc = centerComp.locations() 
-		
+		/*console.log(gridcopy)
+		console.log(island)
+		console.log(centerComp)
+		console.log(" ")*/
+
 		found = false;
 		if(island.length == 0){ 						// base case when the no compontents in the island
 			island.push([centerComp]);
@@ -94,6 +99,11 @@ function findAllIslands(grid){
 				seen.push(centerComp)
 			}			
 		}
+
+		// when i do the scan
+		// if two or more shit is foudn
+		// and is in two or more island
+		// consolidate the islands
 		
 
 		// this sections gets the bounds to get scan for adjacentcy
@@ -168,12 +178,12 @@ function findAllIslands(grid){
 					}	else{
 						continue;
 					}// end of if(seenbool == false)
-
 				}	// end of if(getAtGrid(j, k))				
 			}	// end of for(k = klower; k <= kupper; k++)
 		}	// end of for(j =jlower; j <= jupper; j++)
 	} // end of the while loop at the top
-}
+	return island
+}	// end of function
 
 
 
