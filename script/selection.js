@@ -16,7 +16,7 @@ function changeSelected(begin, end){
 
 	selected.begin.x = begin.x + camera.begin.x;
 	selected.begin.y = begin.y + camera.begin.y;
-
+	selected.count = 0
 	//console.log(selected.size.width+" "+selected.size.height);
 }
 
