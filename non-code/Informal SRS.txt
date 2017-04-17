@@ -318,11 +318,19 @@ Actors
 
 
 On every new drop/removal of a component -- Circuit Compiler
-	-> GUI/Grid calls compiler to recompile the workspace
-	-> compiler looks at workspace data structure
-	-> compilers then executes all circuit structures
-		-> if all delays are zero, updates immediately
-		-> if any delays are set, updates on each component's run completion(so when each delay finishs, it sends an update to GUI/Grid)
+	-> run through on-blocks then not-gates. Or eliminate not-gates from outputing a signal without an initial signal
+		> call this list - sgc
+	-> add a buffer component, only buffer components and logic gates can have delays. wires cannot have delays
+	-> initially we run sgc.output() on any block that is an on-block or not-gate.
+	-> we keep doing running through the output() until we hit a logic gate. 
+		then we set its input
+		store the logic gate/buffer's reference into another list -> currLogicGates
+		stop execution
+		continue to the next sgc component
+	-> when we've run through all the sgc we execute all the currLogicGates
+		-> run currLogicGates.output()
+		 and repeat the process.
+
 
 
 Issues that need to be resolved but not for scope of Project
