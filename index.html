@@ -8,6 +8,7 @@
 	<link rel = "stylesheet" type="text/css" href="style/workspace.css">
 	<link rel = "stylesheet" type="text/css" href="style/attribute-editor.css">
 	<link rel = "stylesheet" type="text/css" href="style/console.css">
+	<link rel = "stylesheet" type="text/css" href="style/submit.css">
 
 	<link rel="icon" 
 	type="favicon.ico" 
@@ -177,6 +178,37 @@
 				<div class = "ae-button" id = "save"></div>
 			</div>
 	</div>
+
+	<div class = "submit-menu">
+		
+		<p>Submit Circuit To Profile</p>
+
+		<div id = "div-privacy">
+			<form>
+				<span class = "desc">Public</span>
+				<input type = "radio" class = "privacy" name = "privacy" id = "public" checked = "checked">
+				<span class = "desc">Private</span>
+				<input type = "radio" class = "privacy" name = "privacy" id = "private">
+			</form>
+		</div>
+
+		<div id = "div-name">
+			<span class = "desc">Name</span>
+			<input id = "circuit-name" class = "textbox" type = "text" name = "circuit-name" value = "">				
+		</div>
+
+		<div id = "div-tags">
+			<span class = "desc">Tags</span>
+			<input id = "circuit-tags" class = "textbox" type = "text" name = "circuit-tags" value = "">				
+		</div>
+
+		<div id = "div-submit">
+			<button type = "button">Submit</button>
+			<button type = "button">Cancel</button>
+		</div>
+	</div>
+
+	<div class = "blanket"></div>
 
 	<script src = "script/canvas.js"></script>
 	<script src = "script/attribute-editor.js"></script>
