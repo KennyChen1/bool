@@ -1,18 +1,156 @@
 
-var selected = {
-  begin: {
-    x: 0,
-    y: 0
-  },
+/*
+ * Checks if all the components in selectedGrid Array can be rotated
+ * true if yes
+ * false otherwise
+ */
+function canAllBeRotate(selectedGrid){
+  for(i = 0; i < selectedGrid.length; i++){
+    if(canComponentBeRotated(selectedGrid[i]) == false){
+      return false;
+    }
+  }
+  return true;
+}
 
-  size: {
-    width: 0,
-    height: 0
+/*
+* truncated the selected grid to the smallest shit grid it can fit into
+*/
+function condenseSelected(selectedgrid){
+  if(selectedgrid.length == 0){
+    return false;
+  } else{
+    minx = selected.begin.x + selected.size.width;
+    miny = selected.begin.y + selected.size.height;
+
+    maxy = selected.begin.y;
+    maxx = selected.begin.x;
+    
+    // finds the max
+    for(i = 0; i < selectedgrid.length; i++){
+      if(selectedgrid[i].width == 2){
+        if(selectedgrid[i].locations()[1].x > maxx)
+          maxx = selectedgrid[i].locations()[1].x
+        if(selectedgrid[i].locations()[1].y > maxy)
+          maxy = selectedgrid[i].locations()[1].y      
+      }
+    }
+
+    // finds the min
+    for(i = 0; i < selectedgrid.length; i++){
+      if(selectedgrid[i].width == 2){
+        if(selectedgrid[i].locations()[0].x < minx)
+          minx = selectedgrid[i].locations()[0].x
+        if(selectedgrid[i].locations()[0].y < miny)
+          miny = selectedgrid[i].locations()[0].y      
+      }
+    }
+    selected.begin.x = minx
+    selected.begin.y = miny
+    selected.size.width = maxx - selected.begin.x + 1
+    selected.size.height = maxy - selected.begin.y + 1
+
+    return true;
   }
 }
 
-$(document).ready(function(){/*
-  var theOtherAnd = getComponentByType(AND_GATE_COMPONENT, 9, 10);
+/*
+ * returns all the components that are found within the selected region
+ */
+function findAllSelected(){
+  var returnFound = []
+
+  for(i = 0; i < grid.length; i++){
+    if((grid[i].x >= selected.begin.x && grid[i].x <= selected.begin.x + selected.size.width)
+      && (grid[i].y >= selected.begin.y && grid[i].y <= selected.begin.y + selected.size.height)){
+      returnFound.push(grid[i]);
+    } // end of if
+  } // end of for loop
+
+  return returnFound;
+}
+
+/*
+ * takes all the selected compointents and rotates them all indivually
+ */
+function rotateSelected(){
+  var selectedComps = findAllSelected();
+
+
+  if(canAllBeRotate(selectedComps) == false){ 
+    // there exists a component that cannot be rotated
+    // probably should be placed into debug menu
+    return;
+  }
+  // preserve the box
+  maxx = 0
+  maxy = 0;
+
+  //rotates everything
+  for(i = 0; i < selectedComps.length; i++){
+    selectedComps[i].direction = (selectedComps[i].direction+1)%4
+  }
+
+  for(i = 0; i < selectedComps.length; i++){
+    if(selectedComps[i].width == 2){
+      if(selectedComps[i].locations()[1].x > maxx)
+        maxx = selectedComps[i].locations()[1].x
+      if(selectedComps[i].locations()[1].y > maxy)
+        maxy = selectedComps[i].locations()[1].y      
+    } else if(selectedComps[i].width == 1){ 
+    // width is 1 does the same thing as the width == 2 but little different
+      if(selectedComps[i].locations()[0].x > maxx)
+        maxx = selectedComps[i].locations()[0].x
+      if(selectedComps[i].locations()[0].y > maxy)
+        maxy = selectedComps[i].locations()[0].y    
+    } // end if of else
+  } // end of for
+
+  selected.size.width = maxx - selected.begin.x + 1
+  selected.size.height = maxy - selected.begin.y + 1
+
+  updateGridInterface()  
+
+}
+
+/*
+ * Rotates all the components preserving the order
+ */
+function rotateAxis(){
+  var selectedComps = findAllSelected();
+
+  var tempswitch = selected.size.width;
+  selected.size.width = selected.size.height;
+  selected.size.height = tempswitch;
+
+  for(i = 0; i < selectedComps.length; i++){
+    var distx = selectedComps[i].x - selected.begin.x
+    var disty = selectedComps[i].y - selected.begin.y
+    if(selectedComps[i].width == 2 
+      && (selectedComps[i].direction == 1 || selectedComps[i].direction == 3)){
+      selectedComps[i].x = selected.begin.x + selected.size.width - disty - 2;
+    } else {
+      selectedComps[i].x = selected.begin.x + selected.size.width - disty - 1;
+    }
+    selectedComps[i].y = selected.begin.y + distx;
+    selectedComps[i].direction = (selectedComps[i].direction+1)%4
+  }
+
+  updateGridInterface()
+}
+
+
+
+
+$(document).ready(function(){
+  var theOtherAnd = getComponentByType(AND_GATE_COMPONENT, 15, 6);
+  addToGrid(theOtherAnd);
+  theOtherAnd.direction = RIGHT;
+  var zzzz = getComponentByType(XOR_GATE_COMPONENT, 14, 4);
+  //addToGrid(zzzz);
+  zzzz.direction = RIGHT;
+
+/*
   var theOr = getComponentByType(NOT_GATE_COMPONENT,10,7);
   var theOtherNot = getComponentByType(NOT_GATE_COMPONENT,9,6);
   var awire = getComponentByType(I_WIRE_COMPONENT, 9,8);
@@ -23,7 +161,6 @@ $(document).ready(function(){/*
   var fwire = getComponentByType(NOT_GATE_COMPONENT, 9, 5);
   var gwire = getComponentByType(I_WIRE_COMPONENT, 9, 7);
   addToGrid(theOr);
-  addToGrid(theOtherAnd);
   addToGrid(theOtherNot);
   addToGrid(awire);
   addToGrid(bwire);
@@ -86,7 +223,7 @@ $(document).ready(function(){/*
   console.log(theOr);
   theAnd.output();
   console.log(theOr);
-*/
+  */
 });
 
 function moveComponentRelatively(fromX, fromY, amountX, amountY){
@@ -127,6 +264,11 @@ function deleteComponent(x,y){
   return null;
 }
 
+/*
+ * Checks if the component toRotate can be rotated
+ * returns true if it can
+ * false otherwise
+ */
 function canComponentBeRotated(toRotate){
   for(var i=0;i<grid.length;i++){
     if(toRotate.x == grid[i].x && toRotate.y == grid[i].y){

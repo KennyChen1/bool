@@ -19,10 +19,10 @@ var ON_BOX_COMPONENT = "ON";
 var VAR_BOX_COMPONENT = "VAR";
 
 //directions
-var UP = 1;
+var UP = 0;
 var DOWN = 2;
 var LEFT = 3;
-var RIGHT = 4;
+var RIGHT = 1;
 
 var stopCircuitEvaluation = false;
 
