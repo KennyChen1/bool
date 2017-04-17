@@ -57,14 +57,19 @@ function condenseSelected(selectedgrid){
 /*
  * returns all the components that are found within the selected region
  */
-function findAllSelected(){
+function findAllSelected(gridlist){
   var returnFound = []
 
   for(i = 0; i < grid.length; i++){
-    if((grid[i].x >= selected.begin.x && grid[i].x <= selected.begin.x + selected.size.width)
-      && (grid[i].y >= selected.begin.y && grid[i].y <= selected.begin.y + selected.size.height)){
+    if((grid[i].x >= selected.begin.x && grid[i].x < selected.begin.x + selected.size.width)
+      && (grid[i].y >= selected.begin.y && grid[i].y < selected.begin.y + selected.size.height)){
       returnFound.push(grid[i]);
-    } // end of if
+    } else if(grid[i].width == 2){
+    if((grid[i].locations()[1].x >= selected.begin.x && grid[i].locations()[1].x< selected.begin.x + selected.size.width)
+      && (grid[i].locations()[1].y >= selected.begin.y && grid[i].locations()[1].y < selected.begin.y + selected.size.height)){
+      returnFound.push(grid[i]);
+      }
+    }
   } // end of for loop
 
   return returnFound;
@@ -76,6 +81,8 @@ function findAllSelected(){
 function rotateSelected(){
   var selectedComps = findAllSelected();
 
+  if(selectedComps.length == 0)
+    return;
 
   if(canAllBeRotate(selectedComps) == false){ 
     // there exists a component that cannot be rotated
@@ -118,6 +125,9 @@ function rotateSelected(){
  */
 function rotateAxis(){
   var selectedComps = findAllSelected();
+
+  if(selectedComps.length == 0)
+    return;
 
   var tempswitch = selected.size.width;
   selected.size.width = selected.size.height;
