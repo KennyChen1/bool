@@ -84,6 +84,7 @@ function pasteToWorkspace(){
         return false;
       }
     }
+    updateUndoList()
     // if it gets here it is assummed that all the things 
     // to be pasted can be placed on to the board
     for(i = 0; i < Object.keys(clipboardCopy).length; i++){
@@ -111,8 +112,16 @@ function undo(){
     return false;
   } else{
     var lastAction = undoList.pop()
+        var newGridList = []
+
+        for(i = 0; i < grid.length; i++){
+          newGridList.push(jQuery.extend(true, {}, grid[i]));
+        }
+        redoList.push(newGridList)
+      
+    
     grid = lastAction;
-    redoList.push(lastAction);
+
     updateGridInterface()  
 
   }
@@ -124,8 +133,17 @@ function redo(){
     return false;
   }
     var redoAction = redoList.pop()
+
+    var undoGridCopy = []
+
+    for(i = 0; i < grid.length; i++){
+      undoGridCopy.push(jQuery.extend(true, {}, grid[i]));
+    }
+
+    undoList.push(undoGridCopy);
+
     grid = redoAction;
-    undoList.push(redoAction);
+
     updateGridInterface()  
 
     return true;
