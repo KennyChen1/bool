@@ -247,6 +247,8 @@ function drawSelected(){
 }
 
 function updateGridInterface(){
+  // maybe
+
   context.clearRect(0,0, cw, ch);
   drawBoard();
   drawComponents();

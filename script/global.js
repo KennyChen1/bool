@@ -16,3 +16,8 @@ var selected = {
     height: 0
   }
 }
+
+
+undoList = [];
+redoList = [];
+var clipboard = [];

@@ -1,4 +1,13 @@
 
+$(document).ready(function(){
+  var theOtherAnd = getComponentByType(AND_GATE_COMPONENT, 15, 6);
+  addToGrid(theOtherAnd);
+  theOtherAnd.direction = RIGHT;
+  var zzzz = getComponentByType(XOR_GATE_COMPONENT, 14, 4);
+  //addToGrid(zzzz);
+  zzzz.direction = RIGHT;
+});
+
 /*
  * Checks if all the components in selectedGrid Array can be rotated
  * true if yes
@@ -89,6 +98,9 @@ function rotateSelected(){
     // probably should be placed into debug menu
     return;
   }
+
+  updateUndoList();
+  
   // preserve the box
   maxx = 0
   maxy = 0;
@@ -133,6 +145,8 @@ function rotateAxis(){
   selected.size.width = selected.size.height;
   selected.size.height = tempswitch;
 
+  updateUndoList();
+
   for(i = 0; i < selectedComps.length; i++){
     var distx = selectedComps[i].x - selected.begin.x
     var disty = selectedComps[i].y - selected.begin.y
@@ -149,92 +163,6 @@ function rotateAxis(){
   updateGridInterface()
 }
 
-
-
-
-$(document).ready(function(){
-  var theOtherAnd = getComponentByType(AND_GATE_COMPONENT, 15, 6);
-  addToGrid(theOtherAnd);
-  theOtherAnd.direction = RIGHT;
-  var zzzz = getComponentByType(XOR_GATE_COMPONENT, 14, 4);
-  //addToGrid(zzzz);
-  zzzz.direction = RIGHT;
-
-/*
-  var theOr = getComponentByType(NOT_GATE_COMPONENT,10,7);
-  var theOtherNot = getComponentByType(NOT_GATE_COMPONENT,9,6);
-  var awire = getComponentByType(I_WIRE_COMPONENT, 9,8);
-  var bwire = getComponentByType(I_WIRE_COMPONENT, 10,8); 
-  var cwire = getComponentByType(NOT_GATE_COMPONENT, 9,9); 
-  var dwire = getComponentByType(NOT_GATE_COMPONENT, 10,11); 
-  var ewire = getComponentByType(NOT_GATE_COMPONENT, 10, 9);
-  var fwire = getComponentByType(NOT_GATE_COMPONENT, 9, 5);
-  var gwire = getComponentByType(I_WIRE_COMPONENT, 9, 7);
-  addToGrid(theOr);
-  addToGrid(theOtherNot);
-  addToGrid(awire);
-  addToGrid(bwire);
-  addToGrid(cwire);
-  addToGrid(dwire);
-  addToGrid(ewire);
-  addToGrid(fwire);
-  addToGrid(gwire);
-  theOr.direction = DOWN;
-  theOtherNot.direction = UP;
-  theOtherAnd.direction = DOWN;
-  awire.direction = DOWN;
-  bwire.direction = DOWN;
-  cwire.direction = DOWN;
-  dwire.direction = DOWN;
-  ewire.direction = DOWN;
-  fwire.direction = DOWN;
-  console.log(theOr);
-  var siggen = findAllSignalGenerating(grid);
-  console.log(siggen);
-  for(var i=0;i<siggen.length;i++){
-    siggen[i].output();
-    
-  }
-  console.log(grid);*//*
-
-/*
-  theAnd = getComponentByType(XOR_GATE_COMPONENT, 0, 5);
-  theOr = getComponentByType(NOT_GATE_COMPONENT,1,5);
-  addToGrid(theAnd);
-  addToGrid(theOr);
-  theOr.direction = RIGHT;
-  theAnd.direction = RIGHT;
-  theAnd.input[0] = true;
-  theAnd.input[1] = true;
-  console.log(theOr);
-  theAnd.output();
-  console.log(theOr);
-
-  theAnd = getComponentByType(XOR_GATE_COMPONENT, 4, 5);
-  theOr = getComponentByType(NOT_GATE_COMPONENT,3,6);
-  addToGrid(theAnd);
-  addToGrid(theOr);
-  theOr.direction = LEFT;
-  theAnd.direction = LEFT;
-  theAnd.input[0] = false;
-  theAnd.input[1] = false;
-  console.log(theOr);
-  theAnd.output();
-  console.log(theOr);
-
-  theAnd = getComponentByType(AND_GATE_COMPONENT, 0, 10);
-  theOr = getComponentByType(NOT_GATE_COMPONENT,1,11);
-  addToGrid(theAnd);
-  addToGrid(theOr);
-  theOr.direction = DOWN;
-  theAnd.direction = DOWN;
-  theAnd.input[0] = true;
-  theAnd.input[1] = false;
-  console.log(theOr);
-  theAnd.output();
-  console.log(theOr);
-  */
-});
 
 function moveComponentRelatively(fromX, fromY, amountX, amountY){
   return moveComponent(fromX, fromY, fromX + amountX, fromY + amountY);

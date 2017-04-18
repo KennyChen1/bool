@@ -7,8 +7,6 @@ $(".toolbar #run").click(function(e){
 });
 
 
-var clipboard = [];
-
 // takes the shit places it into the clipboard
 function copyToClipBoard(){
   // clear the clipboard
@@ -47,7 +45,6 @@ function copyToClipBoard(){
 }
 
 
-
 function cut(){
   if(copyToClipBoard() == false){
     return false
@@ -74,7 +71,7 @@ function cut(){
 function pasteToWorkspace(){
   // nothing in the clipboard, don't do anything
 
-  clipboardCopy = jQuery.extend(true, {}, clipboard);
+  var clipboardCopy = jQuery.extend(true, {}, clipboard);
 
 
   if(clipboardCopy.length == 0){
@@ -98,7 +95,38 @@ function pasteToWorkspace(){
 
 }
 
-undoList = [];
 function updateUndoList(){
-  undoList.push(grid);
+  var newUndoList = []
+  for(i = 0; i < grid.length; i++){
+    newUndoList.push(jQuery.extend(true, {}, grid[i]));
+  }
+
+
+  undoList.push(newUndoList); 
+
+}
+
+function undo(){
+  if(undoList.length == 0){
+    return false;
+  } else{
+    var lastAction = undoList.pop()
+    grid = lastAction;
+    redoList.push(lastAction);
+    updateGridInterface()  
+
+  }
+  return true;
+}
+
+function redo(){
+  if(redoList.length == 0){
+    return false;
+  }
+    var redoAction = redoList.pop()
+    grid = redoAction;
+    undoList.push(redoAction);
+    updateGridInterface()  
+
+    return true;
 }
