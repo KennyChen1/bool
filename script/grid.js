@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
   var theOtherAnd = getComponentByType(AND_GATE_COMPONENT, 15, 6);
   addToGrid(theOtherAnd);
