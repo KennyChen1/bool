@@ -27,6 +27,7 @@
 	<script src = "script/components.js"></script>
 	<script src = "script/images.js"></script>
 	<script src = "script/grid.js"></script>
+	<script src = "script/submit.js"></script>
 
 </head>
 
@@ -53,8 +54,8 @@
 		  			<a href="#">New</a>
 		  			<a href="#">Save</a>
 		  			<a href="#"><input id = "loader" type="file"></a>
-		  			<a href="#">Submit</a>
-		  			<a id="run" href="doskopdk">Run</a>
+		  			<a href = "#" onclick = "promptSubmitMenu()">Submit</a>
+		  			<a id="run">Run</a>
 		  			<a href="#">Toggle Dynamic Evaluator</a>
 				</div>
 			</li>
@@ -210,14 +211,19 @@
 			<input id = "circuit-name" class = "textbox" type = "text" name = "circuit-name" value = "">				
 		</div>
 
+		<div id = "div-share">
+			<span class = "desc">Share</span>
+			<input id = "circuit-share" class = "textbox" type = "text" name = "circuit-share" value = "">				
+		</div>
+
 		<div id = "div-tags">
 			<span class = "desc">Tags</span>
 			<input id = "circuit-tags" class = "textbox" type = "text" name = "circuit-tags" value = "">				
 		</div>
 
 		<div id = "div-submit">
-			<button type = "button">Submit</button>
-			<button type = "button">Cancel</button>
+			<button type = "button" onclick = "submitToDatastore()">Submit</button>
+			<button type = "button" onclick = "hideSubmitMenu()">Cancel</button>
 		</div>
 	</div>
 
