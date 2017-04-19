@@ -171,14 +171,16 @@ function moveComponent(fromX, fromY, toX, toY){
   var curr = deleteComponent(fromX, fromY);
 
   if(curr == null){
-    return false;
-  }
+    return false
+;  }
 
   curr.x = toX;
   curr.y = toY;
 
   if(canComponentBePlaced(curr)){
     grid.push(curr);
+    console.log("dsadsad")
+    //updateUndoList();
     return true;
   }
   else{

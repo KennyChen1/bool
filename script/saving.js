@@ -43,6 +43,7 @@ $("#loader").change(function(){
         obj = JSON.parse(fileLoadedEvent.target.result);
         grid = []
         //document.getElementById("inputTextToSave").value = textFromFileLoaded;
+        updateUndoList()
         for(i = 0; i < obj.length; i++){
         	addToGrid(getComponentByType(obj[i].type, obj[i].x, obj[i].y))
         	grid[i].direction = obj[i].direction

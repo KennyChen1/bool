@@ -44,28 +44,29 @@ function copyToClipBoard(){
 
 }
 
+// Deletes all components from the workspace that are selected
+function deleteSelected(){
+	for(i = grid.length-1; i >= 0; i--){
+	    if((grid[i].x >= selected.begin.x && grid[i].x < selected.begin.x + selected.size.width)
+	      && (grid[i].y >= selected.begin.y && grid[i].y < selected.begin.y + selected.size.height)){
+	          grid.splice(i, 1);
+	    } else if(grid[i].width == 2){
+	      if((grid[i].locations()[1].x >= selected.begin.x && grid[i].locations()[1].x< selected.begin.x + selected.size.width)
+	        && (grid[i].locations()[1].y >= selected.begin.y && grid[i].locations()[1].y < selected.begin.y + selected.size.height)){
+	          grid.splice(i, 1);
+	        }// end of if
+	      }// end else if
+    }// end of for
+    updateGridInterface()  
+}
 
 function cut(){
   if(copyToClipBoard() == false){
     return false
   } else{
-
-
-    for(i = grid.length-1; i >= 0; i--){
-    if((grid[i].x >= selected.begin.x && grid[i].x < selected.begin.x + selected.size.width)
-      && (grid[i].y >= selected.begin.y && grid[i].y < selected.begin.y + selected.size.height)){
-          grid.splice(i, 1);
-    } else if(grid[i].width == 2){
-      if((grid[i].locations()[1].x >= selected.begin.x && grid[i].locations()[1].x< selected.begin.x + selected.size.width)
-        && (grid[i].locations()[1].y >= selected.begin.y && grid[i].locations()[1].y < selected.begin.y + selected.size.height)){
-          grid.splice(i, 1);
-        }// end of if
-      }// end else if
-    }// end of for
-  }
-  
+     deleteSelected()
+  }  
     updateGridInterface()  
-
 }
 
 function pasteToWorkspace(){

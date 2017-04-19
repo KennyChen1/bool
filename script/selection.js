@@ -49,7 +49,11 @@ $("#grid-render").mousedown(function(e){
 
 });
 
+/*
+ * This handles moving components on the screen
+ */
 $("#grid-render").mouseup(function(e){
+
 	if(e.which === 3){
 		upMouse = getMousePos(canvas,e);
 
@@ -70,9 +74,11 @@ $("#grid-render").mouseup(function(e){
 			var cupm = calculateGridXY(upMouse.x, upMouse.y);
 
 			//console.log(cdom);
-			//console.log(cupm);
+			//console.log(cupm);updateUndoList()
 
 			moveComponent(cdom.x, cdom.y, cupm.x, cupm.y);
+			console.log("moveComp")
+
  		}
  		else{
 
