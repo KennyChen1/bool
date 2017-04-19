@@ -33,6 +33,8 @@ canvas.addEventListener("contextmenu", function(e){
 	return false;
 }, false);
 
+massSelection = []
+
 $("#grid-render").mousedown(function(e){
 	if(e.which === 3){ //rightclick
 		downMouse = getMousePos(canvas,e);
@@ -43,7 +45,8 @@ $("#grid-render").mousedown(function(e){
  			downMouse = getMousePos(canvas, e);
  		}
  		else{
-
+ 			massSelection = findAllSelected(grid);
+ 			console.log(massSelection)
  		}
  	}
 
@@ -54,18 +57,17 @@ $("#grid-render").mousedown(function(e){
  */
 $("#grid-render").mouseup(function(e){
 
-	if(e.which === 3){
+	if(e.which === 3){ //rightclick
 		upMouse = getMousePos(canvas,e);
 
 		changeSelected(downMouse, upMouse);
 
 		if(selectedSameSquare()){
 			var pos = $(".grid").offset();
-
 			openAttributeEditor(selected.begin.x, selected.begin.y, upMouse.x * box + pos.left, upMouse.y * box +pos.top);
 		}
 	}
-	if(e.which === 1){
+	if(e.which === 1){ //leftclick
 		if((selected.size.width < 1 && selected.size.height < 1) || selectedSameSquare()){ //nothing selected
 			closeAttributeEditor();
 			upMouse = getMousePos(canvas, e);
@@ -73,14 +75,24 @@ $("#grid-render").mouseup(function(e){
 			var cdom = calculateGridXY(downMouse.x, downMouse.y);
 			var cupm = calculateGridXY(upMouse.x, upMouse.y);
 
-			//console.log(cdom);
-			//console.log(cupm);updateUndoList()
-
 			moveComponent(cdom.x, cdom.y, cupm.x, cupm.y);
-			console.log("moveComp")
+			
 
  		}
  		else{
+ 			if(massSelection.length == 0){
+ 				console.log(massSelection)
+ 			} else{
+ 				var cdom = calculateGridXY(downMouse.x, downMouse.y);
+				var cupm = calculateGridXY(upMouse.x, upMouse.y);
+				for(i = 0; i < massSelection.length; i++){
+					x1 = massSelection[i].x
+					y1 = massSelection[i].y
+					console.log(upMouse.x + " " + upMouse.y)
+					moveComponent(x1, y1, 5, 1);
+				}
+				massSelection = []
+ 			}
 
  		}
 

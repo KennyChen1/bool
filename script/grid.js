@@ -170,24 +170,26 @@ function moveComponentRelatively(fromX, fromY, amountX, amountY){
 function moveComponent(fromX, fromY, toX, toY){
   var curr = deleteComponent(fromX, fromY);
 
+
   if(curr == null){
-    return false
-;  }
+    return false;  
+  }
 
   curr.x = toX;
   curr.y = toY;
 
+   // component can be moved
   if(canComponentBePlaced(curr)){
     grid.push(curr);
-    console.log("dsadsad")
-    //updateUndoList();
+    updateUndoList();
     return true;
   }
-  else{
-    //console.log("cannot be placed");
+  else{ // component cannot be moved
+    console.log("cant be movsed")
     curr.x = fromX;
     curr.y = fromY; 
     grid.push(curr);
+    
     return false;
   }
 }
@@ -317,5 +319,6 @@ function getComponentByType(comp,x,y){
 }
 
 function addToGrid(comp){
+  updateUndoList();
   grid.push(comp);
 }
