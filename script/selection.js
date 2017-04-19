@@ -45,8 +45,8 @@ $("#grid-render").mousedown(function(e){
  			downMouse = getMousePos(canvas, e);
  		}
  		else{
+ 			downMouse = getMousePos(canvas, e);
  			massSelection = findAllSelected(grid);
- 			console.log(massSelection)
  		}
  	}
 
@@ -76,21 +76,33 @@ $("#grid-render").mouseup(function(e){
 			var cupm = calculateGridXY(upMouse.x, upMouse.y);
 
 			moveComponent(cdom.x, cdom.y, cupm.x, cupm.y);
-			
 
  		}
  		else{
  			if(massSelection.length == 0){
  				console.log(massSelection)
  			} else{
- 				var cdom = calculateGridXY(downMouse.x, downMouse.y);
+ 				// maybe check if mouse up is in the selected region
+ 				upMouse = getMousePos(canvas, e);
+				var cdom = calculateGridXY(downMouse.x, downMouse.y);
 				var cupm = calculateGridXY(upMouse.x, upMouse.y);
-				for(i = 0; i < massSelection.length; i++){
+				// needs to be fixed so it only works on drag 
+				// also update the undoList less frequently
+				// maybe also move it reletive rather than the top left
+				for(var i = 0; i < massSelection.length; i++){
 					x1 = massSelection[i].x
 					y1 = massSelection[i].y
-					console.log(upMouse.x + " " + upMouse.y)
-					moveComponent(x1, y1, 5, 1);
+					x2 = selected.begin.x
+					y2 = selected.begin.y
+
+					moveComponent(x1, y1, cupm.x + (x1-x2), cupm.y + (y1-y2));
+					undoList.pop()
 				}
+				updateUndoList()
+
+				selected.begin.x = cupm.x - (cdom.x - selected.begin.x)
+				selected.begin.y = cupm.y - (cdom.y - selected.begin.y)
+
 				massSelection = []
  			}
 
