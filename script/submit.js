@@ -56,7 +56,7 @@ function createCircuitFileObject(){
 function sendToDatastore(circuitFileObject){
 	$.ajax({
 		url: "/workspace/submit",
-		method: "POST",
+		method: "GET",
 		data: circuitFileObject,
 		contentType: "application/json",
 		success: function(data){
