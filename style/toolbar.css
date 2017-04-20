@@ -52,3 +52,10 @@
 .toolbar .dropdown:hover .dropdown-content {
     display: block;
 }
+
+input[type="file"] {
+    display: none;
+}
+.loading {
+    display: inline-block;
+}

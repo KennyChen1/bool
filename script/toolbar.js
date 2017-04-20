@@ -13,11 +13,20 @@ $(document).on("keydown", function(e){
     } else if (e.keyCode == 86 && (e.ctrlKey || e.metaKey)){
        pasteToWorkspace()
     } else if (e.keyCode == 88 && (e.ctrlKey || e.metaKey)){
-       pasteToWorkspace()
+       cut()
     } else if (e.keyCode == 89 && (e.ctrlKey || e.metaKey)){
-       pasteToWorkspace()
+       redo()
     } else if (e.keyCode == 90 && (e.ctrlKey || e.metaKey)){
-       pasteToWorkspace()
+       undo()
+    } else if (e.keyCode == 83 && (e.ctrlKey || e.metaKey)){
+       writetofile()
+    } else if (e.keyCode == 65 && (e.ctrlKey || e.metaKey)){
+       selected.begin.x = 0
+       selected.begin.x = 0
+       selected.size.height = 1000
+       selected.size.width = 1000
+       e.preventDefault();
+       updateGridInterface();
     }
 
 });

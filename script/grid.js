@@ -185,7 +185,7 @@ function moveComponent(fromX, fromY, toX, toY){
     return true;
   }
   else{ // component cannot be moved
-    console.log("cant be movsed")
+    console.log("cant be moved")
     curr.x = fromX;
     curr.y = fromY; 
     grid.push(curr);

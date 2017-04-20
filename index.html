@@ -52,8 +52,11 @@
 				<a href="#" class="dropbtn">File</a>
 				<div class="dropdown-content">
 		  			<a href="#">New</a>
-		  			<a href="#">Save</a>
-		  			<a href="#"><input id = "loader" type="file"></a>
+		  			<a href="#" onclick = "writetofile()">Save</a>
+		  			<a href="#">
+		  				<label for = "loader" class = "loading">Load</label>
+		  				<input id = "loader" type="file">
+		  			</a>
 		  			<a href = "#" onclick = "promptSubmitMenu()">Submit</a>
 		  			<a id="run">Run</a>
 		  			<a href="#">Toggle Dynamic Evaluator</a>
