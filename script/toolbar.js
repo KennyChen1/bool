@@ -51,7 +51,7 @@ function copyToClipBoard(){
 
     // finds the min
   for(i = 0; i < clipboardtemp.length; i++){
-    if(clipboardtemp[i].width == 2){
+    if(clipboardtemp[i].width > 0){
       if(clipboardtemp[i].locations()[0].x < minx)
         minx = clipboardtemp[i].locations()[0].x
       if(clipboardtemp[i].locations()[0].y < miny)
