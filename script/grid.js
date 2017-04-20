@@ -1,10 +1,4 @@
 $(document).ready(function(){
-  var theOtherAnd = getComponentByType(AND_GATE_COMPONENT, 15, 6);
-  addToGrid(theOtherAnd);
-  theOtherAnd.direction = RIGHT;
-  var zzzz = getComponentByType(XOR_GATE_COMPONENT, 14, 4);
-  //addToGrid(zzzz);
-  zzzz.direction = RIGHT;
 });
 
 /*

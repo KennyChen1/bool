@@ -35,5 +35,6 @@ $("#loader").change(function(){
         }
 
     };
+    updateGridInterface();
     fileReader.readAsText(fileToLoad, "UTF-8");
  });
