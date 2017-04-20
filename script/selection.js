@@ -1,6 +1,7 @@
 var downMouse;
 var upMouse;
 
+
 function selectedSameSquare(){
 	return selected.size.width == 1 && selected.size.height == 1;
 }
@@ -79,26 +80,53 @@ $("#grid-render").mouseup(function(e){
 
  		}
  		else{
- 			if(massSelection.length == 0){
- 				console.log(massSelection)
- 			} else{
- 				// maybe check if mouse up is in the selected region
  				upMouse = getMousePos(canvas, e);
 				var cdom = calculateGridXY(downMouse.x, downMouse.y);
 				var cupm = calculateGridXY(upMouse.x, upMouse.y);
-				// needs to be fixed so it only works on drag 
-				// also update the undoList less frequently
-				// maybe also move it reletive rather than the top left
+ 			if((massSelection.length == 0) || ((cupm.x == cdom.x) && (cupm.y == cdom.y))){
+ 				console.log("failed")
+ 				console.log((selected.begin.x - massSelection[0].x) + " " + (selected.begin.y - massSelection[0].y))
+ 			} else{ 				
+				updateUndoList()
+
+				// loops to see if everything can be moved
 				for(var i = 0; i < massSelection.length; i++){
+					var x1 = massSelection[i].x
+					var y1 = massSelection[i].y
+					var x2 = selected.begin.x
+					var y2 = selected.begin.y
+
+					var newx = cupm.x - (cdom.x - x2) + (x1-x2)
+					var newy = cupm.y - (cdom.y - y2) + (y1-y2)
+
+					// makes a copy of the object, 
+					// don't want to fuck with the orignal
+					var temp = jQuery.extend(true, {}, massSelection[i])
+					temp.x = newx;
+					temp.y = newy;
+
+					if(canComponentBePlaced(temp) == false){
+						console.log("cannot be placed at: (" + newx + ", "+ newy + ")")
+						massSelection = []
+						return false;
+					}
+				}
+				// if it makes it out of the loop everything selected can be moved
+
+				for(var i = 0; i < massSelection.length; i++){
+					// should get distance from origin x/y and orgin x y
+					// y2-y1, x2-x1
 					x1 = massSelection[i].x
 					y1 = massSelection[i].y
 					x2 = selected.begin.x
 					y2 = selected.begin.y
 
-					moveComponent(x1, y1, cupm.x + (x1-x2), cupm.y + (y1-y2));
+					newx = cupm.x - (cdom.x - x2) + (x1-x2)
+					newy = cupm.y - (cdom.y - y2) + (y1-y2)
+
+					moveComponent(x1, y1, newx, newy);
 					undoList.pop()
 				}
-				updateUndoList()
 
 				selected.begin.x = cupm.x - (cdom.x - selected.begin.x)
 				selected.begin.y = cupm.y - (cdom.y - selected.begin.y)

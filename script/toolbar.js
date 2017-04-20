@@ -7,6 +7,23 @@ $(".toolbar #run").click(function(e){
 });
 
 
+$(document).on("keydown", function(e){
+    if (e.keyCode == 67 && (e.ctrlKey || e.metaKey)){
+       copyToClipBoard()
+    } else if (e.keyCode == 86 && (e.ctrlKey || e.metaKey)){
+       pasteToWorkspace()
+    } else if (e.keyCode == 88 && (e.ctrlKey || e.metaKey)){
+       pasteToWorkspace()
+    } else if (e.keyCode == 89 && (e.ctrlKey || e.metaKey)){
+       pasteToWorkspace()
+    } else if (e.keyCode == 90 && (e.ctrlKey || e.metaKey)){
+       pasteToWorkspace()
+    }
+
+});
+
+
+
 // takes the shit places it into the clipboard
 function copyToClipBoard(){
   // clear the clipboard
