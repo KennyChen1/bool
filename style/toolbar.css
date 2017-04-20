@@ -1,3 +1,7 @@
+.toolbar{
+    width: calc(100% - 210px - 10px);
+}
+
 .toolbar ul {
     list-style-type: none;
     margin: 0;
@@ -47,4 +51,11 @@
 
 .toolbar .dropdown:hover .dropdown-content {
     display: block;
+}
+
+input[type="file"] {
+    display: none;
+}
+.loading {
+    display: inline-block;
 }

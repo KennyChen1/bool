@@ -8,6 +8,8 @@
 	<link rel = "stylesheet" type="text/css" href="style/workspace.css">
 	<link rel = "stylesheet" type="text/css" href="style/attribute-editor.css">
 	<link rel = "stylesheet" type="text/css" href="style/console.css">
+	<link rel = "stylesheet" type="text/css" href="style/submit.css">
+	<link rel = "stylesheet" type="text/css" href="style/user-menu.css">
 
 	<link rel="icon" 
 	type="favicon.ico" 
@@ -25,11 +27,18 @@
 	<script src = "script/components.js"></script>
 	<script src = "script/images.js"></script>
 	<script src = "script/grid.js"></script>
+	<script src = "script/submit.js"></script>
 
 </head>
 
 
 <body>
+
+	<div class = "user-menu">
+		<div class = "auth">
+		</div>
+	</div>
+
 	<div class = "toolbar"> <!-- Toolbar -->
 		<ul>
 			<li class="dropdown">
@@ -43,21 +52,27 @@
 				<a href="#" class="dropbtn">File</a>
 				<div class="dropdown-content">
 		  			<a href="#">New</a>
-		  			<a href="#">Save</a>
-		  			<a href="#"><input id = "loader" type="file"></a>
-		  			<a href="#">Submit</a>
-		  			<a id="run" href="doskopdk">Run</a>
+		  			<a href="#" onclick = "writetofile()">Save</a>
+		  			<a href="#">
+		  				<label for = "loader" class = "loading">Load</label>
+		  				<input id = "loader" type="file">
+		  			</a>
+		  			<a href = "#" onclick = "promptSubmitMenu()">Submit</a>
+		  			<a id="run">Run</a>
 		  			<a href="#">Toggle Dynamic Evaluator</a>
 				</div>
 			</li>
 			<li class="dropdown">
 			<a href="#" class="dropbtn">Edit</a>
 				<div class="dropdown-content">
-		  			<a href="#">Undo  ctrl-z</a>
-		  			<a href="#">Redo  ctrl-y</a>
-		  			<a href="#">Cut   ctrl-x</a>
-		  			<a href="#">Copy  ctrl-c</a>
-		  			<a href="#">Paste ctrl-v</a>
+		  			<a href="#" onclick = "undo()">Undo  ctrl-z</a>
+		  			<a href="#" onclick = "redo()">Redo  ctrl-y</a>
+		  			<a href="#" onclick = "cut()">Cut   ctrl-x</a>
+		  			<a href="#" onclick = "copyToClipBoard()">Copy  ctrl-c</a>
+		  			<a href="#" onclick = "pasteToWorkspace()">Paste ctrl-v</a>
+		  			<a href="#" onclick = "rotateAxis()">Rotate All</a>
+		  			<a href="#" onclick = "rotateSelected()">Rotate Indivually</a>
+		  			<a href="#" onclick = "deleteSelected()">Delete Selected</a>
 				</div>
 			</li>
 		</ul>
@@ -71,6 +86,8 @@
 		</div>
 
 		<div class = "cmenu"> <!-- Component menu -->
+
+			<div class = "title">Components</div>
 
 			<div class = "twobytwo">
 				<img class = "c-icon" src="img/cmenu-and.png" id = "AND">
@@ -177,6 +194,43 @@
 				<div class = "ae-button" id = "save"></div>
 			</div>
 	</div>
+
+	<div class = "blanket"></div>
+
+	<div class = "submit-menu">
+		
+		<p>Submit Circuit To Profile</p>
+
+		<div id = "div-privacy">
+			<form>
+				<span class = "desc">Public</span>
+				<input type = "radio" class = "privacy" name = "privacy" id = "public" checked = "checked">
+				<span class = "desc">Private</span>
+				<input type = "radio" class = "privacy" name = "privacy" id = "private">
+			</form>
+		</div>
+
+		<div id = "div-name">
+			<span class = "desc">Name</span>
+			<input id = "circuit-name" class = "textbox" type = "text" name = "circuit-name" value = "">				
+		</div>
+
+		<div id = "div-share">
+			<span class = "desc">Share</span>
+			<input id = "circuit-share" class = "textbox" type = "text" name = "circuit-share" value = "">				
+		</div>
+
+		<div id = "div-tags">
+			<span class = "desc">Tags</span>
+			<input id = "circuit-tags" class = "textbox" type = "text" name = "circuit-tags" value = "">				
+		</div>
+
+		<div id = "div-submit">
+			<button type = "button" onclick = "submitToDatastore()">Submit</button>
+			<button type = "button" onclick = "hideSubmitMenu()">Cancel</button>
+		</div>
+	</div>
+
 
 	<script src = "script/canvas.js"></script>
 	<script src = "script/attribute-editor.js"></script>

@@ -1,0 +1,29 @@
+.user-menu{
+	position: relative;
+	float: right;
+	top: 0px;
+	width: 206px;
+	height: calc(10% + 10px);
+
+	/*
+	background-color: white;
+	border-radius: 8px;
+	border: 2px solid grey;
+	*/
+}
+
+
+
+.user-menu .auth{
+	position: absolute;
+	background-image: url(../img/bool-icon.png);
+	right: 0px;
+
+	height: 100%;
+	padding-left: 100%;
+
+	background-size: auto 100%;
+	background-repeat: no-repeat;
+
+	padding-left: 50%;
+}

@@ -42,13 +42,22 @@ body{
 	position: absolute;
 
 	left: calc(100% - 210px - 10px);
+	top: calc(10% + 34px);
 
 	width: 210px;
-	height: calc(100% - 44px);
+	height: calc(90% - 44px);
 
 	background-color: #C98474;
 
 	overflow: auto;
+}
+
+.workspace .cmenu .title{
+	text-align: center;
+	font-size: 20px;
+	margin: 6px;
+	color: white;
+	border-bottom: 2px solid black;
 }
 
 .workspace .cmenu .onebyone{
