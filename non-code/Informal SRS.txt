@@ -231,8 +231,23 @@ Interface
 				-> Opens a blank Main Workspace
 			> Search Bar
 				-> Depending on which page you are on, searchs through all results and finds circuit based on 
-					- name
-					- tag
+					> if you are on "Shared with me" it will only search through all the shared results
+						- name 			Nelson
+						- tags 			#public
+						- owner 		owner:nelson@gmail.com
+						- shared 		shared:mdadurian@gmail.com
+
+						> all search results are tokenized by a space
+
+				-> Syntax: <name> #<tag> owner:<owner> shared:<shared>
+					-example: Nelson's Circuit #public #cse220 owner:nelsontsui33@gmail.com shared:mdadurian@gmail.com
+
+						This would filter for 
+								any name containing "Nelson's" and "Circuit" 
+							and any tags with "#public" and "#cse220" 
+							and any owners with nelsontsui33@gmail.com
+							and any shared with mdadurian@gmail.com
+						
 			> Notifications
 				-> alerts when something is shared with 
 				-> tooltip that shows all notifications
@@ -269,6 +284,10 @@ Interface
 			- Once made through the Maker Page, it will appear as a normal Circuit in your Profile
 			- You can edit the Quizlet, but you cannot add Quizlet constraints to any normally made Circuit(through the Workspace).
 		> Students can clone their professor's Circuit file and try to solve it.
+
+		> Another tab in the console called -- Quizlet
+			-> Displays the number of each component you have left
+			-> Check Correctness -- checks if the circuit you have on the grid matches the quizlet constraints
 
 		Layout of Maker Page
 			-> Problem - the objective of this quizlet
