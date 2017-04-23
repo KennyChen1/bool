@@ -276,7 +276,7 @@ function pushInput(component, pushComponent, pushLocationX, pushLocationY){
 				pushComponent.outputDirectionsToDelete.push(outputDirectionToDelete[0]);
 				
 				if(isWire(pushComponent)){
-					pushComponent.setInput(component, outputDirectionToDelete[0]-1);
+					pushComponent.setInput(component, outputDirectionToDelete[0]);
 				}
 				else{
 					pushComponent.setInput(component, i);
@@ -313,7 +313,7 @@ function pushOutputWires(component){
 						toPush.outputDirectionsToDelete.push(toPushInDir[j]);
 
 						if(isWire(toPush)){
-							toPush.setInput(component, toPushInDir[j]-1);
+							toPush.setInput(component, toPushInDir[j]);
 						}
 						else{
 							toPush.setInput(component, k);
