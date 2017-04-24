@@ -34,6 +34,10 @@ function allowCircuitEvaluation(){ //allow circuit to be reevaluated
 	stopCircuitEvaluation = false;
 }
 
+function isWire(component){
+	return component.type === I_WIRE_COMPONENT || component.type === L_WIRE_COMPONENT || component.type === T_WIRE_COMPONENT || component.type === CROSS_WIRE_COMPONENT;
+}
+
 function directionToString(direction){
 	switch(direction){
 		case UP:
@@ -124,6 +128,42 @@ function flip(direction){ //180 degree rotation
 
 function inputDirectionMatchOutputDirection(input, output){
 	return flip(input) === output;
+}
+
+function deleteUnneededOutputs(outputs, outputsToDelete){
+	for(var j=0;j<outputsToDelete.length;j++){
+		var anOutput = outputs.indexOf(outputsToDelete[j])
+		if(anOutput > -1){
+			outputs.splice(anOutput, 1);
+		}
+	}
+}
+
+function getAdjacentLocationByDirection(location, direction){
+	var pushLocationX;
+	var pushLocationY;
+
+	if(direction === UP){//up
+		pushLocationX = location.x;
+		pushLocationY =	location.y - 1;
+	}
+	else if(direction === RIGHT){//right
+		pushLocationX = location.x + 1;
+		pushLocationY =	location.y;
+	}
+	else if(direction === DOWN){//down
+		pushLocationX = location.x;
+		pushLocationY =	location.y + 1;
+	}
+	else if(direction === LEFT){//left
+		pushLocationX = location.x - 1;
+		pushLocationY =	location.y;
+	}
+	else{
+		console.log("Error in getAdjacentLocationByDirection(direction). direction is invalid!");
+	}
+
+	return {x: pushLocationX, y: pushLocationY};
 }
 
 function canPushInput(inputArr, outputArr, noMatchOutputArr){
@@ -236,7 +276,7 @@ function pushInput(component, pushComponent, pushLocationX, pushLocationY){
 				pushComponent.outputDirectionsToDelete.push(outputDirectionToDelete[0]);
 				
 				if(isWire(pushComponent)){
-					pushComponent.setInput(component, outputDirectionToDelete[0]-1);
+					pushComponent.setInput(component, outputDirectionToDelete[0]);
 				}
 				else{
 					pushComponent.setInput(component, i);
@@ -246,41 +286,7 @@ function pushInput(component, pushComponent, pushLocationX, pushLocationY){
 	}
 }
 
-function deleteUnneededOutputs(outputs, outputsToDelete){
-	for(var j=0;j<outputsToDelete.length;j++){
-		var anOutput = outputs.indexOf(outputsToDelete[j])
-		if(anOutput > -1){
-			outputs.splice(anOutput, 1);
-		}
-	}
-}
 
-function getAdjacentLocationByDirection(location, direction){
-	var pushLocationX;
-	var pushLocationY;
-
-	if(direction === UP){//up
-		pushLocationX = location.x;
-		pushLocationY =	location.y - 1;
-	}
-	else if(direction === RIGHT){//right
-		pushLocationX = location.x + 1;
-		pushLocationY =	location.y;
-	}
-	else if(direction === DOWN){//down
-		pushLocationX = location.x;
-		pushLocationY =	location.y + 1;
-	}
-	else if(direction === LEFT){//left
-		pushLocationX = location.x - 1;
-		pushLocationY =	location.y;
-	}
-	else{
-		console.log("Error in getAdjacentLocationByDirection(direction). direction is invalid!");
-	}
-
-	return {x: pushLocationX, y: pushLocationY};
-}
 
 function pushOutputWires(component){
 	var compOutDir = component.outputDirection();
@@ -307,7 +313,7 @@ function pushOutputWires(component){
 						toPush.outputDirectionsToDelete.push(toPushInDir[j]);
 
 						if(isWire(toPush)){
-							toPush.setInput(component, toPushInDir[j]-1);
+							toPush.setInput(component, toPushInDir[j]);
 						}
 						else{
 							toPush.setInput(component, k);
@@ -317,10 +323,6 @@ function pushOutputWires(component){
 			}
 		}
 	}
-}
-
-function isWire(component){
-	return component.type === I_WIRE_COMPONENT || component.type === L_WIRE_COMPONENT || component.type === T_WIRE_COMPONENT || component.type === CROSS_WIRE_COMPONENT;
 }
 
 

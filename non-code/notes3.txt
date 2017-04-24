@@ -1,0 +1,92 @@
+Notes for Phase 3
+
+Workspace
+	Console(truth table + boolean equations)
+		Functions
+			> Boolean equation to circuit
+			> Circuit to boolean equation
+			> Truth table to boolean equation
+			> Boolean equation to truth table
+
+	Layout
+		-> Truth table tab layout
+		-> Boolean equations tab layout
+
+	Tools
+		-> Load - load any circuit files that are yours (can only load files that you are marked as OWNER)
+
+	Evaluator
+		-> Add 
+			- button(sends a short signal)
+			- switch(sends a constant signal)
+			- crossing (+ shape, allows signal to travel over another signal)
+		-> Evaluation
+			currently -> looks for every signal generating circuit and propagates on them. (depth first traversal on every SGC)
+			changes ->  either breadth first traversal on every SGC or tick based evaluation
+
+	Bringing from bool to bool_online
+		Relink
+			Workspace
+				> File -> New						/workspace
+				> Authenticate -> Login/Logout		/workspace/toggleLoginLogout
+				> Authenticate -> Profile			/workspace/profile
+				> Authenticate -> Exit				/
+
+			Profile
+				> Login 							/login
+				> Continue as Guest					/workspace
+
+Profile
+
+	Profile name and Utilities (on the top)
+		> Logo - brings you to splash screen
+
+		> New
+			-> Opens a blank Main Workspace
+
+		> Search Bar
+			-> Depending on which page you are on, searchs through all results and finds circuit based on 
+				> if you are on "Shared with me" it will only search through all the shared results
+					- name 			Nelson
+					- tags 			#public
+					- owner 		owner:nelson@gmail.com
+					- shared 		shared:mdadurian@gmail.com
+
+					> all search results are tokenized by a space
+
+			-> Syntax: <name> #<tag> owner:<owner> shared:<shared>
+				-example: Nelson's Circuit #public #cse220 owner:nelsontsui33@gmail.com shared:mdadurian@gmail.com
+
+					This would filter for 
+							any name containing "Nelson's" and "Circuit" 
+						and any tags with "#public" and "#cse220" 
+						and any owners with nelsontsui33@gmail.com
+						and any shared with mdadurian@gmail.com
+
+		> Notifications
+			-> alerts when something is shared with 
+			-> tooltip that shows all notifications
+
+		> Upload
+			-> Prompts File Manager and allows you to select which file you wish to upload
+			-> Dragging a file with the correct extension into the List of Circuits interface will automatically upload the file to the datastore (with you as the owner)
+
+		> Profile Name/Logout
+			-> Brings you to Splash Screen		
+
+		> Each Circuit listing has
+			-> Open (double click on listing)
+			-> Delete (prompts asking if you are SURE you want to delete)
+			-> Get Shareable Link
+			-> Share Option
+			-> Clone as owner(if not you Circuit) - copies Circuit file and puts into your account
+	
+Datastore
+	Storage Format
+		Circuit
+			- Owner - owner of the circuit
+			- Shared - who can view/clone the circuit
+			- Name - name of the Circuit file
+			- Circuit-content - String which stores the contents of the circuit
+			- Quizlet-constrains - any constraints which the creator has put on this circuit
+			- Tags - any tag that has been given to the circuit(helpful for searching)
