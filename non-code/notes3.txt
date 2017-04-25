@@ -41,10 +41,10 @@ Workspace
 Profile
 
 	Profile name and Utilities (on the top)
-		> Logo - brings you to splash screen
+		> Logo - brings you to splash screen (Reef)
 
 		> New
-			-> Opens a blank Main Workspace
+			-> Opens a blank Main Workspace (Reef)
 
 		> Search Bar
 			-> Depending on which page you are on, searchs through all results and finds circuit based on 
@@ -69,7 +69,7 @@ Profile
 				> owner: currentUser && shared: currentUser || tag.contains(#public)
 				> after you get this initial list of elements, you filter further based on the search query.
 
-		> Notifications
+		> Notifications (Reef)
 			-> alerts when something is shared with 
 			-> tooltip that shows all notifications
 
@@ -77,10 +77,10 @@ Profile
 			-> Prompts File Manager and allows you to select which file you wish to upload
 			-> Dragging a file with the correct extension into the List of Circuits interface will automatically upload the file to the datastore (with you as the owner)
 
-		> Profile Name/Logout
+		> Profile Name/Logout (Reef)
 			-> Brings you to Splash Screen		
 
-		> Each Circuit listing has
+		> Each Circuit listing has (Reef maybe some parts)
 			-> Open (double click on listing)
 			-> Delete (prompts asking if you are SURE you want to delete)
 			-> Get Shareable Link -- <owner><name>
