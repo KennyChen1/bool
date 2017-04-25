@@ -5,8 +5,10 @@ Workspace
 		Functions
 			> Boolean equation to circuit
 			> Circuit to boolean equation
-			> Truth table to boolean equation
-			> Boolean equation to truth table
+			K > Parser for boolean equations
+			K > Truth table to boolean equation
+			K > Boolean equation to truth table
+			K > Simplifying boolean equation (make boolean equation into its simplest form)
 
 	Layout
 		-> Truth table tab layout
@@ -63,11 +65,15 @@ Profile
 						and any owners with nelsontsui33@gmail.com
 						and any shared with mdadurian@gmail.com
 
+			-> Everything by default is filtered on 
+				> owner: currentUser && shared: currentUser || tag.contains(#public)
+				> after you get this initial list of elements, you filter further based on the search query.
+
 		> Notifications
 			-> alerts when something is shared with 
 			-> tooltip that shows all notifications
 
-		> Upload
+		> Upload **
 			-> Prompts File Manager and allows you to select which file you wish to upload
 			-> Dragging a file with the correct extension into the List of Circuits interface will automatically upload the file to the datastore (with you as the owner)
 
@@ -77,16 +83,15 @@ Profile
 		> Each Circuit listing has
 			-> Open (double click on listing)
 			-> Delete (prompts asking if you are SURE you want to delete)
-			-> Get Shareable Link
+			-> Get Shareable Link -- <owner><name>
 			-> Share Option
 			-> Clone as owner(if not you Circuit) - copies Circuit file and puts into your account
+
+------
+
+Extra Notes
+	> check if name exists.
+		if exists: add a (1). eg) helloworld(1).
+		else: accept
+
 	
-Datastore
-	Storage Format
-		Circuit
-			- Owner - owner of the circuit
-			- Shared - who can view/clone the circuit
-			- Name - name of the Circuit file
-			- Circuit-content - String which stores the contents of the circuit
-			- Quizlet-constrains - any constraints which the creator has put on this circuit
-			- Tags - any tag that has been given to the circuit(helpful for searching)

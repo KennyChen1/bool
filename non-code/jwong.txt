@@ -1,0 +1,14 @@
+JWong
+
+--easy--
+component output wire comes out of the center
+More useful information on attribute menu, like what coordinates the output will go to
+Directional wires look like shit
+
+--doable--
+wires automatically oriented when placed
+more visual feedback
+off box
+
+--harder--
+if you don't place an on box we automatically place an off box
