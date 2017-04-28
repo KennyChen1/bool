@@ -28,6 +28,7 @@
 	<script src = "script/images.js"></script>
 	<script src = "script/grid.js"></script>
 	<script src = "script/submit.js"></script>
+	<script src = "script/truth-table.js"></script>
 
 </head>
 
@@ -129,10 +130,12 @@
 					<span class = "console-label">Boolean Equations</span>
 				</div>
 
+				<!--
 				<div class = "name-container" id = "name-container">		
 					<span class = "name-label">Circuit Name</span>
 					<input id = "name-input" class = "name-input-textbox" type = "text" name = "circuit-name" value = "">
 				</div>
+				-->
 
 				<div id = "clear-console">Clear Debug</div>
 
@@ -140,28 +143,70 @@
 
 			<div class = "console-bottom show" id = "debug">
 				<p class = "debug-msg"> Welcome to <i>bool</i>! The Online Circuit Builder</p>
+				
+				<div id = "debug-printed">
 				<p class = "debug-msg"> To get started, drag and drop some circuit components onto the grid. Then go to file -> run and let the simulation begin!</p>
 				<p class = "debug-msg"> To edit any of the circuit components attributes, right click the component on the grid and change away!</p>
-				<div id = "debug-printed">
 
 				</div>
 			</div>
 			
 			<div class = "console-bottom" id = "truth-table">
 				<div class = "build-circuit">
-					<div class = "bool-button">asdasda</div>
-					<div class = "bool-button">asdasads</div>
+					<div class = "left">
+						<div class = "bool-button">Build Table</div>
+						<div class = "bool-button">Build Circuit</div>	
+
+						<br>
+
+						<div class = "bool-button" id = "toggle-table">
+							Show Textbox
+						</div>					
+					</div>
+					<div class = "right">
+						<div class = "bool-button" onclick = "addColumnToTruthTable()">
+						Add Column
+						</div>
+						<div class = "bool-button" onclick = "addRowToTruthTable()">Add Row</div>
+						<div class = "bool-button">Delete Column</div>
+						<div class = "bool-button">Delete Row</div>
+						<div class = "bool-button">Reset Table</div>
+					</div>
 				</div>
-				<div id = "table"></div>
-				<div id = "table-buttons"></div>
+				<div id = "input">
+					<div id = "table show">					
+						<table class = "table-input">
+						  <tr class = "header">
+						    <th>-</th>
+						    <th>A</th>					    	 
+						  </tr>	
+						  <tr class = "tt-row">
+						  	<td class = "row-num">1</td>
+						  	<td>0</td>
+						  </tr>	  
+						  <tr class = "tt-row">
+						  	<td class = "row-num">2</td>
+						  	<td>0</td>
+						  </tr>	
+						</table>
+					</div>
+					<div id = "textbox">
+						<textarea id = "truth-tb">
+							00000
+						</textarea>
+					</div>		
+				</div>		
 			</div>
 
 			<div class = "console-bottom" id = "boolean">
 				<div class = "build-circuit">
-					<div class = "bool-button">asdasda</div>
-					<div class = "bool-button">asdasads</div>
+					<div class = "bool-button">Make Circuit</div>
+					<div class = "bool-button">Make Boolean Eq</div>
 				</div>
-				<div id = "textbox"></div>
+				<div id = "textbox">
+					<textarea id = "boolean-tb">Enter boolean equations here!
+					</textarea>
+				</div>
 			</div>
 
 		</div>

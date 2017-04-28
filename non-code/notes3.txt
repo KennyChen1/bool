@@ -6,13 +6,49 @@ Workspace
 			> Boolean equation to circuit
 			> Circuit to boolean equation
 			K > Parser for boolean equations
+
+				Example: A * !B + ( C * D + !A)
+
+				Breaking on + exception: A * B * ( C + D )
+
+				Tokens
+					A
+					*
+					!B
+					+
+					(
+					C
+					*
+					D
+					+
+					!A
+
+				eq = A * B, any expression
+
+				Ze grammah
+					eq -> (eq) | eq op eq | label
+					label -> word | !word
+					op -> * | +
+
 			K > Truth table to boolean equation
 			K > Boolean equation to truth table
 			K > Simplifying boolean equation (make boolean equation into its simplest form)
 
 	Layout
-		-> Truth table tab layout
+		K -> Truth table tab layout
+			> Clicking on one of the boxes in the table toggles it(either 0 or 1)
+
+			> Selecting a row
+			> Selecting a column
+				-> then pressing
+					> Delete - will delete the selected row/col
+					> Add - will add a row/col to the bottom/right of the row/col
+			> Reset Table - resets the entire table to 0s
+
 		-> Boolean equations tab layout
+
+		-> Help Menu page (gives instructions on how to use circuits)
+		-> QA page (contact info and how to send buggy circuits to us)
 
 	Tools
 		-> Load - load any circuit files that are yours (can only load files that you are marked as OWNER)
