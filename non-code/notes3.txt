@@ -5,12 +5,43 @@ Workspace
 		Functions
 			> Boolean equation to circuit
 			> Circuit to boolean equation
-			> Truth table to boolean equation
-			> Boolean equation to truth table
+			K > Parser for boolean equations
+
+				Example: A * !B + ( C * D + !A)
+
+				Breaking on + exception: A * B * ( C + D )
+
+				Tokens
+					A
+					*
+					!B
+					+
+					(
+					C
+					*
+					D
+					+
+					!A
+
+				eq = A * B, any expression
+
+				Ze grammah
+					eq -> (eq) | eq op eq | label
+					label -> word | !word
+					op -> * | +
+
+			K > Truth table to boolean equation
+			K > Boolean equation to truth table
+			K > Simplifying boolean equation (make boolean equation into its simplest form)
 
 	Layout
-		-> Truth table tab layout
+		K -> Truth table tab layout
+			-Table scrapped, just uses textbox each line is seperated by a /
+
 		-> Boolean equations tab layout
+
+		-> Help Menu page (gives instructions on how to use circuits)
+		-> QA page (contact info and how to send buggy circuits to us)
 
 	Tools
 		-> Load - load any circuit files that are yours (can only load files that you are marked as OWNER)
@@ -18,7 +49,7 @@ Workspace
 	Evaluator
 		-> Add 
 			- button(sends a short signal)
-			- switch(sends a constant signal)
+			- switch(sends a constant signal) -> to replace variable blocks
 			- crossing (+ shape, allows signal to travel over another signal)
 		-> Evaluation
 			currently -> looks for every signal generating circuit and propagates on them. (depth first traversal on every SGC)
@@ -39,10 +70,10 @@ Workspace
 Profile
 
 	Profile name and Utilities (on the top)
-		> Logo - brings you to splash screen
+		> Logo - brings you to splash screen (Reef)
 
 		> New
-			-> Opens a blank Main Workspace
+			-> Opens a blank Main Workspace (Reef)
 
 		> Search Bar
 			-> Depending on which page you are on, searchs through all results and finds circuit based on 
@@ -63,30 +94,33 @@ Profile
 						and any owners with nelsontsui33@gmail.com
 						and any shared with mdadurian@gmail.com
 
-		> Notifications
+			-> Everything by default is filtered on 
+				> owner: currentUser && shared: currentUser || tag.contains(#public)
+				> after you get this initial list of elements, you filter further based on the search query.
+
+		> Notifications (Reef)
 			-> alerts when something is shared with 
 			-> tooltip that shows all notifications
 
-		> Upload
+		> Upload **
 			-> Prompts File Manager and allows you to select which file you wish to upload
 			-> Dragging a file with the correct extension into the List of Circuits interface will automatically upload the file to the datastore (with you as the owner)
 
-		> Profile Name/Logout
+		> Profile Name/Logout (Reef)
 			-> Brings you to Splash Screen		
 
-		> Each Circuit listing has
+		> Each Circuit listing has (Reef maybe some parts)
 			-> Open (double click on listing)
 			-> Delete (prompts asking if you are SURE you want to delete)
-			-> Get Shareable Link
+			-> Get Shareable Link -- <owner><name>
 			-> Share Option
 			-> Clone as owner(if not you Circuit) - copies Circuit file and puts into your account
+
+------
+
+Extra Notes
+	> check if name exists.
+		if exists: add a (1). eg) helloworld(1).
+		else: accept
+
 	
-Datastore
-	Storage Format
-		Circuit
-			- Owner - owner of the circuit
-			- Shared - who can view/clone the circuit
-			- Name - name of the Circuit file
-			- Circuit-content - String which stores the contents of the circuit
-			- Quizlet-constrains - any constraints which the creator has put on this circuit
-			- Tags - any tag that has been given to the circuit(helpful for searching)

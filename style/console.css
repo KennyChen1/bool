@@ -62,27 +62,85 @@
     visibility: visible;
 }
 
-.console .console-bottom .build-circuit{
-    width: 20%;
-    margin: 20px;
-}
-
 .console .bool-button{
     background-color: white;
     border: 2px solid black;
     border-radius: 5px; 
+    width: 100px;
+    text-align: center;
 }
 
 .console #debug{
     overflow: auto;
 }
 
+/*Truth table attributes*/
 .console #truth-table{
-
 }
 
-.console #boolean{
+.console #truth-table .build-circuit{
+    margin: 20px;
+    float: left;
+}
 
+.console #truth-table .build-circuit .left{
+    float: left;
+}
+
+.console #truth-table .build-circuit .right{
+    float: left;
+}
+
+.console #truth-table #input{
+    position: relative;
+    margin: 5px;
+    float: left;
+    border: 2px solid black;
+    width: calc(100% - 280px);
+    height: calc(100% - 15px);
+    overflow: auto;
+}
+
+.console #truth-table .table{
+    position: absolute;
+    visibility: hidden;
+}
+
+.console #truth-table th, td{
+    border: 0.5px solid black;
+}
+
+.console #truth-table #textbox{
+    position: absolute;
+    visibility: hidden;
+}
+
+.console #truth-table #alt-textbox #truth-tb{
+   margin: 10px 0 0 0;
+   width: 30em;
+   height: 10em;
+}
+
+/*Boolean attributes*/
+.console #boolean{
+    margin: 20px;
+}
+
+.console #boolean .build-circuit .bool-button{
+    width: 150px;
+}
+
+.console #boolean .build-circuit{
+    margin-right: 20px;
+    float: left;
+}
+
+.console #boolean #textbox{
+    float: left;
+}
+
+.console #boolean textarea{
+    width: 20em;
 }
 
 
