@@ -154,27 +154,29 @@
 			<div class = "console-bottom" id = "truth-table">
 				<div class = "build-circuit">
 					<div class = "left">
-						<div class = "bool-button">Build Table</div>
+						<div class = "bool-button" onclick = "getTruthTableAsString()">Build Table</div>
 						<div class = "bool-button">Build Circuit</div>	
 
-						<br>
+						<!--<br>
 
-						<div class = "bool-button" id = "toggle-table">
+						<div class = "bool-button" id = "toggle-table" onclick = "toggleTruthTableTextBox()">
 							Show Textbox
-						</div>					
+						</div>		
+						-->			
 					</div>
+					<!--
 					<div class = "right">
 						<div class = "bool-button" onclick = "addColumnToTruthTable()">
 						Add Column
 						</div>
-						<div class = "bool-button" onclick = "addRowToTruthTable()">Add Row</div>
-						<div class = "bool-button">Delete Column</div>
-						<div class = "bool-button">Delete Row</div>
+						<div class = "bool-button" onclick = "deleteColumnFromTruthTable()">Delete Column</div>
 						<div class = "bool-button">Reset Table</div>
 					</div>
+					-->
 				</div>
+				<!--
 				<div id = "input">
-					<div id = "table show">					
+					<div id = "table">					
 						<table class = "table-input">
 						  <tr class = "header">
 						    <th>-</th>
@@ -190,11 +192,18 @@
 						  </tr>	
 						</table>
 					</div>
-					<div id = "textbox">
+					<div id = "textbox show">
 						<textarea id = "truth-tb">
 							00000
 						</textarea>
 					</div>		
+				</div>		
+				-->
+				<div id = "alt-textbox">
+					<textarea id = "truth-tb">- A B / 
+1 0 0 / 
+2 0 0
+					</textarea>
 				</div>		
 			</div>
 

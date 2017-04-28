@@ -36,14 +36,7 @@ Workspace
 
 	Layout
 		K -> Truth table tab layout
-			> Clicking on one of the boxes in the table toggles it(either 0 or 1)
-
-			> Selecting a row
-			> Selecting a column
-				-> then pressing
-					> Delete - will delete the selected row/col
-					> Add - will add a row/col to the bottom/right of the row/col
-			> Reset Table - resets the entire table to 0s
+			-Table scrapped, just uses textbox each line is seperated by a /
 
 		-> Boolean equations tab layout
 
@@ -56,7 +49,7 @@ Workspace
 	Evaluator
 		-> Add 
 			- button(sends a short signal)
-			- switch(sends a constant signal)
+			- switch(sends a constant signal) -> to replace variable blocks
 			- crossing (+ shape, allows signal to travel over another signal)
 		-> Evaluation
 			currently -> looks for every signal generating circuit and propagates on them. (depth first traversal on every SGC)

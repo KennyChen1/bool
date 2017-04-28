@@ -98,10 +98,10 @@
     border: 2px solid black;
     width: calc(100% - 280px);
     height: calc(100% - 15px);
-    overflow: scroll;
+    overflow: auto;
 }
 
-.console #truth-table #table{
+.console #truth-table .table{
     position: absolute;
     visibility: hidden;
 }
@@ -115,14 +115,15 @@
     visibility: hidden;
 }
 
-.show{
-    visibility: visible;
+.console #truth-table #alt-textbox #truth-tb{
+   margin: 10px 0 0 0;
+   width: 30em;
+   height: 10em;
 }
-
 
 /*Boolean attributes*/
 .console #boolean{
-     margin: 20px;
+    margin: 20px;
 }
 
 .console #boolean .build-circuit .bool-button{
