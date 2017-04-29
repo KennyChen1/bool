@@ -1,3 +1,10 @@
+/* Syntax for Boolean Equations Parser*/
+var BE_OR = "+";
+var BE_AND = "*";
+var BE_NOT = "!";
+var BE_LPAREN = "(";
+var BE_RPAREN = ")";
+
 function getBooleanEquation(){
 	var booleq = $(".console #boolean #textbox #boolean-tb").val();
 
@@ -55,7 +62,7 @@ function splitOnChar(tbe, charToSplit){
 				var currRoot;
 				
 
-				if(charToSplit == "!"){
+				if(charToSplit == BE_NOT){
 					currRoot = new parseNode(curr);
 					currRoot.right = parseBooleanEq(tbe.slice(i+1, tbe.length));
 				}
@@ -100,15 +107,15 @@ function parseBooleanEq(tbe){
 		console.log(tbe[0]);
 		return new parseNode(tbe[0]);
 	}
-	else if(tbe[0] == "(" && tbe[tbe.length-1] == ")"){ // eq -> (eq)
+	else if(tbe[0] == BE_LPAREN && tbe[tbe.length-1] == BE_RPAREN){ // eq -> (eq)
 		return parseBooleanEq(tbe.slice(1,tbe.length-1));
 	}
 	else{
-		var orSplit = splitOnChar(tbe, "+");
+		var orSplit = splitOnChar(tbe, BE_OR);
 		if(!orSplit){
-			var andSplit = splitOnChar(tbe, "*");
+			var andSplit = splitOnChar(tbe, BE_AND);
 			if(!andSplit){
-				var notSplit = splitOnChar(tbe, "!");
+				var notSplit = splitOnChar(tbe, BE_NOT);
 				if(notSplit.ret){
 					return notSplit.value;
 				}
@@ -131,6 +138,70 @@ function buildCircuit(boolEq){
 	var parseTree = parseBooleanEquation(boolEq);
 
 	var tempClipboard = [];
+
+	clipboard = breadthTraverseParseTree([parseTree], tempClipboard, 0);
+}
+
+function breadthTraverseParseTree(list, tempClipboard, count){
+	var nextList = [];
+
+	if(list.length <= 0){
+		return tempClipboard;
+	}
+
+	for (var i = 0; i < list.length; i++) {
+		var curr = list[i]
+		var currLeft = list[i].left;
+		var currRight = list[i].right;
+		if(currLeft != null){
+			nextList.push(currLeft);
+		}
+		if(currRight != null){
+			nextList.push(currRight);
+		}
+
+		putCircuitsOnClipboard(tempClipboard, i, count, curr)
+		console.log(curr);
+	}
+
+	console.log("\n--------next---------");
+
+	count++;
+
+	return breadthTraverseParseTree(nextList, tempClipboard, count);
+}
+
+function putCircuitsOnClipboard(tempClipboard, i, count, curr){
+	var placeY = i * 2;
+	var placeX = count * 3;
+	var placeDirection = LEFT;
+
+	var pushGate;
+
+	if(curr.data == BE_NOT){
+		pushGate = not_gate(null, placeX, placeY);
+		pushGate.direction = placeDirection;
+
+		tempClipboard.push(pushGate);
+	}
+	else if(curr.data == BE_AND){
+		pushGate = and_gate(null, placeX, placeY);
+		pushGate.direction = placeDirection;
+
+		tempClipboard.push(pushGate);
+	}
+	else if(curr.data == BE_OR){
+		pushGate = or_gate(null, placeX, placeY);
+		pushGate.direction = placeDirection;
+
+		tempClipboard.push(pushGate);
+	}
+	else{
+		pushGate = var_box(curr.data, placeX, placeY);
+		pushGate.direction = placeDirection;
+
+		tempClipboard.push(pushGate);
+	}
 }
 
 /* Parse Tree Node Objects */
