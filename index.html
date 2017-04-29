@@ -28,8 +28,6 @@
 	<script src = "script/images.js"></script>
 	<script src = "script/grid.js"></script>
 	<script src = "script/submit.js"></script>
-	<script src = "script/truth-table.js"></script>
-	<script src = "script/boolean-eq.js"></script>
 
 </head>
 
@@ -214,7 +212,7 @@
 					<div class = "bool-button" onclick = "makeBoolEqFromCircuit()">Make Boolean Eq</div>
 				</div>
 				<div id = "textbox">
-					<textarea id = "boolean-tb">A + B * !(!A + B)</textarea>
+					<textarea id = "boolean-tb">!(D+!B) + B * !(!A + B)</textarea>
 				</div>
 			</div>
 
@@ -295,8 +293,10 @@
 	<script src = "script/evaluator.js"></script> <!-- Circuit Evaluator -->
 	<script src = "script/saving.js"></script>
 
-
 	<script src = "script/toolbar.js"></script>
+
+	<script src = "script/truth-table.js"></script>
+	<script src = "script/boolean-eq.js"></script>
 
 </body>
 

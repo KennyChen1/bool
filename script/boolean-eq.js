@@ -7,7 +7,7 @@ function getBooleanEquation(){
 }
 
 function makeCircuitFromBoolEq(){
-	parseBooleanEquation(getBooleanEquation());
+	buildCircuit(getBooleanEquation());
 }
 
 function makeBoolEqFromCircuit(){
@@ -18,6 +18,7 @@ function isLetter(str){
 	return str.length === 1 && str.match(/[a-z]/i);
 }
 
+/* Functions for parsing and tokenizing the boolean equations */
 function tokenizeBoolEq(boolEq){
 	boolEq = boolEq.replace(/\s/g, '');
 
@@ -85,6 +86,8 @@ function parseBooleanEquation(boolEq){
 	var parseTree = parseBooleanEq(tbe);
 
 	console.log(parseTree);
+	
+	return parseTree;
 }
 
 function parseBooleanEq(tbe){
@@ -122,6 +125,12 @@ function parseBooleanEq(tbe){
 		}		
 	}
 
+}
+
+function buildCircuit(boolEq){
+	var parseTree = parseBooleanEquation(boolEq);
+
+	var tempClipboard = [];
 }
 
 /* Parse Tree Node Objects */
