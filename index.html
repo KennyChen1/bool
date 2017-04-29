@@ -29,6 +29,7 @@
 	<script src = "script/grid.js"></script>
 	<script src = "script/submit.js"></script>
 	<script src = "script/truth-table.js"></script>
+	<script src = "script/boolean-eq.js"></script>
 
 </head>
 
@@ -209,12 +210,11 @@
 
 			<div class = "console-bottom" id = "boolean">
 				<div class = "build-circuit">
-					<div class = "bool-button">Make Circuit</div>
-					<div class = "bool-button">Make Boolean Eq</div>
+					<div class = "bool-button" onclick = "makeCircuitFromBoolEq()">Make Circuit</div>
+					<div class = "bool-button" onclick = "makeBoolEqFromCircuit()">Make Boolean Eq</div>
 				</div>
 				<div id = "textbox">
-					<textarea id = "boolean-tb">Enter boolean equations here!
-					</textarea>
+					<textarea id = "boolean-tb">A + B * !(!A + B)</textarea>
 				</div>
 			</div>
 
