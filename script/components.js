@@ -26,306 +26,6 @@ var RIGHT = 1;
 
 var stopCircuitEvaluation = false;
 
-function killCircuitEvaluation(){ //kills the circuit evaluation (DOES NOT PAUSE EVALUATION)
-	stopCircuitEvaluation = true;
-}
-
-function allowCircuitEvaluation(){ //allow circuit to be reevaluated
-	stopCircuitEvaluation = false;
-}
-
-function isWire(component){
-	return component.type === I_WIRE_COMPONENT || component.type === L_WIRE_COMPONENT || component.type === T_WIRE_COMPONENT || component.type === CROSS_WIRE_COMPONENT;
-}
-
-function directionToString(direction){
-	switch(direction){
-		case UP:
-			return "UP";
-			break;
-		case LEFT:
-			return "LEFT";
-			break;
-		case RIGHT:
-			return "RIGHT";
-			break;
-		case DOWN: 
-			return "DOWN";
-			break;
-
-		default:
-			console.log("none direction! FUNCTION: directionToString(direction)");
-			return "???";
-			break;
-	}
-}
-
-function clockwise(direction){ //90 degree rotation
-	switch(direction){
-		case UP:
-			return RIGHT;
-			break;
-		case RIGHT:
-			return DOWN;
-			break;
-		case DOWN:
-			return LEFT;
-			break;
-		case LEFT: 
-			return UP;
-			break;
-
-		default:
-			console.log("none direction! FUNCTION: clockwise(direction)");
-			return "???";
-			break;
-	}
-}
-
-function counterClockwise(direction){ //270 degree rotation
-	switch(direction){
-		case UP:
-			return LEFT;
-			break;
-		case LEFT:
-			return DOWN;
-			break;
-		case DOWN:
-			return RIGHT;
-			break;
-		case RIGHT: 
-			return UP;
-			break;
-
-		default:
-			console.log("none direction! FUNCTION: counterClockwise(direction)");
-			return "???";
-			break;
-	}
-}
-
-function flip(direction){ //180 degree rotation
-	switch(direction){
-		case UP:
-			return DOWN;
-			break;
-		case DOWN:
-			return UP;
-			break;
-		case LEFT:
-			return RIGHT;
-			break;
-		case RIGHT: 
-			return LEFT;
-			break;
-
-		default:
-			console.log("none direction! FUNCTION: flip(direction)");
-			return "???";
-			break;
-	}
-}
-
-function inputDirectionMatchOutputDirection(input, output){
-	return flip(input) === output;
-}
-
-function deleteUnneededOutputs(outputs, outputsToDelete){
-	for(var j=0;j<outputsToDelete.length;j++){
-		var anOutput = outputs.indexOf(outputsToDelete[j])
-		if(anOutput > -1){
-			outputs.splice(anOutput, 1);
-		}
-	}
-}
-
-function getAdjacentLocationByDirection(location, direction){
-	var pushLocationX;
-	var pushLocationY;
-
-	if(direction === UP){//up
-		pushLocationX = location.x;
-		pushLocationY =	location.y - 1;
-	}
-	else if(direction === RIGHT){//right
-		pushLocationX = location.x + 1;
-		pushLocationY =	location.y;
-	}
-	else if(direction === DOWN){//down
-		pushLocationX = location.x;
-		pushLocationY =	location.y + 1;
-	}
-	else if(direction === LEFT){//left
-		pushLocationX = location.x - 1;
-		pushLocationY =	location.y;
-	}
-	else{
-		console.log("Error in getAdjacentLocationByDirection(direction). direction is invalid!");
-	}
-
-	return {x: pushLocationX, y: pushLocationY};
-}
-
-function canPushInput(inputArr, outputArr, noMatchOutputArr){
-	for(var i=0;i<inputArr.length;i++){
-		for(var j=0;j<outputArr.length;j++){
-			if(inputDirectionMatchOutputDirection(inputArr[i], outputArr[j])){
-				noMatchOutputArr.push(inputArr[i]);
-				return true;
-			}
-		}
-	}
-
-	return false;
-}
-
-function isSignalGenerating(component){
-	return component.type == NOT_GATE_COMPONENT ||
-		component.type == ON_BOX_COMPONENT;		
-}
-
-function pushOutput2by1(component){
-	var cl = component.locations();
-
-	var outputLocation; //location where the output comes out of
-	var pushLocationX;  //x location of where the output goes
-	var pushLocationY;	//y location of where the output goes
-
-	var pushComponent;  //gotten grid component of where the pushcomponent is.
-
-	if(component.direction === UP || component.direction === RIGHT){
-		outputLocation = cl[0];
-		if(component.direction === UP){	
-			pushLocationX = outputLocation.x;
-			pushLocationY =	outputLocation.y - 1;
-			pushComponent = getAtGrid(pushLocationX, pushLocationY);
-		}
-		else{//right
-			pushLocationX = outputLocation.x + 1;
-			pushLocationY =	outputLocation.y;
-			pushComponent = getAtGrid(pushLocationX, pushLocationY);
-		}
-	}
-	else{ //down or left
-		outputLocation = cl[1];
-		if(component.direction === DOWN){	
-			pushLocationX = outputLocation.x;
-			pushLocationY =	outputLocation.y + 1;
-			pushComponent = getAtGrid(pushLocationX, pushLocationY);
-		}
-		else if(component.direction === LEFT){//right
-			pushLocationX = outputLocation.x - 1;
-			pushLocationY =	outputLocation.y;
-			pushComponent = getAtGrid(pushLocationX, pushLocationY);
-		}
-		else{
-			console.log("Invalid direction in pushOutput2by1 - component printed below");
-			console.log(component);
-		}
-	}
-
-	pushInput(component, pushComponent, pushLocationX, pushLocationY);
-}
-
-function pushOutput1by1Straight(component){
-	var cl = component.locations();
-
-	var outputLocation; //location where the output comes out of
-	var pushLocationX;  //x location of where the output goes
-	var pushLocationY;	//y location of where the output goes
-
-	var pushComponent;  //gotten grid component of where the pushcomponent is.
-
-	outputLocation = cl[0];
-	if(component.direction === UP){//up
-		pushLocationX = outputLocation.x;
-		pushLocationY =	outputLocation.y - 1;
-		pushComponent = getAtGrid(pushLocationX, pushLocationY);
-	}
-	else if(component.direction === RIGHT){//right
-		pushLocationX = outputLocation.x + 1;
-		pushLocationY =	outputLocation.y;
-		pushComponent = getAtGrid(pushLocationX, pushLocationY);
-	}
-	else if(component.direction === DOWN){//down
-		pushLocationX = outputLocation.x;
-		pushLocationY =	outputLocation.y + 1;
-		pushComponent = getAtGrid(pushLocationX, pushLocationY);
-	}
-	else if(component.direction === LEFT){//left
-		pushLocationX = outputLocation.x - 1;
-		pushLocationY =	outputLocation.y;
-		pushComponent = getAtGrid(pushLocationX, pushLocationY);
-	}
-	else{
-		console.log("Invalid direction in pushOutput1by1Straight - component printed below");
-		console.log(component);
-	}	
-
-	pushInput(component, pushComponent, pushLocationX, pushLocationY);
-}
-
-function pushInput(component, pushComponent, pushLocationX, pushLocationY){
-	var outputDirectionToDelete = []; 
-	//A->B | A is pushing an input to B
-	//B's input direction(where its recieving input) is the B's output direction to delete
-	if(pushComponent != null && canPushInput(pushComponent.inputDirection(), component.outputDirection(), outputDirectionToDelete)){
-		var pushComponentLoc = pushComponent.locations();
-		for(var i=0;i<pushComponentLoc.length;i++){
-			if(pushLocationX === pushComponentLoc[i].x && pushLocationY === pushComponentLoc[i].y){
-				pushComponent.outputDirectionsToDelete.push(outputDirectionToDelete[0]);
-				
-				if(isWire(pushComponent)){
-					pushComponent.setInput(component, outputDirectionToDelete[0]);
-				}
-				else{
-					pushComponent.setInput(component, i);
-				}
-			}
-		}
-	}
-}
-
-
-
-function pushOutputWires(component){
-	var compOutDir = component.outputDirection();
-	var toPush;
-	for(var i=0;i<compOutDir.length;i++){
-		var toPushCoords = getAdjacentLocationByDirection(component.locations()[0], compOutDir[i]);
-		toPush = getAtGrid(toPushCoords.x, toPushCoords.y);
-
-		if(toPush != null){
-			var toPushInDir = toPush.inputDirection();
-			var toPushLocations = toPush.locations();
-			for(var j=0;j<toPushInDir.length;j++){
-				for(var k=0;k<toPushLocations.length;k++){
-					var toPushPrevCoords = getAdjacentLocationByDirection(toPushLocations[k], toPushInDir[j]); //input blocks of any gate block
-					var toPushPrev = getAtGrid(toPushPrevCoords.x, toPushPrevCoords.y);
-					if(toPushPrev != null && toPushPrev.equals(component)){
-						var outputDirectionToDelete = [];
-						//canPushInput(toPush.inputDirection(), component.outputDirection(), outputDirectionToDelete);
-
-						//for(var p=0;p<outputDirectionToDelete.length;p++){
-						//	toPush.outputDirectionsToDelete.push(outputDirectionToDelete[p]);
-						//}
-
-						toPush.outputDirectionsToDelete.push(toPushInDir[j]);
-
-						if(isWire(toPush)){
-							toPush.setInput(component, toPushInDir[j]);
-						}
-						else{
-							toPush.setInput(component, k);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-
 function component(
 		type, 
 		label, 
@@ -939,4 +639,313 @@ function var_box(label, x, y){
 	}
 
 	return temp;
+}
+
+/* Circuit Evaluation Helper Functions */
+
+function killCircuitEvaluation(){ //kills the circuit evaluation (DOES NOT PAUSE EVALUATION)
+	stopCircuitEvaluation = true;
+}
+
+function allowCircuitEvaluation(){ //allow circuit to be reevaluated
+	stopCircuitEvaluation = false;
+}
+
+function isWire(component){
+	return component.type === I_WIRE_COMPONENT || component.type === L_WIRE_COMPONENT || component.type === T_WIRE_COMPONENT || component.type === CROSS_WIRE_COMPONENT;
+}
+
+function directionToString(direction){
+	switch(direction){
+		case UP:
+			return "UP";
+			break;
+		case LEFT:
+			return "LEFT";
+			break;
+		case RIGHT:
+			return "RIGHT";
+			break;
+		case DOWN: 
+			return "DOWN";
+			break;
+
+		default:
+			console.log("none direction! FUNCTION: directionToString(direction)");
+			return "???";
+			break;
+	}
+}
+
+function clockwise(direction){ //90 degree rotation
+	switch(direction){
+		case UP:
+			return RIGHT;
+			break;
+		case RIGHT:
+			return DOWN;
+			break;
+		case DOWN:
+			return LEFT;
+			break;
+		case LEFT: 
+			return UP;
+			break;
+
+		default:
+			console.log("none direction! FUNCTION: clockwise(direction)");
+			return "???";
+			break;
+	}
+}
+
+function counterClockwise(direction){ //270 degree rotation
+	switch(direction){
+		case UP:
+			return LEFT;
+			break;
+		case LEFT:
+			return DOWN;
+			break;
+		case DOWN:
+			return RIGHT;
+			break;
+		case RIGHT: 
+			return UP;
+			break;
+
+		default:
+			console.log("none direction! FUNCTION: counterClockwise(direction)");
+			return "???";
+			break;
+	}
+}
+
+function flip(direction){ //180 degree rotation
+	switch(direction){
+		case UP:
+			return DOWN;
+			break;
+		case DOWN:
+			return UP;
+			break;
+		case LEFT:
+			return RIGHT;
+			break;
+		case RIGHT: 
+			return LEFT;
+			break;
+
+		default:
+			console.log("none direction! FUNCTION: flip(direction)");
+			return "???";
+			break;
+	}
+}
+
+function inputDirectionMatchOutputDirection(input, output){
+	return flip(input) === output;
+}
+
+function isSignalGenerating(component){
+	return component.type == NOT_GATE_COMPONENT ||
+		component.type == ON_BOX_COMPONENT;		
+}
+
+function getAdjacentLocationByDirection(location, direction){
+	var pushLocationX;
+	var pushLocationY;
+
+	if(direction === UP){//up
+		pushLocationX = location.x;
+		pushLocationY =	location.y - 1;
+	}
+	else if(direction === RIGHT){//right
+		pushLocationX = location.x + 1;
+		pushLocationY =	location.y;
+	}
+	else if(direction === DOWN){//down
+		pushLocationX = location.x;
+		pushLocationY =	location.y + 1;
+	}
+	else if(direction === LEFT){//left
+		pushLocationX = location.x - 1;
+		pushLocationY =	location.y;
+	}
+	else{
+		console.log("Error in getAdjacentLocationByDirection(direction). direction is invalid!");
+	}
+
+	return {x: pushLocationX, y: pushLocationY};
+}
+
+/* Circuit Evaluator Functions */
+
+// push logic to output location
+// output component checks if it can accept it based on input location
+// keeps track of which direction the signal came from
+// outputs to everywhere except where the signal came from
+
+/* Unused functions */
+function deleteUnneededOutputs(outputs, outputsToDelete){
+	for(var j=0;j<outputsToDelete.length;j++){
+		var anOutput = outputs.indexOf(outputsToDelete[j])
+		if(anOutput > -1){
+			outputs.splice(anOutput, 1);
+		}
+	}
+}
+
+function canPushInput(inputArr, outputArr, noMatchOutputArr){
+	for(var i=0;i<inputArr.length;i++){
+		for(var j=0;j<outputArr.length;j++){
+			if(inputDirectionMatchOutputDirection(inputArr[i], outputArr[j])){
+				noMatchOutputArr.push(inputArr[i]);
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+function pushOutput2by1(component){
+	var cl = component.locations();
+
+	var outputLocation; //location where the output comes out of
+	var pushLocationX;  //x location of where the output goes
+	var pushLocationY;	//y location of where the output goes
+
+	var pushComponent;  //gotten grid component of where the pushcomponent is.
+
+	if(component.direction === UP || component.direction === RIGHT){
+		outputLocation = cl[0];
+		if(component.direction === UP){	
+			pushLocationX = outputLocation.x;
+			pushLocationY =	outputLocation.y - 1;
+			pushComponent = getAtGrid(pushLocationX, pushLocationY);
+		}
+		else{//right
+			pushLocationX = outputLocation.x + 1;
+			pushLocationY =	outputLocation.y;
+			pushComponent = getAtGrid(pushLocationX, pushLocationY);
+		}
+	}
+	else{ //down or left
+		outputLocation = cl[1];
+		if(component.direction === DOWN){	
+			pushLocationX = outputLocation.x;
+			pushLocationY =	outputLocation.y + 1;
+			pushComponent = getAtGrid(pushLocationX, pushLocationY);
+		}
+		else if(component.direction === LEFT){//right
+			pushLocationX = outputLocation.x - 1;
+			pushLocationY =	outputLocation.y;
+			pushComponent = getAtGrid(pushLocationX, pushLocationY);
+		}
+		else{
+			console.log("Invalid direction in pushOutput2by1 - component printed below");
+			console.log(component);
+		}
+	}
+
+	pushInput(component, pushComponent, pushLocationX, pushLocationY);
+}
+
+function pushOutput1by1Straight(component){
+	var cl = component.locations();
+
+	var outputLocation; //location where the output comes out of
+	var pushLocationX;  //x location of where the output goes
+	var pushLocationY;	//y location of where the output goes
+
+	var pushComponent;  //gotten grid component of where the pushcomponent is.
+
+	outputLocation = cl[0];
+	if(component.direction === UP){//up
+		pushLocationX = outputLocation.x;
+		pushLocationY =	outputLocation.y - 1;
+		pushComponent = getAtGrid(pushLocationX, pushLocationY);
+	}
+	else if(component.direction === RIGHT){//right
+		pushLocationX = outputLocation.x + 1;
+		pushLocationY =	outputLocation.y;
+		pushComponent = getAtGrid(pushLocationX, pushLocationY);
+	}
+	else if(component.direction === DOWN){//down
+		pushLocationX = outputLocation.x;
+		pushLocationY =	outputLocation.y + 1;
+		pushComponent = getAtGrid(pushLocationX, pushLocationY);
+	}
+	else if(component.direction === LEFT){//left
+		pushLocationX = outputLocation.x - 1;
+		pushLocationY =	outputLocation.y;
+		pushComponent = getAtGrid(pushLocationX, pushLocationY);
+	}
+	else{
+		console.log("Invalid direction in pushOutput1by1Straight - component printed below");
+		console.log(component);
+	}	
+
+	pushInput(component, pushComponent, pushLocationX, pushLocationY);
+}
+
+function pushInput(component, pushComponent, pushLocationX, pushLocationY){
+	var outputDirectionToDelete = []; 
+	//A->B | A is pushing an input to B
+	//B's input direction(where its recieving input) is the B's output direction to delete
+	if(pushComponent != null && canPushInput(pushComponent.inputDirection(), component.outputDirection(), outputDirectionToDelete)){
+		var pushComponentLoc = pushComponent.locations();
+		for(var i=0;i<pushComponentLoc.length;i++){
+			if(pushLocationX === pushComponentLoc[i].x && pushLocationY === pushComponentLoc[i].y){
+				pushComponent.outputDirectionsToDelete.push(outputDirectionToDelete[0]);
+				
+				if(isWire(pushComponent)){
+					pushComponent.setInput(component, outputDirectionToDelete[0]);
+				}
+				else{
+					pushComponent.setInput(component, i);
+				}
+			}
+		}
+	}
+}
+
+
+
+function pushOutputWires(component){
+	var compOutDir = component.outputDirection();
+	var toPush;
+	for(var i=0;i<compOutDir.length;i++){
+		var toPushCoords = getAdjacentLocationByDirection(component.locations()[0], compOutDir[i]);
+		toPush = getAtGrid(toPushCoords.x, toPushCoords.y);
+
+		if(toPush != null){
+			var toPushInDir = toPush.inputDirection();
+			var toPushLocations = toPush.locations();
+			for(var j=0;j<toPushInDir.length;j++){
+				for(var k=0;k<toPushLocations.length;k++){
+					var toPushPrevCoords = getAdjacentLocationByDirection(toPushLocations[k], toPushInDir[j]); //input blocks of any gate block
+					var toPushPrev = getAtGrid(toPushPrevCoords.x, toPushPrevCoords.y);
+					if(toPushPrev != null && toPushPrev.equals(component)){
+						var outputDirectionToDelete = [];
+						//canPushInput(toPush.inputDirection(), component.outputDirection(), outputDirectionToDelete);
+
+						//for(var p=0;p<outputDirectionToDelete.length;p++){
+						//	toPush.outputDirectionsToDelete.push(outputDirectionToDelete[p]);
+						//}
+
+						toPush.outputDirectionsToDelete.push(toPushInDir[j]);
+
+						if(isWire(toPush)){
+							toPush.setInput(component, toPushInDir[j]);
+						}
+						else{
+							toPush.setInput(component, k);
+						}
+					}
+				}
+			}
+		}
+	}
 }
