@@ -18,7 +18,97 @@ function makeCircuitFromBoolEq(){
 }
 
 function makeBoolEqFromCircuit(){
+}
 
+
+/*
+ * gets turns the boolean equation to the table
+ */ 
+function eqToTable(){
+	// gets the unique letters and char
+	var letters = getBooleanEquation().replace(/[^a-zA-Z]+/g, '');
+	uniques = letters.split('').filter(function(item, i, ar){ return ar.indexOf(item) === i; }).join('');
+
+	// zero array of length of unique char in equation to start pritning
+	printStr = Array.apply(null, Array(uniques.length)).map(Number.prototype.valueOf,0);
+	printStr[printStr.length-1] = 1
+
+	tableString = "- " + uniques.split('').join(' ') + " sol/\n";
+
+	// strCopt is the boolean  with || and && instead of + and *
+	// replace * with &&
+	strCopt = getBooleanEquation().split('*').join('&&');
+	// replace + with ||
+	strCopt = strCopt.split('+').join('||');
+
+
+	for(i = 0; i < Math.pow(2,uniques.length); i++){
+		tableString = tableString + i;
+
+		// increments the zeros
+		for(k = 0; k < printStr.length; k++){
+			// want to check if it's time to increment and if it's too soon to increment
+			//(
+			if((i%Math.pow(2,printStr.length-k-1) == 0) && (i+2 > Math.pow(2,printStr.length-k-1)) ){
+				//console.log(Math.pow(2,printStr.length-k-1))
+				printStr[k] = (printStr[k] + 1)%2
+			}
+		}
+
+		tempStr = strCopt;
+		var x = uniques.split("");
+		for(z = 0; z < printStr.length; z++){
+			//console.log(x[z]+" " + printStr[z])
+			tempStr = tempStr.split(x[printStr.length-z-1]).join(printStr[z])
+		}
+
+		// prints the zeros
+		for(j = 0; j < printStr.length; j++){ 
+			tableString += (" " + printStr[j]);
+		}
+
+		// this changes true false text to 0 and 1
+		if(eval(tempStr) == false)
+			tempStr = 0
+		if(eval(tempStr) == true)
+			tempStr = 1
+
+		// adds the result and ending
+		tableString+= (" " + tempStr + " /\n");
+
+
+	}
+	console.log(tableString)
+
+	$("#truth-tb").text(tableString)
+}
+
+function breadthTraversal(list, count){
+	var nextList = [];
+
+	if(list.length <= 0){
+		return ;
+	}
+
+	for (var i = 0; i < list.length; i++) {
+		var curr = list[i]
+		var currLeft = list[i].left;
+		var currRight = list[i].right;
+		if(currLeft != null){
+			nextList.push(currLeft);
+		}
+		if(currRight != null){
+			nextList.push(currRight);
+		}
+
+		console.log(curr);
+	}
+
+	console.log("\n--------next---------");
+
+	count++;
+
+	return breadthTraversal(nextList, count);
 }
 
 function isLetter(str){
@@ -58,7 +148,7 @@ function splitOnChar(tbe, charToSplit){
 
 		if(!parenOpen){
 			if(curr == charToSplit){
-				console.log(curr);
+				//console.log(curr);
 				var currRoot;
 				
 
@@ -92,7 +182,7 @@ function parseBooleanEquation(boolEq){
 	var tbe = tokenizeBoolEq(boolEq);//tokenized boolean equation
 	var parseTree = parseBooleanEq(tbe);
 
-	console.log(parseTree);
+	//console.log(parseTree);
 	
 	return parseTree;
 }
@@ -100,11 +190,10 @@ function parseBooleanEquation(boolEq){
 function parseBooleanEq(tbe){
 
 	if(tbe.length == 0){
-		//console.log("Nothing");
 		return null;
 	}
 	else if(tbe.length == 1){
-		console.log(tbe[0]);
+		//console.log(tbe[0]);
 		return new parseNode(tbe[0]);
 	}
 	else if(tbe[0] == BE_LPAREN && tbe[tbe.length-1] == BE_RPAREN){ // eq -> (eq)
@@ -141,6 +230,10 @@ function buildCircuit(boolEq){
 
 	clipboard = breadthTraverseParseTree([parseTree], tempClipboard, 0);
 }
+
+
+
+
 
 function breadthTraverseParseTree(list, tempClipboard, count){
 	var nextList = [];

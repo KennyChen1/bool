@@ -2,7 +2,7 @@
 function writetofile(){
 	var texttowrite = JSON.stringify(grid);
     var textToSaveAsBlob = new Blob([texttowrite], {type:"text/plain"});
-	var filename = prompt("Please enter the name", "");
+    var filename = prompt("Please enter the name", "");
     if(filename == null){
         return false;
     }
@@ -11,16 +11,16 @@ function writetofile(){
 
     var downloadLink = document.createElement("a");
     downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(texttowrite));
-  	downloadLink.setAttribute('download', filename);
+    downloadLink.setAttribute('download', filename);
     downloadLink.click()
 }
 
 
 $("#loader").change(function(){
     console.log("sadas")
-	var fileToLoad = $("#loader")[0].files[0];
+    var fileToLoad = $("#loader")[0].files[0];
     //var fileToLoad = document.getElementById("loader").files[0];
- 
+    
     var fileReader = new FileReader();
     fileReader.onload = function(fileLoadedEvent) 
     {
@@ -37,4 +37,4 @@ $("#loader").change(function(){
     };
     updateGridInterface();
     fileReader.readAsText(fileToLoad, "UTF-8");
- });
+});
