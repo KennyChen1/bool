@@ -4,7 +4,8 @@ Workspace
 	Console(truth table + boolean equations)
 		Functions
 			> Boolean equation to circuit
-				-> Pathfind algo from output to intended input
+				K -> Pathfind algo from output to intended input
+						> ignore crossing blocks (cross blocks = empty coord)
 				-> Auto clip for wires (automatically matches output to input)
 				-> Crossing wire, so some configurations are not impossible
 				-> Switches instead of variable blocks
@@ -26,7 +27,7 @@ Workspace
 			K > Simplifying boolean equation (make boolean equation into its simplest form)
 
 	Layout
-		K -> Truth table tab layout
+		-> Truth table tab layout
 			-Table scrapped, just uses textbox each line is seperated by a /
 
 		-> Boolean equations tab layout

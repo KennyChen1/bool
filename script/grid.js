@@ -1,4 +1,27 @@
 $(document).ready(function(){
+  var andGate = and_gate("hello", 5,5);
+  var wire1 = i_wire(null, 5,6);
+  var wire2 = i_wire(null, 5,7);
+  var wire3 = i_wire(null, 5,8);
+  var notGate = not_gate("goodbye", 5,9);
+  var notGateRight = not_gate("goodbye2", 6,6);
+
+  wire1.direction = DOWN;
+  wire2.direction = DOWN;
+  wire3.direction = DOWN;
+
+  addToGrid(andGate);
+  addToGrid(wire1);
+  addToGrid(wire2);
+  addToGrid(wire3);
+  addToGrid(notGate);
+
+  var bftList = [];
+  pushOutput(notGate, bftList);
+  pushOutput(notGateRight, bftList)
+
+  console.log(bftList);
+
 });
 
 /*

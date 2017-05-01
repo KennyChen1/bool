@@ -786,6 +786,126 @@ function getAdjacentLocationByDirection(location, direction){
 // keeps track of which direction the signal came from
 // outputs to everywhere except where the signal came from
 
+function getOutputLocations(component){
+	var retOl = []; //output locations to return
+
+	for (var i = 0; i < component.outputDirection().length; i++) {
+		var curr = component.outputDirection()[i];
+
+		if(component.width == 2 && component.height == 1){ // 2x1 gate
+			if(curr === UP || curr === RIGHT){
+				retOl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
+			}
+			else{
+				retOl.push(getAdjacentLocationByDirection(component.locations()[1], curr));
+			}
+			
+		}
+		else if(component.width == 1 && component.height == 1){ // 1x1 gate
+			retOl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
+		}
+		else{//error
+			console.log("getOutputLocations: invalid component width or height");
+		}
+	}
+
+	return retOl;
+}
+
+function getInputLocations(component){
+	var retIl = []; //input locations to return
+
+	for (var i = 0; i < component.inputDirection().length; i++) {
+		var curr = component.inputDirection()[i];
+
+		if(component.width == 2 && component.height == 1){ // 2x1 gate
+			retIl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
+			retIl.push(getAdjacentLocationByDirection(component.locations()[1], curr));			
+		}
+		else if(component.width == 1 && component.height == 1){ // 1x1 gate
+			retIl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
+		}
+		else{//error
+			console.log("getInputLocations: invalid component width or height");
+		}
+	}
+
+	return retIl;
+}
+
+//component is the component to put output from
+//breadthTraverseList is an empty list, contains all the gates that the depth traversal ends on.
+
+// pushs output until it hits a logic gate or wire with a delay
+// once it hits a logic gate or wire with delay, it sets the input of that gate and pushs it to breadthTraverseList
+function pushOutput(component, breadthTraverseList){ 
+	var ol = getOutputLocations(component);
+
+	for (var i = 0; i < ol.length; i++) {
+		var currOl = ol[i];
+
+		var pushComponent = getAtGrid(currOl.x, currOl.y);
+
+		if(pushComponent != null){
+			setInput(pushComponent, component); //setInput checks where the signal came from and sets input[] accordingly
+
+			if(isWire(pushComponent) && pushComponent.delay <= 0){ //if its a wire and there is no delay on the component, continue
+
+				var pushOl = getOutputLocations(pushComponent); 
+
+				for (var j = 0; j < pushOl.length; j++) {
+					var curr = pushOl[j];
+					var currComponent = getAtGrid(curr.x, curr.y); //pushComponent's pushComponent
+
+					if(currComponent != null){
+						if(!currComponent.equals(component)){ // if the pushComponent's pushComponent is not equal to component then continue with the depth traversal
+							pushOutput(pushComponent,breadthTraverseList);
+						}
+					}
+
+				}
+			} 
+			else{
+				breadthTraverseList.push(pushComponent); //if its not a wire, add it to the list of components, to re-output
+			}
+
+		}
+	}
+}
+
+
+//sets input of component based on prevComponent
+function setInput(component, prevComponent){
+	var il = getInputLocations(component);
+
+	for (var i = 0; i < il.length; i++) {
+		var currIl = il[i];
+
+		var currIlComponent = getAtGrid(currIl.x, currIl.y);
+
+		if(isWire(component)){ //1x1 but behaves differently
+			if(currIlComponent.equals(prevComponent)){
+				component.input[i] = prevComponent.logic();
+			}
+		}
+		else{
+			if(component.type === NOT_GATE_COMPONENT){ //1x1
+				component.input[0] = prevComponent.logic();
+			}
+			else{ //2x1
+				var inputIndex = i % 2; //because every 2 indices are a direction, modding it will determine which input to set
+
+				component.input[inputIndex];
+			}
+		}
+	}
+}
+
+
+
+
+
+
 /* Unused functions */
 function deleteUnneededOutputs(outputs, outputsToDelete){
 	for(var j=0;j<outputsToDelete.length;j++){
