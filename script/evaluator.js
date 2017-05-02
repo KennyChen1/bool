@@ -11,10 +11,29 @@ function evaluate(){
 	var siggen = findAllSignalGenerating(grid);
 	allowCircuitEvaluation();
   	console.log(siggen);
+
+  	var bftList = [];
   	for(var i=0;i<siggen.length;i++){
-    	siggen[i].output();
+    	siggen[i].output(bftList);
   	}
 
+  	while(true){
+  		var bftCopy = bftList;
+  		var bftList = [];
+
+  		for (var i = 0; i < bftCopy.length; i++) {
+  			bftCopy[i].activate();
+  			bftCopy[i].output(bftList);
+  		}
+
+  		updateGridInterface();
+
+  		if(bftList.length <= 0){
+  			break;
+  		}
+  	}
+
+  	updateGridInterface();
 }
 
 /* resets all components to original values */

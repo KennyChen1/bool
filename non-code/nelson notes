@@ -1,0 +1,8 @@
+Circuit Evaluator notes
+
+> Add buffer later on, delays will only be for logic gates(including buffer)
+> Implement buffer, switch, and crossing
+> NOT gate no longer signal generating(only switches and on-blocks)
+> Circuit to boolean equation
+
+> get rid of duplicate components in bftList

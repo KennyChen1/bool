@@ -1,4 +1,5 @@
 $(document).ready(function(){
+  /*
   var andGate = and_gate("hello", 5,5);
   var wire1 = i_wire(null, 5,6);
   var wire2 = i_wire(null, 5,7);
@@ -15,13 +16,14 @@ $(document).ready(function(){
   addToGrid(wire2);
   addToGrid(wire3);
   addToGrid(notGate);
+  addToGrid(notGateRight);
 
   var bftList = [];
   pushOutput(notGate, bftList);
   pushOutput(notGateRight, bftList)
 
   console.log(bftList);
-
+  */
 });
 
 /*

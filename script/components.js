@@ -128,7 +128,7 @@ function component(
 	this.input.push(false);		// input[1] recieves the output of the gate that connects to locations()[1]
 	this.input.push(false);		// input[2] recieves output from third
 
-	this.prevOutput; //previous output
+	this.prevOutput = null; //previous output
 
 	this.reset = function reset(){ //resets component for reevaluation
 		for(var h=0;h<this.input.length;h++){
@@ -150,30 +150,20 @@ function component(
 	// requires initialization in constructor functions below!
 	this.logic; 	// logic for generating a '1' for output
 	this.output; 	// push output(whatever is generated in logic()) to adjacent logic gate if directions align.
-	this.use;		// waits delay then use case if logic returns true.
-
-	this.setInput = function setInput(otherComponent, index){
-		if(!stopCircuitEvaluation){
-			this.input[index] = otherComponent.logic();
-			this.active = this.logic();
-			if(this.use != null){
-				this.use();
-			}
-			updateGridInterface();
-
-			if(this.prevOutput != this.logic()){
-				this.prevOutput = this.logic();
-				var component = this;
-				if(this.delay > 0){
-					setTimeout(function(){
-						component.output();
-					},this.delay);
-				}
-				else{
-					component.output();
-				}
-			}
+	this.activate = function activate(){
+		this.active = this.logic();
+		if(this.use != null){
+			this.use();
 		}
+	}
+	this.use;		// action for the circuit component to do.
+
+	this.setInput = function setInput(prevComponent){
+		return setInput(this, prevComponent);
+	}
+
+	this.output = function output(breadthTraverseList){
+		return pushOutput(this, breadthTraverseList, null);
 	}
 
 
@@ -208,10 +198,6 @@ function and_gate(label, x, y){
 
 	temp.logic = function(){
 		return temp.input[0] && temp.input[1];
-	}
-
-	temp.output = function(){
-		pushOutput2by1(temp);
 	}
 
 	return temp;
@@ -249,11 +235,6 @@ function or_gate(label, x, y){
 		return temp.input[0] || temp.input[1];
 	}
 
-	temp.output = function(){
-		pushOutput2by1(temp);
-	}
-
-
 	return temp;
 }
 
@@ -289,11 +270,6 @@ function xor_gate(label, x, y){
 		return (!temp.input[0] && temp.input[1]) || (temp.input[0] && !temp.input[1]);
 	}
 
-	temp.output = function(){
-		pushOutput2by1(temp);
-	}
-
-
 	return temp;
 }
 
@@ -328,10 +304,6 @@ function not_gate(label, x, y){
 		return !temp.input[0];
 	}
 
-	temp.output = function(){
-		pushOutput1by1Straight(temp);
-	}
-
 	return temp;
 }
 
@@ -362,19 +334,12 @@ function l_wire(label, x, y){
 		arr.push(clockwise(temp.direction));
 		arr.push(temp.direction);
 
-		deleteUnneededOutputs(arr, temp.outputDirectionsToDelete);
-
 		return arr;
 	}
 
 	temp.logic = function(){
 		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
 	}
-
-	temp.output = function(){
-		pushOutputWires(temp);
-	}
-
 
 	return temp;
 }
@@ -396,7 +361,7 @@ function i_wire(label, x, y){
 
 	temp.inputDirection = function(){
 		var arr = [];
-		//arr.push(flip(temp.direction));
+		arr.push(flip(temp.direction));
 		arr.push(temp.direction);
 		return arr
 	}
@@ -404,18 +369,13 @@ function i_wire(label, x, y){
 	temp.outputDirection = function(){
 		var arr = [];
 		arr.push(flip(temp.direction));
-		//arr.push(temp.direction);
+		arr.push(temp.direction);
 
-		deleteUnneededOutputs(arr, temp.outputDirectionsToDelete);
 		return arr;
 	}
 
 	temp.logic = function(){
 		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
-	}
-
-	temp.output = function(){
-		pushOutputWires(temp);
 	}
 
 	return temp;
@@ -450,16 +410,11 @@ function t_wire(label, x, y){
 		arr.push(clockwise(temp.direction));
 		arr.push(counterClockwise(temp.direction));
 
-		deleteUnneededOutputs(arr, temp.outputDirectionsToDelete);
 		return arr;
 	}
 
 	temp.logic = function(){
 		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
-	}
-
-	temp.output = function(){
-		pushOutputWires(temp);
 	}
 
 	return temp;
@@ -496,16 +451,11 @@ function cross_wire(label, x, y){
 		arr.push(clockwise(temp.direction));
 		arr.push(counterClockwise(temp.direction));
 
-		deleteUnneededOutputs(arr, temp.outputDirectionsToDelete);
 		return arr;
 	}
 
 	temp.logic = function(){
 		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
-	}
-
-	temp.output = function(){
-		pushOutputWires(temp);
 	}
 
 	return temp;
@@ -538,16 +488,11 @@ function print_box(label, x, y, message){
 		arr.push(flip(temp.direction));
 		//arr.push(temp.direction);
 
-		deleteUnneededOutputs(arr, temp.outputDirectionsToDelete);
 		return arr;
 	}
 
 	temp.logic = function(){
 		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
-	}
-
-	temp.output = function(){
-		pushOutputWires(temp);
 	}
 
 	temp.use = function(){
@@ -593,10 +538,6 @@ function on_box(label, x, y){
 		return true;
 	}
 
-	temp.output = function(){
-		pushOutputWires(temp);
-	}
-
 	return temp;
 }
 
@@ -632,10 +573,6 @@ function var_box(label, x, y){
 
 	temp.logic = function(){
 		return temp.input[0];
-	}
-
-	temp.output = function(){
-		pushOutputWires(temp);
 	}
 
 	return temp;
@@ -748,8 +685,7 @@ function inputDirectionMatchOutputDirection(input, output){
 }
 
 function isSignalGenerating(component){
-	return component.type == NOT_GATE_COMPONENT ||
-		component.type == ON_BOX_COMPONENT;		
+	return component.type == ON_BOX_COMPONENT;		
 }
 
 function getAdjacentLocationByDirection(location, direction){
@@ -838,7 +774,7 @@ function getInputLocations(component){
 
 // pushs output until it hits a logic gate or wire with a delay
 // once it hits a logic gate or wire with delay, it sets the input of that gate and pushs it to breadthTraverseList
-function pushOutput(component, breadthTraverseList){ 
+function pushOutput(component, breadthTraverseList, prevComponent){ 
 	var ol = getOutputLocations(component);
 
 	for (var i = 0; i < ol.length; i++) {
@@ -846,29 +782,31 @@ function pushOutput(component, breadthTraverseList){
 
 		var pushComponent = getAtGrid(currOl.x, currOl.y);
 
+
 		if(pushComponent != null){
-			setInput(pushComponent, component); //setInput checks where the signal came from and sets input[] accordingly
 
-			if(isWire(pushComponent) && pushComponent.delay <= 0){ //if its a wire and there is no delay on the component, continue
-
-				var pushOl = getOutputLocations(pushComponent); 
-
-				for (var j = 0; j < pushOl.length; j++) {
-					var curr = pushOl[j];
-					var currComponent = getAtGrid(curr.x, curr.y); //pushComponent's pushComponent
-
-					if(currComponent != null){
-						if(!currComponent.equals(component)){ // if the pushComponent's pushComponent is not equal to component then continue with the depth traversal
-							pushOutput(pushComponent,breadthTraverseList);
-						}
-					}
-
-				}
-			} 
-			else{
-				breadthTraverseList.push(pushComponent); //if its not a wire, add it to the list of components, to re-output
+			var cont = true;
+			if(prevComponent != null){//not the initial component
+				cont = !pushComponent.equals(prevComponent);
 			}
 
+			if(cont){
+				setInput(pushComponent, component); //setInput checks where the signal came from and sets input[] accordingly
+
+				console.log(component.type+" pushing to "+pushComponent.type);
+				console.log(component.input[0]+"|"+component.input[1]+"|"+component.input[2]);
+
+				component.active = component.logic();
+
+				if(isWire(pushComponent) && pushComponent.delay <= 0){ //if its a wire and there is no delay on the component, continue
+					component.prevOutput = component.logic();
+					pushOutput(pushComponent,breadthTraverseList,component);
+				} 
+				else{
+					breadthTraverseList.push(pushComponent); //if its not a wire, add it to the list of components, to re-output
+				}
+			}
+			
 		}
 	}
 }
@@ -883,30 +821,31 @@ function setInput(component, prevComponent){
 
 		var currIlComponent = getAtGrid(currIl.x, currIl.y);
 
-		if(isWire(component)){ //1x1 but behaves differently
-			if(currIlComponent.equals(prevComponent)){
-				component.input[i] = prevComponent.logic();
+		if(currIlComponent != null){
+			if(isWire(component)){ //1x1 but behaves differently
+				if(currIlComponent.equals(prevComponent)){
+					component.input[i] = prevComponent.logic();
+				}
 			}
-		}
-		else{
-			if(component.type === NOT_GATE_COMPONENT){ //1x1
-				component.input[0] = prevComponent.logic();
-			}
-			else{ //2x1
-				var inputIndex = i % 2; //because every 2 indices are a direction, modding it will determine which input to set
+			else{
+				if(currIlComponent.equals(prevComponent)){
+					if(component.type === NOT_GATE_COMPONENT){ //1x1
+						component.input[0] = prevComponent.logic();
+					}
+					else{ //2x1
+						var inputIndex = i % 2; //because every 2 indices are a direction, modding it will determine which input to set
 
-				component.input[inputIndex];
+						component.input[inputIndex] = prevComponent.logic();
+					}
+				}
 			}
 		}
 	}
 }
 
 
-
-
-
-
 /* Unused functions */
+/*
 function deleteUnneededOutputs(outputs, outputsToDelete){
 	for(var j=0;j<outputsToDelete.length;j++){
 		var anOutput = outputs.indexOf(outputsToDelete[j])
@@ -1069,3 +1008,4 @@ function pushOutputWires(component){
 		}
 	}
 }
+*/
