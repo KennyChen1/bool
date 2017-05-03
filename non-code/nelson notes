@@ -2,13 +2,24 @@ Circuit Evaluator notes
 
 > Implement 
 	- buffer -- delays will only be for logic gates(including buffer)
-	- switch -- propogates through everything beginning from the switch
+
+	- switch -- propogates through everything beginning from the switch 
+		- need to implement traversal for switch, right now only traverses to closest non-wire(cause doesnt call evaluate)
+
 	- crossing -- allows circuits to pass through top
+
+	- light-bulb/end block -- allows circuitToEquation to easily spot the root of a circuit tree
+
 > Circuit to boolean equation
+	> find end block, then breadthTraversal and append to left and right of root(check whiteboard)
+
+> Delays - sort the bftList by delay order, if none have delays then doesn't matter the order but if they have delay then execute lowest delay, then subtract the lowest from second lowest and wait that time and keep doing it for wait(bftList[i+1].delay - bftList[i].delay).
 
 > get rid of duplicate components in bftList
 
 
+Delays:
+	AND, OR, XOR, NOT, BUFFER
 
 finished
 
