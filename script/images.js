@@ -21,6 +21,7 @@ var CROSS_IMAGE = loadImage(path + "cross.png"); 	// +
 var PRINT_IMAGE = loadImage(path + "print.png");
 var ON_IMAGE = loadImage(path + "on.png");
 var VAR_IMAGE = loadImage(path + "var.png");
+var SWITCH_IMAGE = loadImage(path + "switch.png");
 
 // Logic Gates
 var AND_ACTIVE_IMAGE = loadImage(active_path + "and.png"); 
@@ -41,6 +42,7 @@ var CROSS_ACTIVE_IMAGE = loadImage(active_path + "cross.png"); 	// +
 var PRINT_ACTIVE_IMAGE = loadImage(active_path + "print.png");
 var ON_ACTIVE_IMAGE = loadImage(active_path + "on.png");
 var VAR_ACTIVE_IMAGE = loadImage(active_path + "var.png");
+var SWITCH_ACTIVE_IMAGE = loadImage(active_path + "switch.png");
 
 function loadImage(path){
 	var imageObj = new Image();
@@ -90,6 +92,9 @@ function getImageByComponentType(component){
 		else if(comp === VAR_BOX_COMPONENT){
 			image = VAR_ACTIVE_IMAGE;
 		}
+		else if(comp === SWITCH_BOX_COMPONENT){
+			image = SWITCH_ACTIVE_IMAGE;
+		}
 	}
 	else{
 		if(comp === AND_GATE_COMPONENT){
@@ -128,6 +133,9 @@ function getImageByComponentType(component){
 		}
 		else if(comp === VAR_BOX_COMPONENT){
 			image = VAR_IMAGE;
+		}
+		else if(comp === SWITCH_BOX_COMPONENT){
+			image = SWITCH_IMAGE;
 		}
 	}
 

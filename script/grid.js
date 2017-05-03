@@ -333,6 +333,9 @@ function getComponentByType(comp,x,y){
   else if(comp === VAR_BOX_COMPONENT){
     toPush = var_box(null,x,y);
   }
+  else if(comp === SWITCH_BOX_COMPONENT){
+    toPush = switch_box(null,x,y);
+  }
 
   return toPush;
 }

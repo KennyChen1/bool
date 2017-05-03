@@ -17,6 +17,7 @@ var CROSS_WIRE_COMPONENT = "CROSS"; 	// +
 var PRINT_BOX_COMPONENT = "PRINT";
 var ON_BOX_COMPONENT = "ON";
 var VAR_BOX_COMPONENT = "VAR";
+var SWITCH_BOX_COMPONENT = "SWITCH";
 
 //directions
 var UP = 0;
@@ -127,6 +128,7 @@ function component(
 	this.input.push(false);		// input[0] recieves the output of the gate that connects to locations()[0]
 	this.input.push(false);		// input[1] recieves the output of the gate that connects to locations()[1]
 	this.input.push(false);		// input[2] recieves output from third
+	this.input.push(false);		// input[3]
 
 	this.prevOutput = null; //previous output
 
@@ -157,6 +159,9 @@ function component(
 		}
 	}
 	this.use;		// action for the circuit component to do.
+	this.onclick = function onclick(){
+		console.log(this.type);
+	}; //do this when this component is clicked on
 
 	this.setInput = function setInput(prevComponent){
 		return setInput(this, prevComponent);
@@ -578,6 +583,57 @@ function var_box(label, x, y){
 	return temp;
 }
 
+function switch_box(label, x, y){
+	var temp = new component(
+		SWITCH_BOX_COMPONENT,	//type
+		label, 					//label
+		0, 						//inputs
+		4, 						//outputs
+		UP,						//direction
+		0, 						//delay
+		1, 						//width
+		1,		 				//height
+		x, 						//x
+		y,						//y
+		null					//print message
+	);
+
+	temp.inputDirection = function(){
+		var arr = [];
+		return arr
+	}
+
+	temp.outputDirection = function(){
+		var arr = [];
+		arr.push(flip(temp.direction));
+		arr.push(temp.direction);
+		arr.push(clockwise(temp.direction));
+		arr.push(counterClockwise(temp.direction));
+
+		return arr;
+	}
+
+	temp.logic = function(){
+		return temp.input[0];
+	}
+
+	temp.onclick = function(){
+		console.log("switch does something");
+
+		if(this.active){
+			this.active = false;
+			temp.input[0] = false;
+		}
+		else{
+			this.active = true;
+			temp.input[0] = true;
+		}
+		this.output([]);
+	}
+
+	return temp;
+}
+
 /* Circuit Evaluation Helper Functions */
 
 function killCircuitEvaluation(){ //kills the circuit evaluation (DOES NOT PAUSE EVALUATION)
@@ -771,6 +827,7 @@ function getInputLocations(component){
 
 //component is the component to put output from
 //breadthTraverseList is an empty list, contains all the gates that the depth traversal ends on.
+//prevComponent is the component that called this component(could be null if its the initial call)
 
 // pushs output until it hits a logic gate or wire with a delay
 // once it hits a logic gate or wire with delay, it sets the input of that gate and pushs it to breadthTraverseList
@@ -780,21 +837,32 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 	for (var i = 0; i < ol.length; i++) {
 		var currOl = ol[i];
 
-		var pushComponent = getAtGrid(currOl.x, currOl.y);
-
+		var pushComponent = getAtGrid(currOl.x, currOl.y); //the next component in the evaluation
 
 		if(pushComponent != null){
+
+			var pushComponentIl = getInputLocations(pushComponent);
 
 			var cont = true;
 			if(prevComponent != null){//not the initial component
 				cont = !pushComponent.equals(prevComponent);
 			}
 
-			if(cont){
-				setInput(pushComponent, component); //setInput checks where the signal came from and sets input[] accordingly
+			var pci = false; //true if pushComponent's inputLocation is component.
+			for (var j = 0; j < pushComponentIl.length; j++) {
+				var pcCurrIl = pushComponentIl[j];
+				var pcCurr = getAtGrid(pcCurrIl.x, pcCurrIl.y);
 
+				if(pcCurr != null && pcCurr.equals(component)){
+					pci = true;
+				}
+			}
+
+			if(cont && pci){
 				console.log(component.type+" pushing to "+pushComponent.type);
 				console.log(component.input[0]+"|"+component.input[1]+"|"+component.input[2]);
+
+				setInput(pushComponent, component); //setInput checks where the signal came from and sets input[] accordingly
 
 				component.active = component.logic();
 

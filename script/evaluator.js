@@ -21,6 +21,8 @@ function evaluate(){
   		var bftCopy = bftList;
   		var bftList = [];
 
+  		//removeDuplicatesInBftList(bftCopy);
+
   		for (var i = 0; i < bftCopy.length; i++) {
   			bftCopy[i].activate();
   			bftCopy[i].output(bftList);
@@ -34,6 +36,12 @@ function evaluate(){
   	}
 
   	updateGridInterface();
+}
+
+function removeDuplicatesInBftList(list){
+	uniqueArray = a.filter(function(item, pos) {
+    	return a.indexOf(item) == pos;
+	});
 }
 
 /* resets all components to original values */

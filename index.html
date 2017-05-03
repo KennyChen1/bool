@@ -109,6 +109,7 @@
 				<img class = "c-icon" src="img/cmenu-onbox.png" id = "ON">
 				<img class = "c-icon" src="img/cmenu-printbox.png" id = "PRINT">
 				<img class = "c-icon" src="img/cmenu-varbox.png" id = "VAR">
+				<img class = "c-icon" src="img/cmenu-switchbox.png" id = "SWITCH">
 			</div>
 			
 		</div>
@@ -153,7 +154,7 @@
 			<div class = "console-bottom" id = "truth-table">
 				<div class = "build-circuit">
 					<div class = "left">
-						<div class = "bool-button" onclick = "getTruthTableAsString()">Build Table</div>
+						<div class = "bool-button" onclick = "eqToTable()">Build Table</div>
 						<div class = "bool-button">Build Circuit</div>	
 
 						<!--<br>
@@ -209,7 +210,7 @@
 			<div class = "console-bottom" id = "boolean">
 				<div class = "build-circuit">
 					<div class = "bool-button" onclick = "makeCircuitFromBoolEq()">Make Circuit</div>
-					<div class = "bool-button" onclick = "eqToTable()">Make Table</div>
+					<div class = "bool-button">Make Table</div>
 				</div>
 				<div id = "textbox">
 					<textarea id = "boolean-tb">!(D+!B) + B * !(!A + B)</textarea>
