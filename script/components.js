@@ -68,6 +68,11 @@ function component(
 		console.log("location (x,y): "+x+" ,"+y+")");
 	}
 
+	this.move = function move(x,y){
+		this.x = x;
+		this.y = y;
+	}
+
 	this.rotate = function rotate(){
 		if(this.direction == UP){
 			this.direction = RIGHT;
@@ -163,7 +168,15 @@ function component(
 	this.use;		// action for the circuit component to do.
 	this.onclick = function onclick(){
 		console.log(this.type);
-	}; //do this when this component is clicked on
+	} //do this when this component is clicked on
+
+	this.ondelete = function ondelete(){
+		console.log(this.type+".ondelete()");
+	}
+
+	this.onplace = function onplace(){
+		console.log(this.type+".ondelete()");
+	}
 
 	this.setInput = function setInput(prevComponent){
 		return setInput(this, prevComponent);
@@ -485,6 +498,16 @@ function crossing_wire(label, x, y){
 		null						//print message
 	);
 
+	temp.move = function move(x,y){
+		temp.x = x;
+		temp.y = y;
+
+		temp1.x = x;
+		temp2.x = x;
+		temp1.y = y;
+		temp2.y = y;
+	}
+
 	var temp1 = i_wire(label, x, y);
 	temp1.direction = RIGHT;
 	var temp2 = i_wire(label, x, y);
@@ -579,6 +602,15 @@ function on_box(label, x, y){
 		return true;
 	}
 
+	temp.onplace = function(){
+		evaluateComponents([temp]);
+	}
+
+	temp.ondelete = function(){
+		var setter = switch_box("setter", temp.x, temp.y);
+		evaluateComponents([temp]);
+	}
+
 	return temp;
 }
 
@@ -654,8 +686,6 @@ function switch_box(label, x, y){
 	}
 
 	temp.onclick = function(){
-		console.log("switch does something");
-
 		if(this.active){
 			this.active = false;
 			temp.input[0] = false;
@@ -664,6 +694,11 @@ function switch_box(label, x, y){
 			this.active = true;
 			temp.input[0] = true;
 		}
+		evaluateComponents([this]);
+	}
+
+	temp.ondelete = function(){
+		temp.input[0] = false;
 		evaluateComponents([this]);
 	}
 
