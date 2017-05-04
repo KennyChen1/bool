@@ -4,38 +4,30 @@ Workspace
 	Console(truth table + boolean equations)
 		Functions
 			> Boolean equation to circuit
+				K -> Pathfind algo from output to intended input
+						> ignore crossing blocks (cross blocks = empty coord)
+				-> Auto clip for wires (automatically matches output to input)
+				-> Crossing wire, so some configurations are not impossible
+				-> Switches instead of variable blocks
+				-> the number of times it appears in the boolean eq, is the number of wires it needs to be spaces vertically
+					> conservative so each switch can get wired up to the corresponding input
+					> A * (A + B)
+						A B
+						| |
+					   /+ |
+					AND-OR/
 			> Circuit to boolean equation
-			K > Parser for boolean equations
-
-				Example: A * !B + ( C * D + !A)
-
-				Breaking on + exception: A * B * ( C + D )
-
-				Tokens
-					A
-					*
-					!B
-					+
-					(
-					C
-					*
-					D
-					+
-					!A
-
-				eq = A * B, any expression
-
-				Ze grammah
-					eq -> (eq) | eq op eq | label
-					label -> word | !word
-					op -> * | +
+			> Parser for boolean equations
+				eq -> (eq) | eq op eq | !eq | label
+				label -> word
+				op -> * | +
 
 			K > Truth table to boolean equation
 			K > Boolean equation to truth table
 			K > Simplifying boolean equation (make boolean equation into its simplest form)
 
 	Layout
-		K -> Truth table tab layout
+		-> Truth table tab layout
 			-Table scrapped, just uses textbox each line is seperated by a /
 
 		-> Boolean equations tab layout
@@ -49,7 +41,7 @@ Workspace
 	Evaluator
 		-> Add 
 			- button(sends a short signal)
-			- switch(sends a constant signal) -> to replace variable blocks
+			- switch(sends a constant signal, can be toggled on/off when clicked on) -> to replace variable blocks
 			- crossing (+ shape, allows signal to travel over another signal)
 		-> Evaluation
 			currently -> looks for every signal generating circuit and propagates on them. (depth first traversal on every SGC)

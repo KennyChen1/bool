@@ -1,4 +1,29 @@
 $(document).ready(function(){
+  /*
+  var andGate = and_gate("hello", 5,5);
+  var wire1 = i_wire(null, 5,6);
+  var wire2 = i_wire(null, 5,7);
+  var wire3 = i_wire(null, 5,8);
+  var notGate = not_gate("goodbye", 5,9);
+  var notGateRight = not_gate("goodbye2", 6,6);
+
+  wire1.direction = DOWN;
+  wire2.direction = DOWN;
+  wire3.direction = DOWN;
+
+  addToGrid(andGate);
+  addToGrid(wire1);
+  addToGrid(wire2);
+  addToGrid(wire3);
+  addToGrid(notGate);
+  addToGrid(notGateRight);
+
+  var bftList = [];
+  pushOutput(notGate, bftList);
+  pushOutput(notGateRight, bftList)
+
+  console.log(bftList);
+  */
 });
 
 /*
@@ -169,8 +194,9 @@ function moveComponent(fromX, fromY, toX, toY){
     return false;  
   }
 
-  curr.x = toX;
-  curr.y = toY;
+  curr.move(toX,toY);
+  // curr.x = toX;
+  // curr.y = toY;
 
    // component can be moved
   if(canComponentBePlaced(curr)){
@@ -180,8 +206,9 @@ function moveComponent(fromX, fromY, toX, toY){
   }
   else{ // component cannot be moved
     console.log("cant be moved")
-    curr.x = fromX;
-    curr.y = fromY; 
+    curr.move(fromX,fromY);
+    // curr.x = fromX;
+    // curr.y = fromY; 
     grid.push(curr);
     
     return false;
@@ -189,14 +216,25 @@ function moveComponent(fromX, fromY, toX, toY){
 }
 
 function deleteComponent(x,y){
+  var toRet = [];
   for(var i=0;i<grid.length;i++){
     var curr = grid[i];
     if(curr.x == x && curr.y == y){
-      return grid.splice(i,1)[0];
+      var toDel = grid.splice(i,1)[0];
+      //toDel.ondelete();
+      toRet.push(toDel);
     }
   }
 
-  return null;
+  if(toRet.length == 0){
+    return null;
+  }
+  else if(toRet.length == 1){
+    return toRet[0];
+  }
+  else{
+    return toRet;
+  }
 }
 
 /*
@@ -251,6 +289,7 @@ function canComponentBePlaced(toPlace){
 }
 
 function getAtGrid(x,y){
+  var toRet = [];
   for(var i=0;i<grid.length;i++){
     var curr = grid[i];
     var cl = curr.locations();
@@ -260,12 +299,20 @@ function getAtGrid(x,y){
     for(var j=0;j<cl.length;j++){
       //console.log(j)
       if(cl[j].x == x && cl[j].y == y){
-        return curr;
+        toRet.push(curr);
       }
     }
   }
 
-  return null;
+  if(toRet.length == 1){
+    return toRet[0];
+  }
+  else if(toRet.length > 1){
+    return toRet;
+  }
+  else{
+    return null;
+  }
 }
 
 function getComponentByType(comp,x,y){
@@ -297,6 +344,9 @@ function getComponentByType(comp,x,y){
   else if(comp === CROSS_WIRE_COMPONENT){
     toPush = cross_wire(null,x,y);
   }
+  else if(comp === CROSSING_WIRE_COMPONENT){
+    toPush = crossing_wire(null,x,y);
+  }
 
   //boxes
   else if(comp === PRINT_BOX_COMPONENT){
@@ -307,6 +357,12 @@ function getComponentByType(comp,x,y){
   }
   else if(comp === VAR_BOX_COMPONENT){
     toPush = var_box(null,x,y);
+  }
+  else if(comp === SWITCH_BOX_COMPONENT){
+    toPush = switch_box(null,x,y);
+  }
+  else if(comp === LIGHT_BOX_COMPONENT){
+    toPush = light_box(null, x,y);
   }
 
   return toPush;
