@@ -2,6 +2,9 @@
 var BE_OR = "+";
 var BE_AND = "*";
 var BE_NOT = "!";
+var BE_XOR = "#";
+var BE_HIGH = "1";
+var BE_LOW = "0";
 var BE_LPAREN = "(";
 var BE_RPAREN = ")";
 
@@ -13,12 +16,19 @@ function getBooleanEquation(){
 	return booleq;
 }
 
+function setBooleanEquation(boolEq){
+	var booleq = $(".console #boolean #textbox #boolean-tb").val(boolEq);
+}
+
 function makeCircuitFromBoolEq(){
 	buildCircuit(getBooleanEquation());
 }
 
 function makeBoolEqFromCircuit(){
+	traverseDownwardFromRoot();
 }
+
+/* Boolean Equation to Circuit */
 
 function breadthTraversal(list, count){
 	var nextList = [];
@@ -71,19 +81,21 @@ function splitOnChar(tbe, charToSplit){
 
 	var ret = false; 
 
+	var stack = [];
+
 	for (var i = 0; i < tbe.length; i++) {
 		var curr = tbe[i];
 
 		if(curr == "("){
-			parenOpen = true;
+			stack.push("(");
 		}
 
 
-		if(curr == ")" && parenOpen == true){
-			parenOpen = false;
+		if(curr == ")"){
+			stack.splice(stack.length-1, 1);
 		}
 
-		if(!parenOpen){
+		if(stack.length <= 0){
 			if(curr == charToSplit){
 				//console.log(curr);
 				var currRoot;
@@ -141,12 +153,18 @@ function parseBooleanEq(tbe){
 		if(!orSplit){
 			var andSplit = splitOnChar(tbe, BE_AND);
 			if(!andSplit){
-				var notSplit = splitOnChar(tbe, BE_NOT);
-				if(notSplit.ret){
-					return notSplit.value;
+				var xorSplit = splitOnChar(tbe, BE_XOR);
+				if(!xorSplit){
+					var notSplit = splitOnChar(tbe, BE_NOT);
+					if(notSplit.ret){
+						return notSplit.value;
+					}
+					else{
+						return null;
+					}
 				}
 				else{
-					return null;
+					return xorSplit.value;
 				}
 			}
 			else{
@@ -167,10 +185,6 @@ function buildCircuit(boolEq){
 
 	clipboard = breadthTraverseParseTree([parseTree], tempClipboard, 0);
 }
-
-
-
-
 
 function breadthTraverseParseTree(list, tempClipboard, count){
 	var nextList = [];
@@ -226,13 +240,171 @@ function putCircuitsOnClipboard(tempClipboard, i, count, curr){
 
 		tempClipboard.push(pushGate);
 	}
+	else if(curr.data == BE_XOR){
+		pushGate = xor_gate(null, placeX, placeY);
+		pushGate.direction = placeDirection;
+
+		tempClipboard.push(pushGate);
+	}
+	else if(curr.data == BE_HIGH){
+		pushGate = on_box(null, placeX, placeY);
+		pushGate.direction = placeDirection;
+
+		tempClipboard.push(pushGate);
+	}
+	else if(curr.data == BE_LOW){
+		//nothing lol
+		//its low(0) duh.
+	}
 	else{
-		pushGate = var_box(curr.data, placeX, placeY);
+		pushGate = switch_box(curr.data, placeX, placeY);
 		pushGate.direction = placeDirection;
 
 		tempClipboard.push(pushGate);
 	}
 }
+
+/* Circuit to Boolean Equation */
+
+function getCurrentlySelectedNode(){
+	if(selectedSameSquare()){
+		var selectedComp = getAtGrid(selected.begin.x, selected.begin.y);
+
+		return selectedComp;
+	}
+	else{
+		consoleDisplayString("Please select a single square");
+		console.log("Please selected a single square");
+	}
+
+}
+
+function traverseDownwardFromRoot(){
+	var currSel = getCurrentlySelectedNode();
+	if(currSel != null){
+		console.log(currSel);
+		var toPrint = tdr(currSel);
+
+		console.log(toPrint);
+
+		var boolEq = assembleBeqFromParseTree(toPrint)
+
+		console.log(boolEq);
+
+		setBooleanEquation(boolEq);
+	}
+}
+
+// traverses grid backward output to input, and makes a parseTree out of the circuit components
+function tdr(component, prevComponent){ 
+	var ret;
+
+	if(component == null){
+		return new parseNode(0);
+	}
+	else if(component.type === ON_BOX_COMPONENT){
+		ret = new parseNode(1);
+	}
+	else if(component.type === SWITCH_BOX_COMPONENT){
+		ret = new parseNode(component.label);
+	}
+	else if(component.type === AND_GATE_COMPONENT){
+		ret = new parseNode(BE_AND);
+		var il = getInputLocations(component);
+
+		var retLeft = getAtGrid(il[0].x, il[0].y);
+		var retRight = getAtGrid(il[1].x, il[1].y);
+
+		ret.left = tdr(retLeft, component);
+		ret.right = tdr(retRight, component);
+	}
+	else if(component.type === OR_GATE_COMPONENT){
+		ret = new parseNode(BE_OR);
+		var il = getInputLocations(component);
+
+		var retLeft = getAtGrid(il[0].x, il[0].y);
+		var retRight = getAtGrid(il[1].x, il[1].y);
+
+		ret.left = tdr(retLeft, component);
+		ret.right = tdr(retRight, component);
+	}
+	else if(component.type === XOR_GATE_COMPONENT){
+		ret = new parseNode(BE_XOR);
+		var il = getInputLocations(component);
+
+		var retLeft = getAtGrid(il[0].x, il[0].y);
+		var retRight = getAtGrid(il[1].x, il[1].y);
+
+		ret.left = tdr(retLeft, component);
+		ret.right = tdr(retRight, component);
+	}
+	else if(component.type === NOT_GATE_COMPONENT){
+		ret = new parseNode(BE_NOT);
+		var il = getInputLocations(component);
+
+		var retRight = getAtGrid(il[0].x, il[0].y);
+
+		ret.right = tdr(retRight, component);
+	}
+	else{// is wire, so do its checks and continue
+		var il = getInputLocations(component);
+
+		for (var i = 0; i < il.length; i++) {
+			var currOl = il[i];
+
+			var pushComponent = getAtGrid(currOl.x, currOl.y); //the next component in the evaluation
+
+			if(pushComponent != null){
+
+				var pushComponentOl = getOutputLocations(pushComponent);
+
+				var cont = true;
+				if(prevComponent != null){//not the initial component
+					cont = !pushComponent.equals(prevComponent);
+				}
+
+				var pci = false; //true if pushComponent's outputLocation is component.
+				for (var j = 0; j < pushComponentOl.length; j++) {
+					var pcCurrIl = pushComponentOl[j];
+					var pcCurr = getAtGrid(pcCurrIl.x, pcCurrIl.y);
+
+					if(pcCurr != null && pcCurr.equals(component)){
+						pci = true;
+					}
+				}
+
+				if(cont && pci){
+					//console.log(component.type+" pushing to "+pushComponent.type);
+																		
+					ret = tdr(pushComponent,component); 
+				}
+			}
+		}
+	}
+
+	// if there is nothing there, assume it is a 0 constant
+	return ret;
+}
+
+function assembleBeqFromParseTree(rootNode){
+	var ret;
+
+	if(rootNode.right == null && rootNode.left == null){
+		ret = rootNode.data;
+	}
+	else if(rootNode.left == null && rootNode.right != null){
+		ret = rootNode.data+BE_LPAREN+assembleBeqFromParseTree(rootNode.right)+BE_RPAREN;
+	}
+	else if(rootNode.left != null && rootNode.right != null){
+		ret = BE_LPAREN+assembleBeqFromParseTree(rootNode.left)+rootNode.data+assembleBeqFromParseTree(rootNode.right)+BE_RPAREN;
+	}
+	else{
+		console.log("assembleBeqFromParseTree, error.");
+	}
+
+	return ret;
+}
+
 
 /* Parse Tree Node Objects */
 

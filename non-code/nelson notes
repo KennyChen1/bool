@@ -3,26 +3,41 @@ Circuit Evaluator notes
 > Implement 
 	- buffer -- delays will only be for logic gates(including buffer)
 
-	- switch -- propogates through everything beginning from the switch 
-		- need to implement traversal for switch, right now only traverses to closest non-wire(cause doesnt call evaluate)
-
 	- crossing -- allows circuits to pass through top
-
-	- light-bulb/end block -- allows circuitToEquation to easily spot the root of a circuit tree
-
-> Circuit to boolean equation
-	> find end block, then breadthTraversal and append to left and right of root(check whiteboard)
 
 > Delays - sort the bftList by delay order, if none have delays then doesn't matter the order but if they have delay then execute lowest delay, then subtract the lowest from second lowest and wait that time and keep doing it for wait(bftList[i+1].delay - bftList[i].delay).
 
-> get rid of duplicate components in bftList
 
 
 Delays:
 	AND, OR, XOR, NOT, BUFFER
 
 finished
+	> fix bug when two outputs are pointed into each other, it breaks
+		- check input locations
 
-> fix bug when two outputs are pointed into each other, it breaks
-	- check input locations
-> NOT gate no longer signal generating(only switches and on-blocks)
+	> NOT gate no longer signal generating(only switches and on-blocks)
+
+	> Circuit to boolean equation
+		> find end block, then breadthTraversal and append to left and right of root(check whiteboard)
+
+	> get rid of duplicate components in bftList
+
+
+** Add new blocks **
+	example: Light Bulb
+
+	component.js 
+		> make new constant at top -	var LIGHT_BOX_COMPONENT = "LIGHT"
+		> make new function -			function light_box(label, x, y){}
+
+	grid.js
+		> add to getComponentByType(comp,x,y);
+
+	index.html
+		> add to <div class = "cmenu"></div>
+
+	images.js
+		> add active image constant
+		> add regular image constant
+		> add to getImageByComponentType(component);

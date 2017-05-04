@@ -8,16 +8,18 @@ var NAND_GATE_COMPONENT = "NAND";
 var NOR_GATE_COMPONENT = "NOR";
 
 // Circuit Passthroughs/Wires
-var L_WIRE_COMPONENT = "L"; 			// L
-var I_WIRE_COMPONENT = "I"; 			// |
-var T_WIRE_COMPONENT = "T"; 			// T
-var CROSS_WIRE_COMPONENT = "CROSS"; 	// +
+var L_WIRE_COMPONENT = "L"; 				// L
+var I_WIRE_COMPONENT = "I"; 				// |
+var T_WIRE_COMPONENT = "T"; 				// T
+var CROSS_WIRE_COMPONENT = "CROSS"; 		// +
+var CROSSING_WIRE_COMPONENT = "CROSSING"; 	// + (- |) seperates horizontal signal from vertical signal
 
 // Blackboxes
 var PRINT_BOX_COMPONENT = "PRINT";
 var ON_BOX_COMPONENT = "ON";
 var VAR_BOX_COMPONENT = "VAR";
 var SWITCH_BOX_COMPONENT = "SWITCH";
+var LIGHT_BOX_COMPONENT = "LIGHT";
 
 //directions
 var UP = 0;
@@ -466,6 +468,48 @@ function cross_wire(label, x, y){
 	return temp;
 }
 
+function crossing_wire(label, x, y){
+	var temp = new component(
+		CROSSING_WIRE_COMPONENT,	//type
+		label, 						//label
+		1, 							//inputs
+		3, 							//outputs
+		UP,							//direction
+		0, 							//delay
+		1, 							//width
+		1, 							//height
+		x, 							//x
+		y,							//y
+		null						//print message
+	);
+
+	temp.inputDirection = function(){
+		var arr = [];
+		arr.push(flip(temp.direction));
+		arr.push(temp.direction);
+		arr.push(clockwise(temp.direction));
+		arr.push(counterClockwise(temp.direction));
+		return arr
+	}
+
+	temp.outputDirection = function(){
+		var arr = [];
+		arr.push(flip(temp.direction));
+		arr.push(temp.direction);
+		arr.push(clockwise(temp.direction));
+		arr.push(counterClockwise(temp.direction));
+
+		return arr;
+	}
+
+	temp.logic = function(){
+		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
+	}
+
+	return temp;
+}
+
+
 function print_box(label, x, y, message){
 	var temp = new component(
 		PRINT_BOX_COMPONENT,	//type
@@ -628,7 +672,44 @@ function switch_box(label, x, y){
 			this.active = true;
 			temp.input[0] = true;
 		}
-		this.output([]);
+		evaluateComponents([this]);
+	}
+
+	return temp;
+}
+
+function light_box(label, x, y){
+	var temp = new component(
+		LIGHT_BOX_COMPONENT,	//type
+		label, 					//label
+		4, 						//inputs
+		0, 						//outputs
+		UP,						//direction
+		0, 						//delay
+		1, 						//width
+		1,		 				//height
+		x, 						//x
+		y,						//y
+		null					//print message
+	);
+
+	temp.inputDirection = function(){
+		var arr = [];
+		arr.push(flip(temp.direction));
+		arr.push(temp.direction);
+		arr.push(clockwise(temp.direction));
+		arr.push(counterClockwise(temp.direction));
+
+		return arr
+	}
+
+	temp.outputDirection = function(){
+		var arr = [];
+		return arr;
+	}
+
+	temp.logic = function(){
+		return temp.input[0] | temp.input[1] | temp.input[2] | temp.input[3];
 	}
 
 	return temp;
@@ -832,6 +913,8 @@ function getInputLocations(component){
 // pushs output until it hits a logic gate or wire with a delay
 // once it hits a logic gate or wire with delay, it sets the input of that gate and pushs it to breadthTraverseList
 function pushOutput(component, breadthTraverseList, prevComponent){ 
+	component.active = component.logic();
+
 	var ol = getOutputLocations(component);
 
 	for (var i = 0; i < ol.length; i++) {
@@ -864,9 +947,10 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 
 				setInput(pushComponent, component); //setInput checks where the signal came from and sets input[] accordingly
 
-				component.active = component.logic();
+				//component.active = component.logic();
 
 				if(isWire(pushComponent) && pushComponent.delay <= 0){ //if its a wire and there is no delay on the component, continue
+																		//TODO: remove pushCOmponent.delay <= 0 when implements buffer.
 					component.prevOutput = component.logic();
 					pushOutput(pushComponent,breadthTraverseList,component);
 				} 
@@ -912,168 +996,53 @@ function setInput(component, prevComponent){
 }
 
 
-/* Unused functions */
-/*
-function deleteUnneededOutputs(outputs, outputsToDelete){
-	for(var j=0;j<outputsToDelete.length;j++){
-		var anOutput = outputs.indexOf(outputsToDelete[j])
-		if(anOutput > -1){
-			outputs.splice(anOutput, 1);
-		}
-	}
+function evaluateComponents(compList){
+  	var bftList = [];
+  	for(var i=0;i<compList.length;i++){
+    	compList[i].output(bftList);
+  	}
+
+  	while(true){
+  		var bftCopy = bftList;
+  		var bftList = [];
+
+  		bftCopy = removeDuplicateComponents(bftCopy);
+
+  		for (var i = 0; i < bftCopy.length; i++) {
+  			bftCopy[i].activate();
+  			bftCopy[i].output(bftList);
+  		}
+
+  		updateGridInterface();
+
+  		if(bftList.length <= 0){
+  			break;
+  		}
+  	}
+
+  	updateGridInterface();
 }
 
-function canPushInput(inputArr, outputArr, noMatchOutputArr){
-	for(var i=0;i<inputArr.length;i++){
-		for(var j=0;j<outputArr.length;j++){
-			if(inputDirectionMatchOutputDirection(inputArr[i], outputArr[j])){
-				noMatchOutputArr.push(inputArr[i]);
-				return true;
-			}
+function existsInBft(bft, comp){
+	for (var i = bft.length - 1; i >= 0; i--) {
+		if(bft[i].equals(comp)){
+			return true;
 		}
 	}
-
 	return false;
 }
 
-function pushOutput2by1(component){
-	var cl = component.locations();
+function removeDuplicateComponents(bft){
+	var uniqueComp = [];
 
-	var outputLocation; //location where the output comes out of
-	var pushLocationX;  //x location of where the output goes
-	var pushLocationY;	//y location of where the output goes
-
-	var pushComponent;  //gotten grid component of where the pushcomponent is.
-
-	if(component.direction === UP || component.direction === RIGHT){
-		outputLocation = cl[0];
-		if(component.direction === UP){	
-			pushLocationX = outputLocation.x;
-			pushLocationY =	outputLocation.y - 1;
-			pushComponent = getAtGrid(pushLocationX, pushLocationY);
+	for (var i = bft.length - 1; i >= 0; i--) {
+		if(!existsInBft(uniqueComp, bft[i])){
+			uniqueComp.push(bft[i]);
 		}
-		else{//right
-			pushLocationX = outputLocation.x + 1;
-			pushLocationY =	outputLocation.y;
-			pushComponent = getAtGrid(pushLocationX, pushLocationY);
-		}
-	}
-	else{ //down or left
-		outputLocation = cl[1];
-		if(component.direction === DOWN){	
-			pushLocationX = outputLocation.x;
-			pushLocationY =	outputLocation.y + 1;
-			pushComponent = getAtGrid(pushLocationX, pushLocationY);
-		}
-		else if(component.direction === LEFT){//right
-			pushLocationX = outputLocation.x - 1;
-			pushLocationY =	outputLocation.y;
-			pushComponent = getAtGrid(pushLocationX, pushLocationY);
-		}
-		else{
-			console.log("Invalid direction in pushOutput2by1 - component printed below");
-			console.log(component);
-		}
+
 	}
 
-	pushInput(component, pushComponent, pushLocationX, pushLocationY);
-}
-
-function pushOutput1by1Straight(component){
-	var cl = component.locations();
-
-	var outputLocation; //location where the output comes out of
-	var pushLocationX;  //x location of where the output goes
-	var pushLocationY;	//y location of where the output goes
-
-	var pushComponent;  //gotten grid component of where the pushcomponent is.
-
-	outputLocation = cl[0];
-	if(component.direction === UP){//up
-		pushLocationX = outputLocation.x;
-		pushLocationY =	outputLocation.y - 1;
-		pushComponent = getAtGrid(pushLocationX, pushLocationY);
-	}
-	else if(component.direction === RIGHT){//right
-		pushLocationX = outputLocation.x + 1;
-		pushLocationY =	outputLocation.y;
-		pushComponent = getAtGrid(pushLocationX, pushLocationY);
-	}
-	else if(component.direction === DOWN){//down
-		pushLocationX = outputLocation.x;
-		pushLocationY =	outputLocation.y + 1;
-		pushComponent = getAtGrid(pushLocationX, pushLocationY);
-	}
-	else if(component.direction === LEFT){//left
-		pushLocationX = outputLocation.x - 1;
-		pushLocationY =	outputLocation.y;
-		pushComponent = getAtGrid(pushLocationX, pushLocationY);
-	}
-	else{
-		console.log("Invalid direction in pushOutput1by1Straight - component printed below");
-		console.log(component);
-	}	
-
-	pushInput(component, pushComponent, pushLocationX, pushLocationY);
-}
-
-function pushInput(component, pushComponent, pushLocationX, pushLocationY){
-	var outputDirectionToDelete = []; 
-	//A->B | A is pushing an input to B
-	//B's input direction(where its recieving input) is the B's output direction to delete
-	if(pushComponent != null && canPushInput(pushComponent.inputDirection(), component.outputDirection(), outputDirectionToDelete)){
-		var pushComponentLoc = pushComponent.locations();
-		for(var i=0;i<pushComponentLoc.length;i++){
-			if(pushLocationX === pushComponentLoc[i].x && pushLocationY === pushComponentLoc[i].y){
-				pushComponent.outputDirectionsToDelete.push(outputDirectionToDelete[0]);
-				
-				if(isWire(pushComponent)){
-					pushComponent.setInput(component, outputDirectionToDelete[0]);
-				}
-				else{
-					pushComponent.setInput(component, i);
-				}
-			}
-		}
-	}
+	return uniqueComp;
 }
 
 
-
-function pushOutputWires(component){
-	var compOutDir = component.outputDirection();
-	var toPush;
-	for(var i=0;i<compOutDir.length;i++){
-		var toPushCoords = getAdjacentLocationByDirection(component.locations()[0], compOutDir[i]);
-		toPush = getAtGrid(toPushCoords.x, toPushCoords.y);
-
-		if(toPush != null){
-			var toPushInDir = toPush.inputDirection();
-			var toPushLocations = toPush.locations();
-			for(var j=0;j<toPushInDir.length;j++){
-				for(var k=0;k<toPushLocations.length;k++){
-					var toPushPrevCoords = getAdjacentLocationByDirection(toPushLocations[k], toPushInDir[j]); //input blocks of any gate block
-					var toPushPrev = getAtGrid(toPushPrevCoords.x, toPushPrevCoords.y);
-					if(toPushPrev != null && toPushPrev.equals(component)){
-						var outputDirectionToDelete = [];
-						//canPushInput(toPush.inputDirection(), component.outputDirection(), outputDirectionToDelete);
-
-						//for(var p=0;p<outputDirectionToDelete.length;p++){
-						//	toPush.outputDirectionsToDelete.push(outputDirectionToDelete[p]);
-						//}
-
-						toPush.outputDirectionsToDelete.push(toPushInDir[j]);
-
-						if(isWire(toPush)){
-							toPush.setInput(component, toPushInDir[j]);
-						}
-						else{
-							toPush.setInput(component, k);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-*/

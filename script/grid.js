@@ -214,14 +214,23 @@ function moveComponent(fromX, fromY, toX, toY){
 }
 
 function deleteComponent(x,y){
+  var toRet = [];
   for(var i=0;i<grid.length;i++){
     var curr = grid[i];
     if(curr.x == x && curr.y == y){
-      return grid.splice(i,1)[0];
+      toRet.push(grid.splice(i,1)[0]);
     }
   }
 
-  return null;
+  if(toRet.length == 0){
+    return null;
+  }
+  else if(toRet.length == 1){
+    return toRet[0];
+  }
+  else{
+    return toRet;
+  }
 }
 
 /*
@@ -276,6 +285,7 @@ function canComponentBePlaced(toPlace){
 }
 
 function getAtGrid(x,y){
+  var toRet = [];
   for(var i=0;i<grid.length;i++){
     var curr = grid[i];
     var cl = curr.locations();
@@ -285,12 +295,20 @@ function getAtGrid(x,y){
     for(var j=0;j<cl.length;j++){
       //console.log(j)
       if(cl[j].x == x && cl[j].y == y){
-        return curr;
+        toRet.push(curr);
       }
     }
   }
 
-  return null;
+  if(toRet.length == 1){
+    return toRet[0];
+  }
+  else if(toRet.length > 1){
+    return toRet;
+  }
+  else{
+    return null;
+  }
 }
 
 function getComponentByType(comp,x,y){
@@ -322,6 +340,9 @@ function getComponentByType(comp,x,y){
   else if(comp === CROSS_WIRE_COMPONENT){
     toPush = cross_wire(null,x,y);
   }
+  else if(comp === CROSSING_WIRE_COMPONENT){
+    toPush = crossing_wire(null,x,y);
+  }
 
   //boxes
   else if(comp === PRINT_BOX_COMPONENT){
@@ -335,6 +356,9 @@ function getComponentByType(comp,x,y){
   }
   else if(comp === SWITCH_BOX_COMPONENT){
     toPush = switch_box(null,x,y);
+  }
+  else if(comp === LIGHT_BOX_COMPONENT){
+    toPush = light_box(null, x,y);
   }
 
   return toPush;

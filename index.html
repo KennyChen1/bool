@@ -103,13 +103,15 @@
 				<img class = "c-icon" src="img/cmenu-minus.png" id = "I">
 				<img class = "c-icon" src="img/cmenu-t.png" id = "T">
 				<img class = "c-icon" src="img/cmenu-l.png" id = "L">
+				<img class = "c-icon" src="img/cmenu-crossing.png" id = "CROSSING">
 			</div>
 
 			<div class = "twobytwo">
 				<img class = "c-icon" src="img/cmenu-onbox.png" id = "ON">
 				<img class = "c-icon" src="img/cmenu-printbox.png" id = "PRINT">
-				<img class = "c-icon" src="img/cmenu-varbox.png" id = "VAR">
+				<!--<img class = "c-icon" src="img/cmenu-varbox.png" id = "VAR">-->
 				<img class = "c-icon" src="img/cmenu-switchbox.png" id = "SWITCH">
+				<img class = "c-icon" src="img/cmenu-light.png" id = "LIGHT">
 			</div>
 			
 		</div>
@@ -145,9 +147,10 @@
 				<p class = "debug-msg"> Welcome to <i>bool</i>! The Online Circuit Builder</p>
 				
 				<div id = "debug-printed">
+				<!--
 				<p class = "debug-msg"> To get started, drag and drop some circuit components onto the grid. Then go to file -> run and let the simulation begin!</p>
 				<p class = "debug-msg"> To edit any of the circuit components attributes, right click the component on the grid and change away!</p>
-
+				-->
 				</div>
 			</div>
 			
@@ -210,7 +213,7 @@
 			<div class = "console-bottom" id = "boolean">
 				<div class = "build-circuit">
 					<div class = "bool-button" onclick = "makeCircuitFromBoolEq()">Make Circuit</div>
-					<div class = "bool-button">Make Table</div>
+					<div class = "bool-button" onclick = "makeBoolEqFromCircuit()">Make Boolean Eq</div>
 				</div>
 				<div id = "textbox">
 					<textarea id = "boolean-tb">!(D+!B) + B * !(!A + B)</textarea>
