@@ -8,6 +8,75 @@ function getTruthTableAsArray(){
 
 }
 
+function truthTableToBool(){
+
+	// cleans input takes the table separate by row 
+	tString = getTruthTableAsString().trim().split("/");
+
+	// the columns that has solutions
+	solCol = [];
+	// splits each rows into cols
+	for(i = 0; i < tString.length; i++){
+		tString[i] = tString[i].trim().split(" ");
+
+		// gets the col of solutions
+		if(1){
+			solCol.push(tString[i][tString[i].length-1])
+		}
+	}
+	boolStr = ""
+	// check when the sol is 1
+	for(i =1; i < tString.length; i++){
+
+		if(solCol[i] == "1"){
+			// check for the col that has 1 
+			// check from 1 to n-1; don't check frsti and last
+			for(j = 1; j < tString[i].length-1; j++){
+
+				// checks if 0 or 1 to add "!"
+				if(tString[i][j] == "1"){
+					boolStr = boolStr + tString[0][j] 
+				} else if(tString[i][j] == "0"){
+					boolStr = boolStr + "!" +tString[0][j] 
+				}
+
+				// adds the and *
+				if(j != tString[i].length-2){
+						boolStr = boolStr + "*"
+				}
+			}
+			boolStr = boolStr + " + "
+		}
+	}
+	boolStr = boolStr.slice(0,-2)
+
+
+	$("#boolean-tb").text(boolStr)
+
+	return boolStr;
+}
+
+// changes * to && and + to ||
+// or * to AND and + to OR
+function convert(str){
+
+	//G5E6L6-4L2WWU3UX7
+
+	var x = str.split('*').join(' AND ');
+	// replace + with ||
+	x = x.split('+').join('OR');
+	x = x.split('!').join('NOT ');
+
+	return x;
+}
+
+function test(){
+	var wolfram = require('wolfram-alpha').createClient("G5E6L6-4L2WWU3UX7", opts);
+
+	var results = yield wolfram.query("integrate 2x");
+	console.log("Result: %j", results);
+}
+
 /*
  * gets turns the boolean equation to the table
  */ 
