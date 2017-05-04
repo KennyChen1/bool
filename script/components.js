@@ -173,6 +173,8 @@ function component(
 		return pushOutput(this, breadthTraverseList, null);
 	}
 
+	this.psuedoComponent; //misc variable, used for crossing to create a list of 2 i_wires.
+
 
 }
 
@@ -472,8 +474,8 @@ function crossing_wire(label, x, y){
 	var temp = new component(
 		CROSSING_WIRE_COMPONENT,	//type
 		label, 						//label
-		1, 							//inputs
-		3, 							//outputs
+		2, 							//inputs
+		2, 							//outputs
 		UP,							//direction
 		0, 							//delay
 		1, 							//width
@@ -483,30 +485,20 @@ function crossing_wire(label, x, y){
 		null						//print message
 	);
 
-	temp.inputDirection = function(){
-		var arr = [];
-		arr.push(flip(temp.direction));
-		arr.push(temp.direction);
-		arr.push(clockwise(temp.direction));
-		arr.push(counterClockwise(temp.direction));
-		return arr
-	}
+	var temp1 = i_wire(label, x, y);
+	temp1.direction = RIGHT;
+	var temp2 = i_wire(label, x, y);
 
-	temp.outputDirection = function(){
-		var arr = [];
-		arr.push(flip(temp.direction));
-		arr.push(temp.direction);
-		arr.push(clockwise(temp.direction));
-		arr.push(counterClockwise(temp.direction));
+	temp.psuedoComponent = []
+	temp.psuedoComponent.push(temp1);
+	temp.psuedoComponent.push(temp2);
 
-		return arr;
-	}
-
-	temp.logic = function(){
-		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
+	temp.equals = function newEquals(otherComponent){
+		return otherComponent.equals(temp.psuedoComponent[0]) || otherComponent.equals(temp.psuedoComponent[1]);
 	}
 
 	return temp;
+	
 }
 
 
@@ -859,6 +851,26 @@ function getAdjacentLocationByDirection(location, direction){
 // keeps track of which direction the signal came from
 // outputs to everywhere except where the signal came from
 
+
+//takes out the two i_wires in the crossing, checks which one matches component then uses that one as the pushComponent
+function crossingWireDecompose(pushComponent, component){	
+	for (var i = 0; i < pushComponent.psuedoComponent.length; i++) {
+		var currPpc = pushComponent.psuedoComponent[i];
+
+		var cppcIl = getInputLocations(currPpc);
+
+		for (var j = 0; j < cppcIl.length; j++) {
+			var compMatch = getAtGrid(cppcIl[j].x, cppcIl[j].y);
+
+			if(compMatch != null && compMatch.equals(component)){
+				return pushComponent.psuedoComponent[i];
+			}
+		}
+	}
+
+	console.log("crossingWireDecompose: error, none of pushComponent.psuedoComponents's inputs match component!");
+}
+
 function getOutputLocations(component){
 	var retOl = []; //output locations to return
 
@@ -924,7 +936,11 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 
 		if(pushComponent != null){
 
-			var pushComponentIl = getInputLocations(pushComponent);
+			if(pushComponent.type == CROSSING_WIRE_COMPONENT){
+				pushComponent = crossingWireDecompose(pushComponent, component);
+			}
+
+			var pushComponentIl = getInputLocations(pushComponent, component);
 
 			var cont = true;
 			if(prevComponent != null){//not the initial component
