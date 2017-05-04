@@ -194,8 +194,9 @@ function moveComponent(fromX, fromY, toX, toY){
     return false;  
   }
 
-  curr.x = toX;
-  curr.y = toY;
+  curr.move(toX,toY);
+  // curr.x = toX;
+  // curr.y = toY;
 
    // component can be moved
   if(canComponentBePlaced(curr)){
@@ -205,8 +206,9 @@ function moveComponent(fromX, fromY, toX, toY){
   }
   else{ // component cannot be moved
     console.log("cant be moved")
-    curr.x = fromX;
-    curr.y = fromY; 
+    curr.move(fromX,fromY);
+    // curr.x = fromX;
+    // curr.y = fromY; 
     grid.push(curr);
     
     return false;
@@ -218,7 +220,9 @@ function deleteComponent(x,y){
   for(var i=0;i<grid.length;i++){
     var curr = grid[i];
     if(curr.x == x && curr.y == y){
-      toRet.push(grid.splice(i,1)[0]);
+      var toDel = grid.splice(i,1)[0];
+      //toDel.ondelete();
+      toRet.push(toDel);
     }
   }
 
