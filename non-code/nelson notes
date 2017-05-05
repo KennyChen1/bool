@@ -3,11 +3,35 @@ Circuit Evaluator notes
 > Implement 
 	- buffer -- delays will only be for logic gates(including buffer)
 
-	- crossing -- allows circuits to pass through top
-
 > Delays - sort the bftList by delay order, if none have delays then doesn't matter the order but if they have delay then execute lowest delay, then subtract the lowest from second lowest and wait that time and keep doing it for wait(bftList[i+1].delay - bftList[i].delay).
 
+> implement ondelete() and onplace() functionality - when remove ON_BOX, whatever is on (that should be off) remains on
+	- eg when you delete an ON_BOX it propagates a 0 through then removes itself
+		- when you place an ON_BOX it propagates a 1 through
+		- when you delete a switch it propagates an 0 through(unless it is already 0)
+		- when you place a switch, it propagates a 1 through.
 
+	- insert where you delete an item
+	- insert where you place an item
+	- take into consideration, mass rotation, mass selection, mass movement, cut/copy/paste, deletion.
+
+> fix boolean equation and truth table to accept multiple character labels
+
+> render crossing correctly - depending on which i_wire is active, render accordingly
+
+> new images for crossing, light_bulb, switch
+
+> boolean equation to circuit - placing wires down
+	- pathfinder algo - pathfind from gate A to gate B
+		- i_wires are traversable, when u crossover an i_wire, it replaces it with a crossing wire.
+		- breadth, maybe A*?
+	- clip onplace function, automatically set direction to match inputs/outputs of already placed wires/gates 
+	- based on the found path, select the corresponding wire.
+		> say we have path = [prevLoc, currLoc, nextLoc];
+			when we are on currLoc and 
+				prevLoc is above
+				nextLoc is right
+			then we would want an L_wire facing up.
 
 Delays:
 	AND, OR, XOR, NOT, BUFFER
@@ -22,6 +46,8 @@ finished
 		> find end block, then breadthTraversal and append to left and right of root(check whiteboard)
 
 	> get rid of duplicate components in bftList
+
+	> implemented crossing
 
 
 ** Add new blocks **
