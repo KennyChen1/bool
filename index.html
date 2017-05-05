@@ -19,6 +19,7 @@
 	<script src="script/jquery-ui.min.js"></script>
 	<script src = "script/kinetic-v5.1.0/kinetic-v5.1.0.js"></script>
 	<script src = "script/kinetic-v5.1.0/kinetic-v5.1.0.min.js"></script>
+	<!--<script src = "script/wolfram.js"></script>-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 
 
@@ -28,6 +29,7 @@
 	<script src = "script/images.js"></script>
 	<script src = "script/grid.js"></script>
 	<script src = "script/submit.js"></script>
+
 
 </head>
 
@@ -158,7 +160,7 @@
 				<div class = "build-circuit">
 					<div class = "left">
 						<div class = "bool-button" onclick = "eqToTable()">Build Table</div>
-						<div class = "bool-button">Build Circuit</div>	
+						<div class = "bool-button" onclick = "truthTableToBool()"">Build Equation</div>	
 
 						<!--<br>
 
@@ -213,7 +215,7 @@
 			<div class = "console-bottom" id = "boolean">
 				<div class = "build-circuit">
 					<div class = "bool-button" onclick = "makeCircuitFromBoolEq()">Make Circuit</div>
-					<div class = "bool-button" onclick = "makeBoolEqFromCircuit()">Make Boolean Eq</div>
+					<div class = "bool-button" onclick = "eqToTable()">Make Truth Table</div>
 				</div>
 				<div id = "textbox">
 					<textarea id = "boolean-tb">!(D+!B) + B * !(!A + B)</textarea>

@@ -4,8 +4,19 @@ function getTruthTableAsString(){
 	return ttString;
 }
 
-function getTruthTableAsArray(){
 
+// changes * to && and + to ||
+// or * to AND and + to OR
+function convert(str){
+
+	//G5E6L6-4L2WWU3UX7
+
+	var x = str.split('*').join(' AND ');
+	// replace + with ||
+	x = x.split('+').join('OR');
+	x = x.split('!').join('NOT ');
+
+	return x;
 }
 
 function truthTableToBool(){
@@ -51,35 +62,12 @@ function truthTableToBool(){
 	boolStr = boolStr.slice(0,-2)
 
 
-	$("#boolean-tb").text(boolStr)
+	$("#boolean-tb").val(boolStr)
 
-	return boolStr;
+	//return boolStr;
 }
 
-// changes * to && and + to ||
-// or * to AND and + to OR
-function convert(str){
 
-	//G5E6L6-4L2WWU3UX7
-
-	var x = str.split('*').join(' AND ');
-	// replace + with ||
-	x = x.split('+').join('OR');
-	x = x.split('!').join('NOT ');
-
-	return x;
-}
-
-function test(){
-	var wolfram = require('wolfram-alpha').createClient("G5E6L6-4L2WWU3UX7", opts);
-
-	var results = yield wolfram.query("integrate 2x");
-	console.log("Result: %j", results);
-}
-
-/*
- * gets turns the boolean equation to the table
- */ 
 function eqToTable(){
 	// gets the unique letters and char
 	var letters = getBooleanEquation().replace(/[^a-zA-Z]+/g, '');
@@ -136,7 +124,7 @@ function eqToTable(){
 	}
 	console.log(tableString)
 
-	$("#truth-tb").text(tableString)
+	$("#truth-tb").val(tableString)
 }
 
 /* Useless functions, may be useful in the future
