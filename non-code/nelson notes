@@ -24,7 +24,7 @@ Circuit Evaluator notes
 > boolean equation to circuit - placing wires down
 	- pathfinder algo - pathfind from gate A to gate B
 		- i_wires are traversable, when u crossover an i_wire, it replaces it with a crossing wire.
-		- breadth, maybe A*?
+		- breadth search, maybe A*?
 	- clip onplace function, automatically set direction to match inputs/outputs of already placed wires/gates 
 	- based on the found path, select the corresponding wire.
 		> say we have path = [prevLoc, currLoc, nextLoc];

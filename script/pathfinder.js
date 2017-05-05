@@ -28,6 +28,7 @@ function pathFind(source, dest){
 }
 
 // not finished
+// helper function for 
 function pfh(dest, canTraverse, visited, bftList, path){
 	for (var i = bftList.length - 1; i >= 0; i--) {
 
