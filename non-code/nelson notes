@@ -1,9 +1,12 @@
-Circuit Evaluator notes
+Nelson's notes
 
 > Implement 
 	- buffer -- delays will only be for logic gates(including buffer)
 
 > Delays - sort the bftList by delay order, if none have delays then doesn't matter the order but if they have delay then execute lowest delay, then subtract the lowest from second lowest and wait that time and keep doing it for wait(bftList[i+1].delay - bftList[i].delay).
+	> remove delay option from all wires when buffer is added
+	> AND, OR, XOR
+	> NOT, BUFFER only stop on evaluation when delay is > 0
 
 > implement ondelete() and onplace() functionality - when remove ON_BOX, whatever is on (that should be off) remains on
 	- eg when you delete an ON_BOX it propagates a 0 through then removes itself
@@ -33,8 +36,21 @@ Circuit Evaluator notes
 				nextLoc is right
 			then we would want an L_wire facing up.
 
-Delays:
-	AND, OR, XOR, NOT, BUFFER
+Check if name exists when submitting if not add (1)
+	> check if name exists.
+		if exists: add a (1). eg) helloworld(1).
+		else: accept
+
+--bugs to fix--
+	Evaluator, make sure all outputs assign themselves to correct inputIndex
+		-when we have 2 sets of i_wires connected to a cross and we turn both sets on them try to turn them off, it breaks(they dont turn off).
+
+--for Kenny--
+	> clipboard needs to paste in as components, not Objects
+		- manually placing wire give correct component.logic()
+		- pasting a wire does not give correct component.logic()
+	> Add XOR and multiple character Label support to truth-table.js functions
+
 
 finished
 	> fix bug when two outputs are pointed into each other, it breaks
