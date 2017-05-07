@@ -3,6 +3,7 @@ var AND_GATE_COMPONENT = "AND";
 var OR_GATE_COMPONENT = "OR";
 var XOR_GATE_COMPONENT = "XOR";
 var NOT_GATE_COMPONENT = "NOT";
+var BUFFER_GATE_COMPONENT = "BUFFER";
 
 var NAND_GATE_COMPONENT = "NAND";
 var NOR_GATE_COMPONENT = "NOR";
@@ -144,14 +145,8 @@ function component(
 			this.input[h] = false;
 		}
 
-		this.outputDirectionsToDelete.splice(0, this.outputDirectionsToDelete.length); 
+		this.active = false;
 
-		if(this.type === NOT_GATE_COMPONENT || this.type === ON_BOX_COMPONENT){
-			this.active = true;
-		}
-		else{
-			this.active = false;
-		}
 
 		this.prevOutput = null;
 	}
@@ -324,6 +319,40 @@ function not_gate(label, x, y){
 
 	temp.logic = function(){
 		return !temp.input[0];
+	}
+
+	return temp;
+}
+
+function buffer_gate(label, x, y){
+	var temp = new component(
+		BUFFER_GATE_COMPONENT, 	//type
+		label, 					//label
+		1, 						//inputs
+		1, 						//outputs
+		UP,						//direction
+		0, 						//delay
+		1,	 					//width
+		1,		 				//height
+		x, 						//x
+		y,						//y
+		null					//print message
+	);
+
+	temp.inputDirection = function(){
+		var arr = [];
+		arr.push(flip(temp.direction));
+		return arr
+	}
+
+	temp.outputDirection = function(){
+		var arr = [];
+		arr.push(temp.direction);
+		return arr;
+	}
+
+	temp.logic = function(){
+		return temp.input[0];
 	}
 
 	return temp;
@@ -682,17 +711,21 @@ function switch_box(label, x, y){
 	}
 
 	temp.logic = function(){
-		return temp.input[0];
+		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
 	}
 
 	temp.onclick = function(){
 		if(this.active){
 			this.active = false;
-			temp.input[0] = false;
+			for (var i = temp.input.length - 1; i >= 0; i--) {
+				temp.input[i] = false;
+			}
 		}
 		else{
 			this.active = true;
-			temp.input[0] = true;
+			for (var i = temp.input.length - 1; i >= 0; i--) {
+				temp.input[i] = true;
+			}
 		}
 		evaluateComponents([this]);
 	}
@@ -754,6 +787,14 @@ function allowCircuitEvaluation(){ //allow circuit to be reevaluated
 
 function isWire(component){
 	return component.type === I_WIRE_COMPONENT || component.type === L_WIRE_COMPONENT || component.type === T_WIRE_COMPONENT || component.type === CROSS_WIRE_COMPONENT;
+}
+
+function isUnaryGate(component){
+	return component.type === NOT_GATE_COMPONENT || component.type === BUFFER_GATE_COMPONENT;
+}
+
+function isMultiOutputWire(component){
+	return component.type === T_WIRE_COMPONENT || component.type === CROSS_WIRE_COMPONENT;
 }
 
 function directionToString(direction){
@@ -932,21 +973,38 @@ function getOutputLocations(component){
 	return retOl;
 }
 
-function getInputLocations(component){
-	var retIl = []; //input locations to return
-
+function getWireInputLocations(component, retIl){
+	for (var i = 0; i < 4; i++) {
+		retIl.push({x: -1, y: -1});
+	}
 	for (var i = 0; i < component.inputDirection().length; i++) {
 		var curr = component.inputDirection()[i];
 
-		if(component.width == 2 && component.height == 1){ // 2x1 gate
-			retIl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
-			retIl.push(getAdjacentLocationByDirection(component.locations()[1], curr));			
-		}
-		else if(component.width == 1 && component.height == 1){ // 1x1 gate
-			retIl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
-		}
-		else{//error
-			console.log("getInputLocations: invalid component width or height");
+		retIl[curr] = getAdjacentLocationByDirection(component.locations()[0], curr);
+	}
+
+}
+
+function getInputLocations(component){
+	var retIl = []; //input locations to return
+
+	if(isWire(component)){
+		getWireInputLocations(component, retIl);
+	}
+	else{
+		for (var i = 0; i < component.inputDirection().length; i++) {
+			var curr = component.inputDirection()[i];
+
+			if(component.width == 2 && component.height == 1){ // 2x1 gate
+				retIl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
+				retIl.push(getAdjacentLocationByDirection(component.locations()[1], curr));			
+			}
+			else if(component.width == 1 && component.height == 1){ // 1x1 gate
+				retIl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
+			}
+			else{//error
+				console.log("getInputLocations: invalid component width or height");
+			}
 		}
 	}
 
@@ -994,13 +1052,13 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 
 			if(cont && pci){
 				console.log(component.type+" pushing to "+pushComponent.type);
-				console.log(component.input[0]+"|"+component.input[1]+"|"+component.input[2]);
+				console.log(component.input[0]+"|"+component.input[1]+"|"+component.input[2]+"|"+component.input[3]);
 
 				setInput(pushComponent, component); //setInput checks where the signal came from and sets input[] accordingly
 
 				//component.active = component.logic();
 
-				if(isWire(pushComponent) && pushComponent.delay <= 0){ //if its a wire and there is no delay on the component, continue
+				if((isWire(pushComponent) || isUnaryGate(pushComponent)) && pushComponent.delay <= 0){ //if its a wire and there is no delay on the component, continue
 																		//TODO: remove pushCOmponent.delay <= 0 when implements buffer.
 					component.prevOutput = component.logic();
 					pushOutput(pushComponent,breadthTraverseList,component);
@@ -1015,6 +1073,7 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 }
 
 
+
 //sets input of component based on prevComponent
 function setInput(component, prevComponent){
 	var il = getInputLocations(component);
@@ -1027,12 +1086,12 @@ function setInput(component, prevComponent){
 		if(currIlComponent != null){
 			if(isWire(component)){ //1x1 but behaves differently
 				if(currIlComponent.equals(prevComponent)){
-					component.input[i] = prevComponent.logic();
+					component.input[i] = prevComponent.logic();					
 				}
 			}
 			else{
 				if(currIlComponent.equals(prevComponent)){
-					if(component.type === NOT_GATE_COMPONENT){ //1x1
+					if(isUnaryGate(component)){ //1x1
 						component.input[0] = prevComponent.logic();
 					}
 					else{ //2x1

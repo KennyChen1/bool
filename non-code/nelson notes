@@ -42,8 +42,6 @@ Check if name exists when submitting if not add (1)
 		else: accept
 
 --bugs to fix--
-	Evaluator, make sure all outputs assign themselves to correct inputIndex
-		-when we have 2 sets of i_wires connected to a cross and we turn both sets on them try to turn them off, it breaks(they dont turn off).
 
 --for Kenny--
 	> clipboard needs to paste in as components, not Objects
@@ -65,6 +63,9 @@ finished
 
 	> implemented crossing
 
+	bug fix > 	Evaluator, make sure all outputs assign themselves to correct inputIndex
+		-when we have 2 sets of i_wires connected to a cross and we turn both sets on them try to turn them off, it breaks(they dont turn off).
+
 
 ** Add new blocks **
 	example: Light Bulb
@@ -72,6 +73,7 @@ finished
 	component.js 
 		> make new constant at top -	var LIGHT_BOX_COMPONENT = "LIGHT"
 		> make new function -			function light_box(label, x, y){}
+		> if is wire or unarygate, add to isWire() or isUnaryGate() functions
 
 	grid.js
 		> add to getComponentByType(comp,x,y);

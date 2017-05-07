@@ -330,6 +330,9 @@ function getComponentByType(comp,x,y){
   else if(comp === NOT_GATE_COMPONENT){
     toPush = not_gate(null,x,y);
   }
+  else if(comp === BUFFER_GATE_COMPONENT){
+    toPush = buffer_gate(null,x,y);
+  }
 
   //wires
   else if(comp === L_WIRE_COMPONENT){
