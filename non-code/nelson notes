@@ -3,6 +3,10 @@ Nelson's notes
 > Implement 
 	- buffer -- delays will only be for logic gates(including buffer)
 
+> Circuit Evaluator
+	- if a circuit outputs the same as prev output, don't output.
+	- if infinite loop, check for stackoverflow exception, catch and kill execution (in evaluator)
+
 > Delays - sort the bftList by delay order, if none have delays then doesn't matter the order but if they have delay then execute lowest delay, then subtract the lowest from second lowest and wait that time and keep doing it for wait(bftList[i+1].delay - bftList[i].delay).
 	> remove delay option from all wires when buffer is added
 	> AND, OR, XOR

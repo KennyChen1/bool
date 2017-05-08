@@ -36,4 +36,9 @@ $(document).ready(function(){
 		onClickConsoleTrigger($(".console #boolean-trigger"));
 		hideOthersAndShowSelected($(".console .console-bottom"), $(".console #boolean"));
 	});
+
+	$(".console #quizlet-trigger").mousedown(function(e){
+		onClickConsoleTrigger($(".console #quizlet-trigger"));
+		hideOthersAndShowSelected($(".console .console-bottom"), $(".console #quizlet"));
+	});
 });
