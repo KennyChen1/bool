@@ -19,6 +19,9 @@ function convert(str){
 	return x;
 }
 
+// https://en.wikipedia.org/wiki/Quine%E2%80%93McCluskey_algorithm
+// returns the unsimplied boolean equation represenation of the truthtable
+// which happens to be sum of minterms
 function truthTableToBool(){
 
 	// cleans input takes the table separate by row 
@@ -64,9 +67,115 @@ function truthTableToBool(){
 
 	$("#boolean-tb").val(boolStr)
 
-	//return boolStr;
+	return boolStr;
 }
 
+function simpEq(){
+	// this get the min term
+	x = truthTableToBool();
+	if(x.split("+").length == 1)
+		return x.trim();
+
+	// gets all the variables
+	vars = x.replace(/!/g, "").split("+")[0].split("*");
+
+	// get bin representation of the minterms
+	binrep = x.replace(/![A-Z]+/g, "0").replace(/[A-Z]+/g, "1").replace(/\*/g, "").split("+");
+
+	// sort them by number of 1s
+
+	// instantiated the 2d array
+	sorted = new Array(binrep[0].length+1);
+	for(i = 0; i < sorted.length; i++){
+		sorted[i] = []
+	}
+
+	//sort them by number of 1s
+	for(i = 0; i < binrep.length; i++){
+		sorted[(binrep[i].match(/1/g) || []).length].push(binrep[i])
+	}
+
+	newsol = [];
+	seen = []
+
+	// for combinging check i and i+1 until i-1 and i, start from 1
+	// this loops checks if the minterm differ by 1 char
+	// so only check i and i+1, if i and i+n, n>1 then it differs by n>1 char and not good
+	for(i = 1; i < sorted.length-1; i++){
+		for(j = 0; j < sorted[i].length; j++){
+			for(k = 0; k < sorted[i+1].length; k++){
+				// might as well trim the white spaces
+				sorted[i][j] = sorted[i][j].trim()
+				sorted[i+1][k] = sorted[i+1][k].trim()
+
+				// count keeps track of how many differnt bits
+				count = 0;
+				// pos keeps track where if differs
+				pos = -1
+				// loops checks if they differ by one char
+				for(x = 0; x < sorted[i][j]; x++){
+					if(sorted[i][k][x]  != sorted[i+1][k][x]){
+						count++;
+						pos = x;
+					}
+				}
+
+				// if count > 1 then differ more than 1 bit, so skip
+				if(count != 1){					
+					continue;
+				} else{ // replaces the bit with a '-' and placs into new sol
+					seen.push(sorted[i][j]);
+					seen.push(sorted[i+1][k]);
+					newsol.push(sorted[i][k].substr(0,pos) + "-" + sorted[i][k].substr(pos+1))
+				}
+				//console.log((""+i+j+k) + " " +sorted[i][j] + " " + sorted[i+1][k])
+			}
+		}
+	} // end for outer most for loop
+
+	// flatted the sorted array
+	merged = [].concat.apply([], sorted);
+
+	// set dif is the shit that isn't able to be matched
+	temparr = $(merged).not(seen).toArray().concat(newsol);
+
+	returnSol = []
+	//conversol final sol
+	for(i = 0; i < temparr.length; i++){
+		splitStr = temparr[i].trim().split("")
+		for(j = 0; j < splitStr.length; j++){
+			
+			switch(splitStr[j]){
+				case "-":
+					splitStr[j] = ""
+					break;
+				case "1":
+					splitStr[j] = vars[j]
+					break;
+				case "0":
+					splitStr[j] = "!"+vars[j]
+					break;
+				default:
+					console.log("should not get here, should only have -,0,1")
+			}
+		}
+		returnSol.push(splitStr.join("*").trim())
+		//temparr = temparr.join(" ").trim().split(" ").join("*")
+	}
+	returnSol = returnSol.join(" + ")
+
+
+	return returnSol;
+}
+function convertString(string){
+	return string.split('*').join(' AND ').split('!').join(' NOT ').split('+').join(" OR ").trim().split("  ").join(" ").split("  ").join(" ")
+
+}
+// replaces a string at pos with char
+function replaceAt(string, pos, char){
+	return string.substr(0,pos) + char + string.substr(pos+1)
+
+}
 
 function eqToTable(){
 	// gets the unique letters and char
@@ -101,16 +210,18 @@ function eqToTable(){
 
 		tempStr = strCopt;
 		var x = uniques.split("");
+		// replaces vars with bits
 		for(z = 0; z < printStr.length; z++){
-			//console.log(x[z]+" " + printStr[z])
-			tempStr = tempStr.split(x[printStr.length-z-1]).join(printStr[z])
+			tempStr = tempStr.split(x[z]).join(printStr[z])
+			//tempStr = tempStr.split(x[printStr.length-z-1]).join(printStr[z])
 		}
+			//console.log(printStr+" " + x)
 
-		// prints the zeros
+		// prints the bits
 		for(j = 0; j < printStr.length; j++){ 
 			tableString += (" " + printStr[j]);
 		}
-
+		//console.log(printStr +  " " + tempStr)
 		// this changes true false text to 0 and 1
 		if(eval(tempStr) == false)
 			tempStr = 0
