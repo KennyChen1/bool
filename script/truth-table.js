@@ -114,7 +114,7 @@ function simplifyBool(eq){
 	// i need to convert the boolean equation to truth table
 	// from the truth table i get the minterms
 	// which is sused to simply the boolean equation
-
+	
 	// first step is to convert the eq to table
 	var tableStr = eqToTable(eq) // this gets the table
 	return truthTableToBool(tableStr)
@@ -128,6 +128,9 @@ function simplifyBool(eq){
 	this shit sucks
 */
 function simpEq(){
+	
+	return;
+
 	// this get the min term
 	x = truthTableToBool();
 	if(x.split("+").length == 1)
@@ -247,9 +250,20 @@ function eqToTable(){
 	var letters;
 	if(arguments.length == 0){		
 		letters = getBooleanEquation().replace(/[^a-zA-Z]+/g, '');
+
+		// strCopt is the boolean  with || and && instead of + and *
+		// replace * with &&
+		strCopt = getBooleanEquation().split('*').join('&&');
+		// replace + with ||
 	} else{
 		letters = arguments[0].replace(/[^a-zA-Z]+/g, '');
+
+		strCopt = arguments[0].split('*').join('&&');
 	}
+
+	strCopt = strCopt.split('+').join('||');
+
+
 	uniques = letters.split('').filter(function(item, i, ar){ return ar.indexOf(item) === i; }).join('');
 
 	// zero array of length of unique char in equation to start pritning
@@ -258,11 +272,7 @@ function eqToTable(){
 
 	tableString = "- " + uniques.split('').join(' ') + " sol/\n";
 
-	// strCopt is the boolean  with || and && instead of + and *
-	// replace * with &&
-	strCopt = getBooleanEquation().split('*').join('&&');
-	// replace + with ||
-	strCopt = strCopt.split('+').join('||');
+	
 
 
 	for(i = 0; i < Math.pow(2,uniques.length); i++){
