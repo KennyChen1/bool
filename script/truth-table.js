@@ -19,13 +19,17 @@ function convert(str){
 	return x;
 }
 
-// https://en.wikipedia.org/wiki/Quine%E2%80%93McCluskey_algorithm
 // returns the unsimplied boolean equation represenation of the truthtable
 // which happens to be sum of minterms
 function truthTableToBool(){
-
+	
 	// cleans input takes the table separate by row 
-	tString = getTruthTableAsString().trim().split("/");
+	if(arguments.length == 0){ // nothing was passed in		
+		tString = getTruthTableAsString().trim().split("/");
+	} else{
+		tString = arguments[0].trim().split("/");
+	}
+
 
 	// the columns that has solutions
 	solCol = [];
@@ -39,10 +43,12 @@ function truthTableToBool(){
 		}
 	}
 	boolStr = ""
+	minterms = []
 	// check when the sol is 1
 	for(i =1; i < tString.length; i++){
 
 		if(solCol[i] == "1"){
+			minterms.push(i-1)
 			// check for the col that has 1 
 			// check from 1 to n-1; don't check frsti and last
 			for(j = 1; j < tString[i].length-1; j++){
@@ -62,14 +68,65 @@ function truthTableToBool(){
 			boolStr = boolStr + " + "
 		}
 	}
-	boolStr = boolStr.slice(0,-2)
+
+	aa = qm(minterms, tString[0].length-2) // have to process the solution
+	aa = aa.split(" + ")
+
+	vars = tString[0].slice(1,-1)
 
 
-	$("#boolean-tb").val(boolStr)
+	for(i = 0; i < aa.length; i++){ // replace "a'" with "!a"
+		aa[i] = aa[i].split("").join("*").replace(/[A-Za-z]\*\'/g,  function(match) {
+		    return "!" + match.substring(0, match.length-2);
+		}).split("*");
+	}
+
+	for(i = 0; i < aa.length; i++){ // this goes though all the terms
+		for(j = 0; j < aa[i].length; j++){ // this goes though the variables in a term
+			if(aa[i][j].length == 2){ 
+				// there is a !
+				aa[i][j] = aa[i][j].substr(0, 1) + vars[aa[i][j].charCodeAt(1)-97] + aa[i][j].substr(1 + 1);
+			} else{
+				// there is only the variable
+				aa[i][j] =  vars[aa[i][j].charCodeAt(0)-97];
+			}
+		}
+		aa[i] = aa[i].join("*")
+	}
+
+	boolStr = aa.join(" + ")
+
+	//boolStr = boolStr.slice(0,-2)
+
+
+	if(arguments.length == 0){ // nothing was passed in		
+		$("#boolean-tb").val(boolStr)
+	}
 
 	return boolStr;
 }
 
+
+/*
+// https://en.wikipedia.org/wiki/Quine%E2%80%93McCluskey_algorithm
+*/
+function simplifyBool(eq){
+	// i need to convert the boolean equation to truth table
+	// from the truth table i get the minterms
+	// which is sused to simply the boolean equation
+
+	// first step is to convert the eq to table
+	var tableStr = eqToTable(eq) // this gets the table
+	return truthTableToBool(tableStr)
+	// second step is to get the minterms from this fucking table
+
+	
+}
+
+/*
+	defunt
+	this shit sucks
+*/
 function simpEq(){
 	// this get the min term
 	x = truthTableToBool();
@@ -114,20 +171,22 @@ function simpEq(){
 				pos = -1
 				// loops checks if they differ by one char
 				for(x = 0; x < sorted[i][j]; x++){
-					if(sorted[i][k][x]  != sorted[i+1][k][x]){
+					if(sorted[i][j][x]  != sorted[i+1][k][x]){
 						count++;
 						pos = x;
 					}
 				}
 
 				// if count > 1 then differ more than 1 bit, so skip
-				if(count != 1){					
+				if(count != 1){				
 					continue;
 				} else{ // replaces the bit with a '-' and placs into new sol
 					seen.push(sorted[i][j]);
 					seen.push(sorted[i+1][k]);
-					newsol.push(sorted[i][k].substr(0,pos) + "-" + sorted[i][k].substr(pos+1))
+					newsol.push(sorted[i][j].substr(0,pos) + "-" + sorted[i][j].substr(pos+1))
 				}
+				count = 0; pos = -1;
+
 				//console.log((""+i+j+k) + " " +sorted[i][j] + " " + sorted[i+1][k])
 			}
 		}
@@ -147,7 +206,7 @@ function simpEq(){
 			
 			switch(splitStr[j]){
 				case "-":
-					splitStr[j] = ""
+					//splitStr[j] = "zz"
 					break;
 				case "1":
 					splitStr[j] = vars[j]
@@ -159,7 +218,7 @@ function simpEq(){
 					console.log("should not get here, should only have -,0,1")
 			}
 		}
-		returnSol.push(splitStr.join("*").trim())
+		returnSol.push(splitStr.join("*").trim().replace(/\*{1}-{1}/g, ""))
 		//temparr = temparr.join(" ").trim().split(" ").join("*")
 	}
 	returnSol = returnSol.join(" + ")
@@ -167,19 +226,30 @@ function simpEq(){
 
 	return returnSol;
 }
+
+
+//replaced into AND NOT and OR
 function convertString(string){
-	return string.split('*').join(' AND ').split('!').join(' NOT ').split('+').join(" OR ").trim().split("  ").join(" ").split("  ").join(" ")
-
-}
-// replaces a string at pos with char
-function replaceAt(string, pos, char){
-	return string.substr(0,pos) + char + string.substr(pos+1)
+	return string.replace(/\*/g, " AND ").replace(/\+/g, " OR ").replace(/!/g, " NOT\ ").trim().replace(/ +/g, " ")
 
 }
 
+/*	
+	converts a boolean equation to it's truth table representation
+
+	paremeters 
+		if none, the function will parse the boolean equation in the text box
+		if one or more than arguements[0] will be the equation passed in to the function and will not change the table
+	returns the string represenation of the boolean eqation
+*/
 function eqToTable(){
 	// gets the unique letters and char
-	var letters = getBooleanEquation().replace(/[^a-zA-Z]+/g, '');
+	var letters;
+	if(arguments.length == 0){		
+		letters = getBooleanEquation().replace(/[^a-zA-Z]+/g, '');
+	} else{
+		letters = arguments[0].replace(/[^a-zA-Z]+/g, '');
+	}
 	uniques = letters.split('').filter(function(item, i, ar){ return ar.indexOf(item) === i; }).join('');
 
 	// zero array of length of unique char in equation to start pritning
@@ -233,9 +303,14 @@ function eqToTable(){
 
 
 	}
+
 	console.log(tableString)
 
-	$("#truth-tb").val(tableString)
+	if(arguments.length == 0){
+		$("#truth-tb").val(tableString)
+	}
+
+	return tableString;
 }
 
 /* Useless functions, may be useful in the future
