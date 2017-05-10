@@ -138,6 +138,12 @@ function component(
 	this.input.push(false);		// input[2] recieves output from third
 	this.input.push(false);		// input[3]
 
+	this.setAllInput = function setAllInput(signal){
+		for (var i = this.input.length - 1; i >= 0; i--) {
+			this.input[i] = signal;
+		}
+	}
+
 	this.prevOutput = null; //previous output
 
 	this.reset = function reset(){ //resets component for reevaluation
@@ -1018,6 +1024,10 @@ function getInputLocations(component){
 // pushs output until it hits a logic gate or wire with a delay
 // once it hits a logic gate or wire with delay, it sets the input of that gate and pushs it to breadthTraverseList
 function pushOutput(component, breadthTraverseList, prevComponent){ 
+	if(component.prevOutput == component.logic()){
+		return;
+	}
+
 	component.active = component.logic();
 
 	var ol = getOutputLocations(component);
@@ -1056,11 +1066,10 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 
 				setInput(pushComponent, component); //setInput checks where the signal came from and sets input[] accordingly
 
-				//component.active = component.logic();
+				component.prevOutput = component.logic();
 
 				if((isWire(pushComponent) || isUnaryGate(pushComponent)) && pushComponent.delay <= 0){ //if its a wire and there is no delay on the component, continue
 																		//TODO: remove pushCOmponent.delay <= 0 when implements buffer.
-					component.prevOutput = component.logic();
 					pushOutput(pushComponent,breadthTraverseList,component);
 				} 
 				else{
@@ -1072,7 +1081,36 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 	}
 }
 
+function setInputMultiOutputComponent(component, signal, i){
+	if(signal){
+		// sets all inputs to true
+		for (var i = 0; i < component.input.length; i++) {
+			component.input[i] = true;
+		}
+	}
+	else{
+		var cid = component.inputDirection();
+		var toCont = true;
+		// if any of the adjacent component's corresponding inputs are true, then do not set this wire to false
+		// example: if the wire above's up(0) input is true, then this wire should be kept as its current value
+		for (var i = 0; i < cid.length; i++) { 
+			var ctcLoc = getAdjacentLocationByDirection(component.locations()[0], cid[i]);
+			var compToCheck = getAtGrid(ctcLoc.x, ctcLoc.y);
+			if(compToCheck != null && compToCheck.input[cid[i]]){
+				toCont = false;
+			}
+		}
 
+		//sets all inputs to false
+		if(toCont){
+			for (var i = 0; i < component.input.length; i++) {
+				component.input[i] = false;
+			}
+
+			evaluateComponents([component]);
+		}
+	}
+}
 
 //sets input of component based on prevComponent
 function setInput(component, prevComponent){
@@ -1086,7 +1124,32 @@ function setInput(component, prevComponent){
 		if(currIlComponent != null){
 			if(isWire(component)){ //1x1 but behaves differently
 				if(currIlComponent.equals(prevComponent)){
-					component.input[i] = prevComponent.logic();					
+					if(isWire(prevComponent)){ // prev & curr are both wires
+						if(isMultiOutputWire(component)){ // prev is any wire, curr is multioutput wire
+							setInputMultiOutputComponent(component, prevComponent.input[i], i);
+						}
+						else{ // prev is any wire, curr is singleoutput wire
+							if(isMultiOutputWire(prevComponent)){
+								if(!prevComponent.input[i]){
+									component.setAllInput(false);
+								}
+								else{
+									component.input[i] = prevComponent.logic();
+								}
+							}
+							else{
+								component.input[i] = prevComponent.input[i];
+							}
+						}
+					}	
+					else{ //prev is not wire, curr is wire
+						if(isMultiOutputWire(component)){ // prev is any wire, curr is multioutput wire
+							setInputMultiOutputComponent(component, prevComponent.logic());
+						}
+						else{ // prev is any wire, curr is singleoutput wire
+							component.input[i] = prevComponent.logic();
+						}
+					}				
 				}
 			}
 			else{
