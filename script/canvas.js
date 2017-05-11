@@ -225,13 +225,27 @@ function rotateCoords(x, y, width, height, direction){
   };
 }
 
+function drawPsuedoComponents(component){
+  for (var i = component.psuedoComponent.length - 1; i >= 0; i--) {
+    var curr = component.psuedoComponent[i];
+
+    var imgDraw = getImageByComponentType(curr);      
+    drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction);
+  }
+}
+
 function drawComponents(){
   for(var i=0; i<grid.length; i++){
     var curr = grid[i];
 
     if(withinCameraView(curr.x, curr.y)){
-      var imgDraw = getImageByComponentType(curr);
-      drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction);
+      if(curr.psuedoComponent != null){
+        drawPsuedoComponents(curr);
+      }
+      else{
+        var imgDraw = getImageByComponentType(curr);      
+        drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction);
+      }
     }
   }
 }

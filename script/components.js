@@ -132,11 +132,35 @@ function component(
 	this.inputDirection; //directions where input can be accepted. NOT-gate facing UP will have an input direction of DOWN
 	this.outputDirection; //directions where output will be pushed to. NOT-gate facing UP will have an output direction of UP
 
-	this.input = [];			// inputs received from previous gate | either 1 or 2 inputs | defaults to 0
-	this.input.push(false);		// input[0] recieves the output of the gate that connects to locations()[0]
-	this.input.push(false);		// input[1] recieves the output of the gate that connects to locations()[1]
-	this.input.push(false);		// input[2] recieves output from third
-	this.input.push(false);		// input[3]
+	this.input = [];						// inputs received from previous gate | either 1 or 2 inputs | defaults to 0
+	this.input.push(new inputStack());		// input[0] recieves the output of the gate that connects to locations()[0]
+	this.input.push(new inputStack());		// input[1] recieves the output of the gate that connects to locations()[1]
+	this.input.push(new inputStack());		// input[2] recieves output from third
+	this.input.push(new inputStack());		// input[3]
+
+	this.pushInput = function pushInput(index, signal){
+		if(index >= this.input.length){
+			console.log("component.pushInput(), invalid index");
+		}
+
+		if(signal){
+			this.input[index].addTrue();
+		}
+		else{
+			this.input[index].addFalse();
+		}
+	}
+
+	this.getInput = function getInput(index){
+		var curr = this.input[index];
+
+		if(curr.stack.length <= 0){
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
 
 	this.setAllInput = function setAllInput(signal){
 		for (var i = this.input.length - 1; i >= 0; i--) {
@@ -220,7 +244,7 @@ function and_gate(label, x, y){
 	}
 
 	temp.logic = function(){
-		return temp.input[0] && temp.input[1];
+		return temp.getInput(0) && temp.getInput(1);
 	}
 
 	return temp;
@@ -255,7 +279,7 @@ function or_gate(label, x, y){
 
 
 	temp.logic = function(){
-		return temp.input[0] || temp.input[1];
+		return temp.getInput(0) || temp.getInput(1);
 	}
 
 	return temp;
@@ -290,7 +314,7 @@ function xor_gate(label, x, y){
 
 
 	temp.logic = function(){
-		return (!temp.input[0] && temp.input[1]) || (temp.input[0] && !temp.input[1]);
+		return (!temp.getInput(0) && temp.getInput(1)) || (temp.getInput(0) && !temp.getInput(1));
 	}
 
 	return temp;
@@ -324,7 +348,7 @@ function not_gate(label, x, y){
 	}
 
 	temp.logic = function(){
-		return !temp.input[0];
+		return !temp.getInput(0);
 	}
 
 	return temp;
@@ -358,7 +382,7 @@ function buffer_gate(label, x, y){
 	}
 
 	temp.logic = function(){
-		return temp.input[0];
+		return temp.getInput(0);
 	}
 
 	return temp;
@@ -395,7 +419,7 @@ function l_wire(label, x, y){
 	}
 
 	temp.logic = function(){
-		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
+		return temp.getInput(0) || temp.getInput(1) || temp.getInput(2) || temp.getInput(3);
 	}
 
 	return temp;
@@ -432,7 +456,7 @@ function i_wire(label, x, y){
 	}
 
 	temp.logic = function(){
-		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
+		return temp.getInput(0) || temp.getInput(1) || temp.getInput(2) || temp.getInput(3);
 	}
 
 	return temp;
@@ -471,7 +495,7 @@ function t_wire(label, x, y){
 	}
 
 	temp.logic = function(){
-		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
+		return temp.getInput(0) || temp.getInput(1) || temp.getInput(2) || temp.getInput(3);
 	}
 
 	return temp;
@@ -512,7 +536,7 @@ function cross_wire(label, x, y){
 	}
 
 	temp.logic = function(){
-		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
+		return temp.getInput(0) || temp.getInput(1) || temp.getInput(2) || temp.getInput(3);
 	}
 
 	return temp;
@@ -555,6 +579,10 @@ function crossing_wire(label, x, y){
 		return otherComponent.equals(temp.psuedoComponent[0]) || otherComponent.equals(temp.psuedoComponent[1]);
 	}
 
+	temp.logic = function logic(){
+		return false;
+	}
+
 	return temp;
 	
 }
@@ -591,7 +619,7 @@ function print_box(label, x, y, message){
 	}
 
 	temp.logic = function(){
-		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
+		return temp.getInput(0) || temp.getInput(1) || temp.getInput(2) || temp.getInput(3);
 	}
 
 	temp.use = function(){
@@ -680,7 +708,7 @@ function var_box(label, x, y){
 	}
 
 	temp.logic = function(){
-		return temp.input[0];
+		return temp.getInput(0);
 	}
 
 	return temp;
@@ -717,27 +745,32 @@ function switch_box(label, x, y){
 	}
 
 	temp.logic = function(){
-		return temp.input[0] || temp.input[1] || temp.input[2] || temp.input[3];
+		return temp.getInput(0) || temp.getInput(1) || temp.getInput(2) || temp.getInput(3);
 	}
 
 	temp.onclick = function(){
 		if(this.active){
 			this.active = false;
 			for (var i = temp.input.length - 1; i >= 0; i--) {
-				temp.input[i] = false;
+				temp.pushInput(i, false);
 			}
 		}
 		else{
 			this.active = true;
 			for (var i = temp.input.length - 1; i >= 0; i--) {
-				temp.input[i] = true;
+				temp.pushInput(i, true);
 			}
 		}
 		evaluateComponents([this]);
 	}
 
 	temp.ondelete = function(){
-		temp.input[0] = false;
+		console.log("SWITCH.ondelete()");
+		temp.pushInput(0, false);
+		temp.pushInput(1, false);
+		temp.pushInput(2, false);
+		temp.pushInput(3, false);
+
 		evaluateComponents([this]);
 	}
 
@@ -775,13 +808,37 @@ function light_box(label, x, y){
 	}
 
 	temp.logic = function(){
-		return temp.input[0] | temp.input[1] | temp.input[2] | temp.input[3];
+		return temp.getInput(0) || temp.getInput(1) || temp.getInput(2) || temp.getInput(3);
 	}
 
 	return temp;
 }
 
 /* Circuit Evaluation Helper Functions */
+
+function inputStack(){
+	this.stack = [];
+
+	this.addTrue = function addTrue(){
+		this.stack.push(true);
+	}
+
+	this.addFalse = function addFalse(){
+		this.stack.splice(this.stack.length-1, 1);
+	}
+
+	this.toString = function toString(){
+		var ret = "";
+
+		for (var i = this.stack.length - 1; i >= 0; i--) {
+			ret = ret + i + " ";
+			ret = ret + this.stack[i]
+			ret = ret + ",";
+		}
+
+		return ret;
+	}
+}
 
 function killCircuitEvaluation(){ //kills the circuit evaluation (DOES NOT PAUSE EVALUATION)
 	stopCircuitEvaluation = true;
@@ -926,6 +983,13 @@ function getAdjacentLocationByDirection(location, direction){
 	return {x: pushLocationX, y: pushLocationY};
 }
 
+
+// gets the direction relative is from base
+// if relative is above base, then the direction is UP
+function getAdjacentDirectionByComponent(base, relative){
+
+}
+
 /* Circuit Evaluator Functions */
 
 // push logic to output location
@@ -1027,9 +1091,6 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 	//if(component.prevOutput == component.logic()){
 	//	return;
 	//}
-
-	component.active = component.logic();
-
 	var ol = getOutputLocations(component);
 
 	for (var i = 0; i < ol.length; i++) {
@@ -1039,11 +1100,13 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 
 		if(pushComponent != null){
 
+			var prevComponentDirection; // which direction, relative to component is prevComponent. (if prevComponent is above, then UP)
+
 			if(pushComponent.type == CROSSING_WIRE_COMPONENT){
 				pushComponent = crossingWireDecompose(pushComponent, component);
 			}
 
-			var pushComponentIl = getInputLocations(pushComponent, component);
+			var pushComponentIl = getInputLocations(pushComponent);
 
 			var cont = true;
 			if(prevComponent != null){//not the initial component
@@ -1057,16 +1120,29 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 
 				if(pcCurr != null && pcCurr.equals(component)){
 					pci = true;
+
+					var componentIl = getInputLocations(component);
+					for (var k = 0; k < componentIl.length; k++) {
+						var cilCurrIl = componentIl[k];
+						if(cilCurrIl != null){
+							var cilCurr = getAtGrid(cilCurrIl.x, cilCurrIl.y);
+
+							if(cilCurr != null && prevComponent != null && cilCurr.equals(prevComponent)){
+								prevComponentDirection = k;
+							}
+						}
+					}
 				}
 			}
 
 			if(cont && pci){
 				console.log(component.type+" pushing to "+pushComponent.type);
-				console.log(component.input[0]+"|"+component.input[1]+"|"+component.input[2]+"|"+component.input[3]);
+				console.log(component.getInput(0)+"|"+component.getInput(1)+"|"+component.getInput(2)+"|"+component.getInput(3));
 
-				setInput(pushComponent, component); //setInput checks where the signal came from and sets input[] accordingly
 
-				component.prevOutput = component.logic();
+				if(setInput(pushComponent, component, prevComponentDirection)){
+					return;
+				}; //setInput checks where the signal came from and sets input[] accordingly
 
 				if((isWire(pushComponent) || isUnaryGate(pushComponent)) && pushComponent.delay <= 0){ //if its a wire and there is no delay on the component, continue
 																		//TODO: remove pushCOmponent.delay <= 0 when implements buffer.
@@ -1113,7 +1189,10 @@ function setInputMultiOutputComponent(component, signal){
 }
 
 //sets input of component based on prevComponent
-function setInput(component, prevComponent){
+// component - component's input to be set
+// prevComponent - input based on this component's logic
+// prevPrevComponentDirection - the prevComponent's previous component's direction based on prevComponent. (so if prevPrevComponent is above prevComponent, prevPrevComponentDirection is UP)
+function setInput(component, prevComponent, prevPrevComponentDirection){
 	var il = getInputLocations(component);
 
 	for (var i = 0; i < il.length; i++) {
@@ -1125,47 +1204,35 @@ function setInput(component, prevComponent){
 			if(isWire(component)){ //1x1 but behaves differently
 				if(currIlComponent.equals(prevComponent)){
 					if(isWire(prevComponent)){ // prev & curr are both wires
-						if(isMultiOutputWire(component)){ // prev is any wire, curr is multioutput wire
-							if(isMultiOutputWire(prevComponent)){
-								setInputMultiOutputComponent(component, prevComponent.input[i]);
-							}
-							else{
-								setInputMultiOutputComponent(component, prevComponent.input[i]);
-							}
+						if(component.getInput(i) == prevComponent.getInput(prevPrevComponentDirection)){
+							return true;
 						}
-						else{ // prev is any wire, curr is singleoutput wire
-							if(isMultiOutputWire(prevComponent)){
-								if(!prevComponent.input[i]){
-									component.setAllInput(false);
-								}
-								else{
-									component.input[i] = prevComponent.logic();
-								}
-							}
-							else{
-								component.input[i] = prevComponent.input[i];
-							}
-						}
+						component.pushInput(i, prevComponent.getInput(prevPrevComponentDirection));
 					}	
 					else{ //prev is not wire, curr is wire
-						if(isMultiOutputWire(component)){ // prev is any wire, curr is multioutput wire
-							setInputMultiOutputComponent(component, prevComponent.logic());
+						if(component.getInput(i) == prevComponent.logic()){
+							return true;
 						}
-						else{ // prev is any wire, curr is singleoutput wire
-							component.input[i] = prevComponent.logic();
-						}
+						component.pushInput(i, prevComponent.logic());
 					}				
 				}
 			}
 			else{
 				if(currIlComponent.equals(prevComponent)){
 					if(isUnaryGate(component)){ //1x1
-						component.input[0] = prevComponent.logic();
+						if(component.getInput(0) == prevComponent.logic()){
+							return true;
+						}
+						component.pushInput(0, prevComponent.logic());
 					}
 					else{ //2x1
 						var inputIndex = i % 2; //because every 2 indices are a direction, modding it will determine which input to set
 
-						component.input[inputIndex] = prevComponent.logic();
+						if(component.getInput(inputIndex) == prevComponent.logic()){
+							return true;
+						}
+
+						component.pushInput(inputIndex, prevComponent.logic());
 					}
 				}
 			}
