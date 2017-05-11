@@ -128,7 +128,6 @@ function simplifyBool(eq){
 	this shit sucks
 */
 function simpEq(){
-	
 	return;
 
 	// this get the min term
@@ -247,8 +246,14 @@ function convertString(string){
 */
 function eqToTable(){
 	// gets the unique letters and char
-	var letters;
-	if(arguments.length == 0){		
+
+
+
+	if(arguments.length == 0){
+		// gets the variables
+		variables = getBooleanEquation().split(/[ +*!()]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });
+
+
 		letters = getBooleanEquation().replace(/[^a-zA-Z]+/g, '');
 
 		// strCopt is the boolean  with || and && instead of + and *
@@ -256,6 +261,8 @@ function eqToTable(){
 		strCopt = getBooleanEquation().split('*').join('&&');
 		// replace + with ||
 	} else{
+		variables = arguments[0].split(/[ +*!()]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });
+
 		letters = arguments[0].replace(/[^a-zA-Z]+/g, '');
 
 		strCopt = arguments[0].split('*').join('&&');
@@ -264,18 +271,18 @@ function eqToTable(){
 	strCopt = strCopt.split('+').join('||');
 
 
-	uniques = letters.split('').filter(function(item, i, ar){ return ar.indexOf(item) === i; }).join('');
+	//uniques = letters.split('').filter(function(item, i, ar){ return ar.indexOf(item) === i; }).join('');
 
 	// zero array of length of unique char in equation to start pritning
-	printStr = Array.apply(null, Array(uniques.length)).map(Number.prototype.valueOf,0);
+	printStr = Array.apply(null, Array(variables.length)).map(Number.prototype.valueOf,0);
 	printStr[printStr.length-1] = 1
 
-	tableString = "- " + uniques.split('').join(' ') + " sol/\n";
+	tableString = "- " + variables.join(' ') + " sol/\n";
 
 	
 
 
-	for(i = 0; i < Math.pow(2,uniques.length); i++){
+	for(i = 0; i < Math.pow(2,variables.length); i++){
 		tableString = tableString + i;
 
 		// increments the zeros
@@ -289,7 +296,7 @@ function eqToTable(){
 		}
 
 		tempStr = strCopt;
-		var x = uniques.split("");
+		var x = variables;
 		// replaces vars with bits
 		for(z = 0; z < printStr.length; z++){
 			tempStr = tempStr.split(x[z]).join(printStr[z])
