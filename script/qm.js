@@ -67,11 +67,11 @@ util.adjacent = function(a, b){
 }
 
 //	override toString of Array for debug
-Array.prototype.toStringOld = Array.prototype.toString;
+/*Array.prototype.toStringOld = Array.prototype.toString;
 Array.prototype.toString = function(){
 	return "{ " + this.toStringOld() + " }";
 }
-
+*/
 //=============================================================================
 // class Implicant
 //-----------------------------------------------------------------------------
