@@ -1024,9 +1024,9 @@ function getInputLocations(component){
 // pushs output until it hits a logic gate or wire with a delay
 // once it hits a logic gate or wire with delay, it sets the input of that gate and pushs it to breadthTraverseList
 function pushOutput(component, breadthTraverseList, prevComponent){ 
-	if(component.prevOutput == component.logic()){
-		return;
-	}
+	//if(component.prevOutput == component.logic()){
+	//	return;
+	//}
 
 	component.active = component.logic();
 
@@ -1081,7 +1081,7 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 	}
 }
 
-function setInputMultiOutputComponent(component, signal, i){
+function setInputMultiOutputComponent(component, signal){
 	if(signal){
 		// sets all inputs to true
 		for (var i = 0; i < component.input.length; i++) {
@@ -1126,7 +1126,12 @@ function setInput(component, prevComponent){
 				if(currIlComponent.equals(prevComponent)){
 					if(isWire(prevComponent)){ // prev & curr are both wires
 						if(isMultiOutputWire(component)){ // prev is any wire, curr is multioutput wire
-							setInputMultiOutputComponent(component, prevComponent.input[i], i);
+							if(isMultiOutputWire(prevComponent)){
+								setInputMultiOutputComponent(component, prevComponent.input[i]);
+							}
+							else{
+								setInputMultiOutputComponent(component, prevComponent.input[i]);
+							}
 						}
 						else{ // prev is any wire, curr is singleoutput wire
 							if(isMultiOutputWire(prevComponent)){

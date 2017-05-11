@@ -60,7 +60,7 @@ function loadImage(path){
 function getImageByComponentType(component){
 	var image;
 	var comp = component.type;
-	if(component.active){
+	if(component.logic()){
 		if(comp === AND_GATE_COMPONENT){
 			image = AND_ACTIVE_IMAGE;
 		}
