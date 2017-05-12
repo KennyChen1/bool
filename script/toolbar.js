@@ -60,7 +60,10 @@ function copyToClipBoard(){
   }
 
   for(i = 0; i < clipboardtemp.length; i++){
+    // have to figure out how to deep clone
     var tempx = jQuery.extend(true, {}, clipboardtemp[i])
+
+
   	tempx.x -= minx
   	tempx.y -= miny
     clipboard.push(tempx);
@@ -98,7 +101,7 @@ function cut(){
 function pasteToWorkspace(){
   // nothing in the clipboard, don't do anything
 
-  var clipboardCopy = jQuery.extend(true, {}, clipboard);
+  clipboardCopy = jQuery.extend(true, {}, clipboard);
 
 
   if(clipboardCopy.length == 0){
