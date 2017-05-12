@@ -1282,42 +1282,44 @@ function evaluateComponents(compList){
   	updateGridInterface();
 
   	var loop = {
-		next: function(){
-			if(bftList.length > 0){
-				var bftCopy = bftList;
-		  		bftList = [];
+		next: function(bft){
+			if(bft.length > 0){
 
 		  		var hasDelay = false;
 
 		  		var delayStep;
 
-		  		bftCopy = removeDuplicateComponents(bftCopy);
+		  		bft = removeDuplicateComponents(bft);
 
-		  		sortListByDelay(bftCopy);		
+		  		sortListByDelay(bft);
 
-		  		for (var i = 0; i < bftCopy.length; i++) {
-		  			if(bftCopy[i].delay <= 0){
-						bftCopy[i].activate();
-						bftCopy[i].output(bftList);
+		  		var noDelayList = []
+		  		var hasDelayList = []		
+
+		  		for (var i = 0; i < bft.length; i++) {
+		  			if(bft[i].delay <= 0){
+						bft[i].activate();
+						bft[i].output(noDelayList);
 					}
 					else{
 						hasDelay = true;
 					}
 				}
 
-				if(hasDelay){
-					delayStep = callComponentOutput(bftCopy, bftList);
-				}
+				setTimeout(function(){
+					for (var i = 0; i < bft.length; i++) {
+						//if(bftCopy[i].delay > 0){
+							bft[i].activate();
+							bft[i].output(hasDelayList);
+							updateGridInterface();
+							loop.next(hasDelayList);
+						//}
+					}
+				}, defaultDelayTime);
+
+				loop.next(noDelayList);
 
 		  		updateGridInterface();
-
-		  		if(hasDelay){
-		  			delayStep.done(function(){console.log(bftList)});
-		  			delayStep.then(loop.next());
-		  		}
-		  		else{
-					loop.next();
-				}
 			}
 			else{
 				console.log("finished!");
@@ -1325,7 +1327,7 @@ function evaluateComponents(compList){
 		}
 	}
 
-	loop.next();
+	loop.next(bftList);
 }
 
 function callComponentOutput(bftCopy, bftList){

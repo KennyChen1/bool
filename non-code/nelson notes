@@ -1,23 +1,23 @@
 Nelson's notes
 
 
-> Delays - sort the bftList by delay order, if none have delays then doesn't matter the order but if they have delay then execute lowest delay, then subtract the lowest from second lowest and wait that time and keep doing it for wait(bftList[i+1].delay - bftList[i].delay).
-	> remove delay option from all wires when buffer is added
-	> AND, OR, XOR
-	> NOT, BUFFER only stop on evaluation when delay is > 0
-
-	- take the delay from the highest delay(say 500) - set as waitTime
-	- begin waiting on the currDelay(say 300)
-		once this delay is up, subtract from waitTime(200)
-		execute all components with delay equal to currDelay(300)
-		look at all the components that come back
-			if any of them have a delay less than waitTime, insert them into the queue
-
-
-
 > new images for crossing, light_bulb, switch
 
 > deep copy function for components
+
+> flip AND, OR, XOR gates(change output directions accordingly and add flipped variable)
+
+> saving/loading doesn't save the delay
+
+> change attribute editor to only show needed inputs(textbox, etc)
+	- remove delay from all wires
+	- add flip to AND, XOR, OR
+	- remove message from all but print
+
+> reskin/recolor everything
+
+> onplace looks at surrounding blocks and checks input
+	- if logic is on, evaluate with itself as starting node
 
 > boolean equation to circuit - placing wires down
 	- pathfinder algo - pathfind from gate A to gate B
@@ -92,9 +92,20 @@ finished
 
 	> fix boolean equation and truth table to accept multiple character labels
 
-
 	bug fix > 	Evaluator, make sure all outputs assign themselves to correct inputIndex
 		-when we have 2 sets of i_wires connected to a cross and we turn both sets on them try to turn them off, it breaks(they dont turn off).
+
+	> Delays - sort the bftList by delay order, if none have delays then doesn't matter the order but if they have delay then execute lowest delay, then subtract the lowest from second lowest and wait that time and keep doing it for wait(bftList[i+1].delay - bftList[i].delay).
+	> remove delay option from all wires when buffer is added
+	> AND, OR, XOR
+	> NOT, BUFFER only stop on evaluation when delay is > 0
+
+	- take the delay from the highest delay(say 500) - set as waitTime
+	- begin waiting on the currDelay(say 300)
+		once this delay is up, subtract from waitTime(200)
+		execute all components with delay equal to currDelay(300)
+		look at all the components that come back
+			if any of them have a delay less than waitTime, insert them into the queue
 
 
 
