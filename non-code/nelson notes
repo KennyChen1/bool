@@ -1,13 +1,24 @@
 Nelson's notes
 
+> breadth traversal for pushOutput as well.
+
 > Delays - sort the bftList by delay order, if none have delays then doesn't matter the order but if they have delay then execute lowest delay, then subtract the lowest from second lowest and wait that time and keep doing it for wait(bftList[i+1].delay - bftList[i].delay).
 	> remove delay option from all wires when buffer is added
 	> AND, OR, XOR
 	> NOT, BUFFER only stop on evaluation when delay is > 0
 
-> fix boolean equation and truth table to accept multiple character labels
+	- take the delay from the highest delay(say 500) - set as waitTime
+	- begin waiting on the currDelay(say 300)
+		once this delay is up, subtract from waitTime(200)
+		execute all components with delay equal to currDelay(300)
+		look at all the components that come back
+			if any of them have a delay less than waitTime, insert them into the queue
+
+
 
 > new images for crossing, light_bulb, switch
+
+> deep copy function for components
 
 > boolean equation to circuit - placing wires down
 	- pathfinder algo - pathfind from gate A to gate B
@@ -34,7 +45,16 @@ Check if name exists when submitting if not add (1)
 	> clipboard needs to paste in as components, not Objects
 		- manually placing wire give correct component.logic()
 		- pasting a wire does not give correct component.logic()
-	> Add XOR and multiple character Label support to truth-table.js functions
+
+	> Add to truth-table.js functions
+		XOR support
+		multiple character Label support 
+
+	> Mass movement, does not allow components to be moved to blocks that the selection is already on
+		- so if the selection is 4x4, you cannot move it down.
+
+	> based on found path, select the corresponding wire
+
 
 
 finished
@@ -68,6 +88,8 @@ finished
 		- take into consideration, mass rotation, mass selection, mass movement, cut/copy/paste, deletion.
 
 	> render crossing correctly - depending on which i_wire is active, render accordingly
+
+	> fix boolean equation and truth table to accept multiple character labels
 
 
 	bug fix > 	Evaluator, make sure all outputs assign themselves to correct inputIndex

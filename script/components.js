@@ -853,7 +853,7 @@ function isWire(component){
 }
 
 function isUnaryGate(component){
-	return component.type === NOT_GATE_COMPONENT || component.type === BUFFER_GATE_COMPONENT;
+	return component.type === NOT_GATE_COMPONENT || component.type === BUFFER_GATE_COMPONENT || component.type === PRINT_BOX_COMPONENT;
 }
 
 function isMultiOutputWire(component){
@@ -1088,9 +1088,7 @@ function getInputLocations(component){
 // pushs output until it hits a logic gate or wire with a delay
 // once it hits a logic gate or wire with delay, it sets the input of that gate and pushs it to breadthTraverseList
 function pushOutput(component, breadthTraverseList, prevComponent){ 
-	//if(component.prevOutput == component.logic()){
-	//	return;
-	//}
+
 	var ol = getOutputLocations(component);
 
 	for (var i = 0; i < ol.length; i++) {
@@ -1253,6 +1251,10 @@ function evaluateComponents(compList){
 
   		bftCopy = removeDuplicateComponents(bftCopy);
 
+  		sortListByDelay(bftCopy);
+  		console.log("sorted by delay");
+  		console.log(bftCopy);
+
   		for (var i = 0; i < bftCopy.length; i++) {
   			bftCopy[i].activate();
   			bftCopy[i].output(bftList);
@@ -1266,6 +1268,14 @@ function evaluateComponents(compList){
   	}
 
   	updateGridInterface();
+}
+
+function sortListByDelay(list){
+	list.sort(function(comp, nextComp){
+		return comp.delay - nextComp.delay;
+	});
+
+	return list;
 }
 
 function existsInBft(bft, comp){
