@@ -68,11 +68,36 @@ function tokenizeBoolEq(boolEq){
 
 	var ret = [];
 
+	var letterStart = false;
+	var letterStartLoc;
+
 	for (var i = 0; i < boolEq.length; i++) {
 		var curr = boolEq.charAt(i);
-		ret.push(curr);
+		if(isLetter(curr)){
+			if(!letterStart){
+				letterStart = true;
+				letterStartLoc = i;
+			}
+		}
+		else{
+			if(letterStart){
+				letterStart = false;
+				ret.push(boolEq.substring(letterStartLoc, i));
+				letterStartLoc = null;
+				ret.push(curr);
+			}
+			else{
+				letterStart = false;
+				ret.push(curr);
+			}
+		}
 	}
 
+	if(letterStart){
+		ret.push(boolEq.substring(letterStartLoc, boolEq.length));
+	}
+	console.log("tokenized beq");
+	console.log(ret);
 	return ret;
 }
 

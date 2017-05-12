@@ -7,6 +7,7 @@ var AND_IMAGE = loadImage(path + "and.png");
 var OR_IMAGE = loadImage(path + "or.png");
 var XOR_IMAGE = loadImage(path + "xor.png");
 var NOT_IMAGE = loadImage(path + "not.png");
+var BUFFER_IMAGE = loadImage(path + "buffer.png");
 
 //var NAND_IMAGE = loadImage(path + "nand.png");
 //var NOR_IMAGE = loadImage(path + "nor.png");
@@ -30,6 +31,7 @@ var AND_ACTIVE_IMAGE = loadImage(active_path + "and.png");
 var OR_ACTIVE_IMAGE = loadImage(active_path + "or.png");
 var XOR_ACTIVE_IMAGE = loadImage(active_path + "xor.png");
 var NOT_ACTIVE_IMAGE = loadImage(active_path + "not.png");
+var BUFFER_ACTIVE_IMAGE = loadImage(active_path + "buffer.png");
 
 //var NAND_IMAGE = loadImage(path + "nand.png");
 //var NOR_IMAGE = loadImage(path + "nor.png");
@@ -58,7 +60,7 @@ function loadImage(path){
 function getImageByComponentType(component){
 	var image;
 	var comp = component.type;
-	if(component.active){
+	if(component.logic()){
 		if(comp === AND_GATE_COMPONENT){
 			image = AND_ACTIVE_IMAGE;
 		}
@@ -70,6 +72,9 @@ function getImageByComponentType(component){
 		}
 		else if(comp === NOT_GATE_COMPONENT){
 			image = NOT_ACTIVE_IMAGE;
+		}
+		else if(comp === BUFFER_GATE_COMPONENT){
+			image = BUFFER_ACTIVE_IMAGE;
 		}
 
 		//wires
@@ -118,6 +123,9 @@ function getImageByComponentType(component){
 		}
 		else if(comp === NOT_GATE_COMPONENT){
 			image = NOT_IMAGE;
+		}
+		else if(comp === BUFFER_GATE_COMPONENT){
+			image = BUFFER_IMAGE;
 		}
 
 		//wires

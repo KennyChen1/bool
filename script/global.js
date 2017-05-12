@@ -17,6 +17,9 @@ var selected = {
   }
 }
 
+var loopBeforeStop = 100; //amount of times pushOutput can be called before circuitEvaluation is killed
+
+var defaultDelayTime = 400; //delay in milliseconds
 
 undoList = [];
 redoList = [];

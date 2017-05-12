@@ -1,13 +1,13 @@
-Notes for Phase 3
+Notes for Phase 4
 
 Workspace
 	Console(truth table + boolean equations)
 		Functions
 			> Boolean equation to circuit
-				K -> Pathfind algo from output to intended input
-						> ignore crossing blocks (cross blocks = empty coord)
+				(Kenny) -> Pathfind algo from output to intended input
+						> i_wire are crossable blocks, but make note of it being an i_wire
+						> i_wires that are crossed will be replaced with crossing blocks.
 				-> Auto clip for wires (automatically matches output to input)
-				-> Crossing wire, so some configurations are not impossible
 				-> Switches instead of variable blocks
 				-> the number of times it appears in the boolean eq, is the number of wires it needs to be spaces vertically
 					> conservative so each switch can get wired up to the corresponding input
@@ -16,36 +16,39 @@ Workspace
 						| |
 					   /+ |
 					AND-OR/
-			> Circuit to boolean equation
-			> Parser for boolean equations
-				eq -> (eq) | eq op eq | !eq | label
-				label -> word
-				op -> * | +
 
-			K > Truth table to boolean equation
-			K > Boolean equation to truth table
 			K > Simplifying boolean equation (make boolean equation into its simplest form)
 
 	Layout
-		-> Truth table tab layout
-			-Table scrapped, just uses textbox each line is seperated by a /
-
-		-> Boolean equations tab layout
-
 		-> Help Menu page (gives instructions on how to use circuits)
+
+		Quizlets Maker Page
+			> Quizlets will just be normal Circuit files but with certain constraints place on them
+				- Once made through the Maker Page, it will appear as a normal Circuit in your Profile
+				- You can edit the Quizlet, but you cannot add Quizlet constraints to any normally made Circuit(through the Workspace).
+			> Students can clone their professor's Circuit file and try to solve it.
+
+			> Another tab in the console called -- Quizlet
+				-> Displays the number of each component you have left
+				-> Check Correctness -- checks if the circuit you have on the grid matches the quizlet constraints
+
+		Layout of Maker Page
+			-> Problem - the objective of this quizlet
+			-> Circuit constraints - any constraints put on the problem solver
+				- Limit amount of circuit components
+				- etc, more to be added
+			-> Correct Answer - can be inputted as
+				- Boolean equation
+				- Circuit (made through Workspace)
+					- Choose Circuit file locally
+					- Choose Circuit from Profile
+			-> Tags
+
+
 		-> QA page (contact info and how to send buggy circuits to us)
 
 	Tools
 		-> Load - load any circuit files that are yours (can only load files that you are marked as OWNER)
-
-	Evaluator
-		-> Add 
-			- button(sends a short signal)
-			- switch(sends a constant signal, can be toggled on/off when clicked on) -> to replace variable blocks
-			- crossing (+ shape, allows signal to travel over another signal)
-		-> Evaluation
-			currently -> looks for every signal generating circuit and propagates on them. (depth first traversal on every SGC)
-			changes ->  either breadth first traversal on every SGC or tick based evaluation
 
 	Bringing from bool to bool_online
 		Relink
@@ -94,6 +97,18 @@ Profile
 			-> alerts when something is shared with 
 			-> tooltip that shows all notifications
 
+			Implementation: 
+				- On submission or share, it checks the shared column in Circuit file, then appends a new row into the notifications table
+				- on reloading of the profile page, it shows the number of unread notifications
+				- Upon clicking the bell
+					- prompts a tooltip displaying all your notifications.
+				- Upon clicking the notification
+					- finds the corresponding notification in the Notifications table and deletes it
+					- get the Circuit File Name and Circuit File Owner from the notification
+						- types into the search bar: <Circuit File Name> owner:<Circuit File Owner>
+							or
+						- filters on Owner(Circuit File Name) and Circuit Name(Circuit File Owner) in the Circuit table
+
 		> Upload **
 			-> Prompts File Manager and allows you to select which file you wish to upload
 			-> Dragging a file with the correct extension into the List of Circuits interface will automatically upload the file to the datastore (with you as the owner)
@@ -104,9 +119,13 @@ Profile
 		> Each Circuit listing has (Reef maybe some parts)
 			-> Open (double click on listing)
 			-> Delete (prompts asking if you are SURE you want to delete)
-			-> Get Shareable Link -- <owner><name>
+			-> Get Shareable Link -- theboolapp.com/<owner>+<name> (only available if public)
 			-> Share Option
 			-> Clone as owner(if not you Circuit) - copies Circuit file and puts into your account
 
 
-	
+Notification Table Structure
+	- Owner (who is being notified)
+	- Type
+	- Circuit File Name
+	- Circuit File Owner

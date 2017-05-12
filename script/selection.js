@@ -83,8 +83,9 @@ $("#grid-render").mouseup(function(e){
 					currSelectedComponent.onclick();
 				}
 			}
-
-			moveComponent(cdom.x, cdom.y, cupm.x, cupm.y);
+			else{
+				moveComponent(cdom.x, cdom.y, cupm.x, cupm.y);
+			}
 
  		}
  		else{

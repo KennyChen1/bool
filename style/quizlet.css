@@ -1,0 +1,16 @@
+.quizlet-maker{
+	background-color: green;
+	padding: 20px 20px;
+	display: inline-block;
+
+	visibility: hidden;
+	display: inline-block;
+	position: fixed;
+
+	border-radius: 20px;
+
+	top: 600px;
+	left: 1000px;
+
+	border: ;
+}
