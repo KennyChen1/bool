@@ -1,6 +1,5 @@
 Nelson's notes
 
-> breadth traversal for pushOutput as well.
 
 > Delays - sort the bftList by delay order, if none have delays then doesn't matter the order but if they have delay then execute lowest delay, then subtract the lowest from second lowest and wait that time and keep doing it for wait(bftList[i+1].delay - bftList[i].delay).
 	> remove delay option from all wires when buffer is added
@@ -53,7 +52,9 @@ Check if name exists when submitting if not add (1)
 	> Mass movement, does not allow components to be moved to blocks that the selection is already on
 		- so if the selection is 4x4, you cannot move it down.
 
-	> based on found path, select the corresponding wire
+	> based on found path, select the corresponding wire, rotate wires correctly.
+
+	> function that checks if 2 boolean eqs are equal.
 
 
 

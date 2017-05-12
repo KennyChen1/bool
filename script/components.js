@@ -762,6 +762,8 @@ function switch_box(label, x, y){
 			}
 		}
 		evaluateComponents([this]);
+
+		updateGridInterface();
 	}
 
 	temp.ondelete = function(){
@@ -1081,13 +1083,44 @@ function getInputLocations(component){
 	return retIl;
 }
 
+function pushOutput(component, breadthTraverseList, prevComponent){
+	var wireBreadthTraverseList = [];
+	pushOutputHelper(component, breadthTraverseList, prevComponent, wireBreadthTraverseList);
+
+	var wbtlCopy = wireBreadthTraverseList.slice();
+	wireBreadthTraverseList = [];
+
+	var count = 0;
+
+	while(wbtlCopy.length > 0){
+
+		if(count > loopBeforeStop){
+			console.log("More evaluations than the number set: "+loopBeforeStop);
+			break;
+		}
+
+		for (var i = 0; i < wbtlCopy.length; i++) {
+			var curr = wbtlCopy[i]; // curr is {pushComponent, component}
+
+			pushOutputHelper(curr.pushComponent, breadthTraverseList, curr.component, wireBreadthTraverseList);
+		}
+
+		wbtlCopy = wireBreadthTraverseList.slice();
+		wireBreadthTraverseList = [];
+
+		updateGridInterface();
+
+		count++;
+	}
+}
+
 //component is the component to put output from
 //breadthTraverseList is an empty list, contains all the gates that the depth traversal ends on.
 //prevComponent is the component that called this component(could be null if its the initial call)
 
 // pushs output until it hits a logic gate or wire with a delay
 // once it hits a logic gate or wire with delay, it sets the input of that gate and pushs it to breadthTraverseList
-function pushOutput(component, breadthTraverseList, prevComponent){ 
+function pushOutputHelper(component, breadthTraverseList, prevComponent, wireBreadthTraverseList){ 
 
 	var ol = getOutputLocations(component);
 
@@ -1142,9 +1175,10 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 					return;
 				}; //setInput checks where the signal came from and sets input[] accordingly
 
-				if((isWire(pushComponent) || isUnaryGate(pushComponent)) && pushComponent.delay <= 0){ //if its a wire and there is no delay on the component, continue
+				if(isWire(pushComponent) || (isUnaryGate(pushComponent) && pushComponent.delay <= 0)){ //if its a wire and there is no delay on the component, continue
 																		//TODO: remove pushCOmponent.delay <= 0 when implements buffer.
-					pushOutput(pushComponent,breadthTraverseList,component);
+					//pushOutput(pushComponent,breadthTraverseList,component);
+					wireBreadthTraverseList.push({pushComponent: pushComponent, component: component});
 				} 
 				else{
 					breadthTraverseList.push(pushComponent); //if its not a wire, add it to the list of components, to re-output
@@ -1245,29 +1279,74 @@ function evaluateComponents(compList){
     	compList[i].output(bftList);
   	}
 
-  	while(true){
-  		var bftCopy = bftList;
-  		var bftList = [];
-
-  		bftCopy = removeDuplicateComponents(bftCopy);
-
-  		sortListByDelay(bftCopy);
-  		console.log("sorted by delay");
-  		console.log(bftCopy);
-
-  		for (var i = 0; i < bftCopy.length; i++) {
-  			bftCopy[i].activate();
-  			bftCopy[i].output(bftList);
-  		}
-
-  		updateGridInterface();
-
-  		if(bftList.length <= 0){
-  			break;
-  		}
-  	}
-
   	updateGridInterface();
+
+  	var loop = {
+		next: function(){
+			if(bftList.length > 0){
+				var bftCopy = bftList;
+		  		bftList = [];
+
+		  		var hasDelay = false;
+
+		  		var delayStep;
+
+		  		bftCopy = removeDuplicateComponents(bftCopy);
+
+		  		sortListByDelay(bftCopy);		
+
+		  		for (var i = 0; i < bftCopy.length; i++) {
+		  			if(bftCopy[i].delay <= 0){
+						bftCopy[i].activate();
+						bftCopy[i].output(bftList);
+					}
+					else{
+						hasDelay = true;
+					}
+				}
+
+				if(hasDelay){
+					delayStep = callComponentOutput(bftCopy, bftList);
+				}
+
+		  		updateGridInterface();
+
+		  		if(hasDelay){
+		  			delayStep.done(function(){console.log(bftList)});
+		  			delayStep.then(loop.next());
+		  		}
+		  		else{
+					loop.next();
+				}
+			}
+			else{
+				console.log("finished!");
+			}
+		}
+	}
+
+	loop.next();
+}
+
+function callComponentOutput(bftCopy, bftList){
+
+	var def = new $.Deferred();
+
+	setTimeout(function(){
+		for (var i = 0; i < bftCopy.length; i++) {
+			//if(bftCopy[i].delay > 0){
+				bftCopy[i].activate();
+				bftCopy[i].output(bftList);
+				console.log("delay > 0 "+ i +" ");
+				console.log(bftCopy[i]);
+				console.log(bftList);
+				updateGridInterface();
+			//}
+		}
+		def.resolve();
+	}, defaultDelayTime);
+
+	return def.promise();
 }
 
 function sortListByDelay(list){
