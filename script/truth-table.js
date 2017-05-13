@@ -321,7 +321,7 @@ function eqToTable(){
 
 	}
 
-	console.log(tableString)
+	//console.log(tableString)
 
 	if(arguments.length == 0){
 		$("#truth-tb").val(tableString)

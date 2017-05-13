@@ -1,3 +1,44 @@
+/*
+	compares if exp1 and exp2 are logically equivallent
+	exp1 and exp2 are boolean expressions
+
+	true if logically equal
+	false otherwise
+*/
+function booleanIsEqual(exp1, exp2){
+
+	// get tt string
+	var tt1 = eqToTable(exp1)
+	var tt2 = eqToTable(exp2)
+
+	// truth table to expression 
+	var sim1 = truthTableToBool(tt1)
+	var sim2 = truthTableToBool(tt2)
+
+	// make truth table from simplified expression
+	var stt1 = eqToTable(sim1)
+	var stt2 = eqToTable(sim2)
+
+	// split up the rows
+	var str1 = stt1.split("\n")
+	var str2 = stt2.split("\n")
+
+	// remove the first row which is the header
+	str1.shift()
+	str2.shift()
+
+	// combine the leftover rows
+	str1 = str1.join("\n")
+	str2 = str2.join("\n")
+
+	// return the solutuon
+	return str1 == str2
+
+}
+
+
+
+
 /* Syntax for Boolean Equations Parser*/
 var BE_OR = "+";
 var BE_AND = "*";
