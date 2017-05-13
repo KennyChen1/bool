@@ -90,6 +90,9 @@ function copyToClipBoard(){
       case "L":
         tempx = new l_wire(x.label, x.x, x.y);
       break;
+      case "CROSSING":
+        tempx = new crossing_wire(x.label, x.x, x.y);
+      break;
       case "SWITCH":
         tempx = new switch_box(x.label, x.x, x.y);
       break;
