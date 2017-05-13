@@ -40,7 +40,7 @@ function copyToClipBoard(){
   //var clipboard = findAllSelected(grid.slice());
 
   // finds all the thing within a region and makes a copy
-	var clipboardtemp = findAllSelected(grid);
+	clipboardtemp = findAllSelected(grid);
 
   // translate it to 0,0
 	if(clipboardtemp.length == 0)
@@ -61,7 +61,70 @@ function copyToClipBoard(){
 
   for(i = 0; i < clipboardtemp.length; i++){
     // have to figure out how to deep clone
-    var tempx = jQuery.extend(true, {}, clipboardtemp[i])
+
+    var x = clipboardtemp[i]
+    var y = x.type
+    var tempx;
+    switch(y){
+      case "AND":
+        tempx = new and_gate(x.label, x.x, x.y);
+      break;
+      case "XOR":
+        tempx = new xor_gate(x.label, x.x, x.y);
+      break;
+      case "OR":
+        tempx = new or_gate(x.label, x.x, x.y);
+      break;
+      case "NOT":
+        tempx = new not_gate(x.label, x.x, x.y);
+      break;
+      case "CROSS":
+        tempx = new cross_wire(x.label, x.x, x.y);
+      break;
+      case "I":
+        tempx = new i_wire(x.label, x.x, x.y);
+      break;
+      case "T":
+        tempx = new t_wire(x.label, x.x, x.y);
+      break;
+      case "L":
+        tempx = new l_wire(x.label, x.x, x.y);
+      break;
+      case "SWITCH":
+        tempx = new switch_box(x.label, x.x, x.y);
+      break;
+      case "PRINT":
+        tempx = new print_box(x.label, x.x, x.y);
+      break;
+      case "LIGHT":
+        tempx = new light_box(x.label, x.x, x.y);
+      break;
+      default:
+        console.log("asdsa")
+
+    }
+
+    tempx.direction = x.direction
+    tempx.delay = x.delay
+    tempx.message = x.message
+
+    //tempx.logic = x.logic
+    /*
+
+    component(
+    type, 
+    label, 
+    inputs, 
+    outputs, 
+    direction, 
+    delay, 
+    width, 
+    height, 
+    x, 
+    y,
+    message
+  )
+    */
 
 
   	tempx.x -= minx
