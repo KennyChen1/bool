@@ -30,6 +30,7 @@
 	<script src = "script/images.js"></script>
 	<script src = "script/grid.js"></script>
 	<script src = "script/submit.js"></script>
+	<script src = "script/quizlet.js"></script>
 
 
 </head>
@@ -56,15 +57,15 @@
 				<a href="#" class="dropbtn">File</a>
 				<div class="dropdown-content">
 		  			<a href="">New Circuit Workspace</a>
-		  			<a href="#">New Circuit Quizlet</a>
+		  			<a href="#" onclick = "promptQuizletMaker()">Quizlet Constraints</a>
 		  			<a href="#" onclick = "writetofile()">Save</a>
 		  			<a href="#">
 		  				<label for = "loader" class = "loading">Load</label>
 		  				<input id = "loader" type="file">
 		  			</a>
 		  			<a href = "#" onclick = "promptSubmitMenu()">Submit</a>
-		  			<!--<a id="run">Run</a>
-		  			<a href="#">Toggle Dynamic Evaluator</a>-->
+		  			<!--<a id="run">Run</a>-->
+		  			<a href="#" onclick = "flickStopCircuitEvaluation()">Stop Circuit Evaluation</a>
 				</div>
 			</li>
 			<li class="dropdown">
@@ -267,7 +268,7 @@
 			</div>
 	</div>
 
-	<div class = "blanket"></div>
+	<div class = "blanket" onclick = "hideAllMenus()"></div>
 
 	<div class = "submit-menu">
 		
@@ -314,45 +315,57 @@
 
 	<div class = "quizlet-maker">
 		
-		<p>Quizlet Maker</p>
+		<p class = "title">Quizlet Constraints</p>
 
 		<div id = "constraints">
-			<form>
-				<span class = "desc">Public</span>
-				<input type = "radio" class = "privacy" name = "privacy" id = "public" checked = "checked">
-				<span class = "desc">Private</span>
-				<input type = "radio" class = "privacy" name = "privacy" id = "private">
-			</form>
+			
+			<!--<div>
+				<span class = "constraint-label">AND GATE</span>
+				<span class = 'constraint-input-right'>
+					<input id = "and-constraint" class = "textbox" type = "text" name = "and-constraint" value = "">
+					<button class = "constraint-button" id = "and-constraint-up">+</button>
+					<button class = "constraint-button" id = "and-constraint-down">-</button>
+					<button class = "constraint-button" id = "and-constraint-inf">*</button>	
+				</span>
+			</div>
+			-->
+			
 		</div>
 
-		<div id = "div-problem">
-			<span class = "desc">Problem</span>
-			<input id = "quizlet-problem" class = "textbox" type = "text" name = "quizlet-problem" value = "">				
-		</div>
+		<div class = "non-constraints">
 
-		<div id = "div-answer">
-			<span class = "desc">Answer</span>
-			<input id = "circuit-name" class = "textbox" type = "text" name = "circuit-name" value = "">				
-		</div>
+			<div id = "div-problem">
+				<span class = "desc">Problem</span>
+				<input id = "quizlet-problem" class = "textbox" type = "text" name = "quizlet-problem" value = "">				
+			</div>
 
-		<div id = "div-name">
-			<span class = "desc">Name</span>
-			<input id = "circuit-name" class = "textbox" type = "text" name = "circuit-name" value = "">				
-		</div>
+			<div id = "div-answer">
+				<span class = "desc">Answer</span>
+				<input id = "circuit-name" class = "textbox" type = "text" name = "circuit-name" value = "">				
+			</div>
 
-		<div id = "div-share">
-			<span class = "desc">Share</span>
-			<input id = "circuit-share" class = "textbox" type = "text" name = "circuit-share" value = "">				
-		</div>
+			<!--
+			<div id = "div-name">
+				<span class = "desc">Name</span>
+				<input id = "circuit-name" class = "textbox" type = "text" name = "circuit-name" value = "">				
+			</div>
 
-		<div id = "div-tags">
-			<span class = "desc">Tags</span>
-			<input id = "circuit-tags" class = "textbox" type = "text" name = "circuit-tags" value = "">				
+			<div id = "div-share">
+				<span class = "desc">Share</span>
+				<input id = "circuit-share" class = "textbox" type = "text" name = "circuit-share" value = "">				
+			</div>
+
+			<div id = "div-tags">
+				<span class = "desc">Tags</span>
+				<input id = "circuit-tags" class = "textbox" type = "text" name = "circuit-tags" value = "">				
+			</div>
+			-->
+
 		</div>
 
 		<div id = "div-submit">
-			<button type = "button" onclick = "submitToDatastore()">Submit</button>
-			<button type = "button" onclick = "hideSubmitMenu()">Cancel</button>
+			<button type = "button" onclick = "makeNewQuizlet()">Submit</button>
+			<button type = "button" onclick = "hideQuizletMaker()">Cancel</button>
 		</div>
 	</div>
 

@@ -5,8 +5,8 @@ var XOR_GATE_COMPONENT = "XOR";
 var NOT_GATE_COMPONENT = "NOT";
 var BUFFER_GATE_COMPONENT = "BUFFER";
 
-var NAND_GATE_COMPONENT = "NAND";
-var NOR_GATE_COMPONENT = "NOR";
+//var NAND_GATE_COMPONENT = "NAND";
+//var NOR_GATE_COMPONENT = "NOR";
 
 // Circuit Passthroughs/Wires
 var L_WIRE_COMPONENT = "L"; 				// L
@@ -28,7 +28,36 @@ var DOWN = 2;
 var LEFT = 3;
 var RIGHT = 1;
 
+var ALL_COMPONENTS = [];
+getAllComponents(); //populates ALL_COMPONENTS
+
+var flickTime = 500;
 var stopCircuitEvaluation = false;
+
+function getAllComponents(){
+
+	if(ALL_COMPONENTS.length <= 0){
+		ALL_COMPONENTS.push(AND_GATE_COMPONENT);
+		ALL_COMPONENTS.push(OR_GATE_COMPONENT);
+		ALL_COMPONENTS.push(XOR_GATE_COMPONENT);
+		ALL_COMPONENTS.push(NOT_GATE_COMPONENT);
+		ALL_COMPONENTS.push(BUFFER_GATE_COMPONENT);
+
+		ALL_COMPONENTS.push(L_WIRE_COMPONENT);
+		ALL_COMPONENTS.push(I_WIRE_COMPONENT);
+		ALL_COMPONENTS.push(T_WIRE_COMPONENT);
+		ALL_COMPONENTS.push(CROSS_WIRE_COMPONENT);
+		ALL_COMPONENTS.push(CROSSING_WIRE_COMPONENT);
+
+		ALL_COMPONENTS.push(PRINT_BOX_COMPONENT);
+		ALL_COMPONENTS.push(ON_BOX_COMPONENT);
+		ALL_COMPONENTS.push(VAR_BOX_COMPONENT);
+		ALL_COMPONENTS.push(SWITCH_BOX_COMPONENT);
+		ALL_COMPONENTS.push(LIGHT_BOX_COMPONENT);
+	}
+
+	return ALL_COMPONENTS;
+}
 
 function component(
 		type, 
@@ -172,11 +201,8 @@ function component(
 
 	this.reset = function reset(){ //resets component for reevaluation
 		for(var h=0;h<this.input.length;h++){
-			this.input[h] = false;
+			this.input[h] = new inputStack();
 		}
-
-		this.active = false;
-
 
 		this.prevOutput = null;
 	}
@@ -842,6 +868,22 @@ function inputStack(){
 	}
 }
 
+function flickStopCircuitEvaluation(){
+	killCircuitEvaluation();
+
+	resetAllComponents();
+
+	setTimeout(function(){
+		allowCircuitEvaluation();
+	}, flickTime);
+}
+
+function resetAllComponents(){
+	for (var i = grid.length - 1; i >= 0; i--) {
+		grid[i].reset();
+	}
+}
+
 function killCircuitEvaluation(){ //kills the circuit evaluation (DOES NOT PAUSE EVALUATION)
 	stopCircuitEvaluation = true;
 }
@@ -1166,7 +1208,7 @@ function pushOutputHelper(component, breadthTraverseList, prevComponent, wireBre
 				}
 			}
 
-			if(cont && pci){
+			if(cont && pci && !stopCircuitEvaluation){
 				console.log(component.type+" pushing to "+pushComponent.type);
 				console.log(component.getInput(0)+"|"+component.getInput(1)+"|"+component.getInput(2)+"|"+component.getInput(3));
 

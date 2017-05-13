@@ -1,7 +1,6 @@
-var attributeEditor = $(".attribute-editor")
+var attributeEditor = $(".attribute-editor");
 
 var currentGridComponent;
-
 
 function openAttributeEditor(x,y, screenX, screenY){
 	var curr = getAtGrid(x,y);
