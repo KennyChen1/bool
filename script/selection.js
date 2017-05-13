@@ -111,7 +111,7 @@ $("#grid-render").mouseup(function(e){
 
 					// makes a copy of the object, 
 					// don't want to fuck with the orignal
-					var temp = jQuery.extend(true, {}, massSelection[i])
+					var temp = copy(massSelection[i])
 					temp.x = newx;
 					temp.y = newy;
 
