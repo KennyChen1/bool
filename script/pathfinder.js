@@ -142,13 +142,80 @@ function astar(start, goal){
     }
 }
 
-function printPath(){
-	x = new node({x:1, y:1}); 
-	y = new node({x:5, y:1})
-	z = astar(x, y);
 
+/*
+	this places the wires on the the board
+*/
+function printPath(){
+	x = new node({x:2, y:2}); // hard coded
+	y = new node({x:8, y:2})
+	z = astar(x, y);		// get the results
+
+	// prev is needed to keep track of the direction
+	var prev = null;
+
+	// keep looping while there is still a parent
 	while(z != null){
-		console.log(z.x + " " + z.y)
+
+
+		// this if statement is here b/c not to include the square itself
+		if(prev != null){
+
+
+			// xx and yy to check which way the last one was coming from direction
+			var xx = prev.x - z.x 
+			var yy = prev.y - z.y
+
+			// peek into the nextone see if it needs a corner piece
+			if(z.parent != null){
+
+				if((z.parent.x != prev.x) && (z.parent.y != prev.y)){
+					
+					var xxx = z.parent.x - z.x
+					var yyy = z.parent.y - z.y
+
+					console.log (xx + " " + yy  + " " + xxx  + " " + yyy)
+					var topush = new l_wire("", z.x, z.y);
+
+
+
+					if(((yy == 1) && (xxx == -1)) || (xx == -1) && (yyy == 1)){
+						topush.direction = 2
+					} else if((yy == -1) && (xxx == -1) || (xx == -1) && (yyy == -1)){
+						topush.direction = 3
+					} else if((yy == 1) && (xxx == 1) || (xx == 1) && (yyy == 1)){
+						topush.direction = 1
+					} else {
+						topush.direction = 0
+					}
+
+
+
+				} else{
+
+					var topush = new i_wire("", z.x, z.y);
+
+					if((xx == 1) || (xx == -1)){
+						topush.direction = 1;
+					} else if((yy == -1) || (yy == 1)){
+						topush.direction = 0;
+					}
+				}
+
+				grid.push(topush)
+
+			}
+
+
+
+			
+
+
+
+		}
+
+
+		prev = z;
 		z = z.parent
 	}
 }

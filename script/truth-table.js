@@ -251,7 +251,7 @@ function eqToTable(){
 
 	if(arguments.length == 0){
 		// gets the variables
-		variables = getBooleanEquation().split(/[ +*!()]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });
+		variables = getBooleanEquation().split(/[ +*!()^]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });
 
 
 		letters = getBooleanEquation().replace(/[^a-zA-Z]+/g, '');
@@ -261,7 +261,7 @@ function eqToTable(){
 		strCopt = getBooleanEquation().split('*').join('&&');
 		// replace + with ||
 	} else{
-		variables = arguments[0].split(/[ +*!()]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });
+		variables = arguments[0].split(/[ +*!()^]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });
 
 		letters = arguments[0].replace(/[^a-zA-Z]+/g, '');
 
