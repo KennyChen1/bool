@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Lora|Noto+Sans|PT+Serif|Source+Sans+Pro');
 html{ 
 	width: calc(100% - 20px);
 	height: calc(100% - 20px);
@@ -8,7 +9,11 @@ body{
 	height: 100%;
 	margin: 10px;
 	overflow: hidden;
-	background-color: black;
+	background-color: #181818;
+}
+
+p, a, div{
+	font-family: 'Source Sans Pro', sans-serif;
 }
 
 .workspace{ 
@@ -24,7 +29,12 @@ body{
 	height: calc(100% - 300px);
 	width: calc(100% - 210px - 30px);
 
-	background-color: white;
+	margin: 3px 0 0 0;
+
+	/*border: 2px solid #AEB0B3;*/
+	border-radius: 3px;
+
+	background-color: #E0E0E0;
 }
 
 .workspace .grid-render{
@@ -42,12 +52,16 @@ body{
 	position: absolute;
 
 	left: calc(100% - 210px - 10px);
-	top: calc(10% + 34px);
+	top: calc(10% + 32px);
 
 	width: 210px;
 	height: calc(90% - 44px);
 
-	background-color: #C98474;
+	background-color: #404040;
+
+	border-radius: 3px;
+
+	/*border: 2px solid #AEB0B3;*/
 
 	overflow: auto;
 }
@@ -57,7 +71,7 @@ body{
 	font-size: 20px;
 	margin: 6px;
 	color: white;
-	border-bottom: 2px solid black;
+	border-bottom: 2px solid #AEB0B3;
 }
 
 .workspace .cmenu .onebyone{
@@ -76,5 +90,10 @@ body{
 	width: calc(100% - 210px - 30px);
 	height: calc(300px - 54px);
 
-	background-color: grey;
+	background-color: #404040;
+
+	border-radius: 3px;
+
+	/*border: 2px solid #AEB0B3;
+	border-top: 0px;*/
 }

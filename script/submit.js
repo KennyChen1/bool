@@ -7,7 +7,7 @@ function promptSubmitMenu(){
 	submitMenu.addClass("show");
 	blanket.addClass("show");
 
-	submitMenu.offset({top: $(window).height()/2 - submitMenu.height(), left: $(window).width()/2 - submitMenu.width()});
+	submitMenu.offset({top: $(window).height()/2 - submitMenu.height(), left: $(window).width()/2 - submitMenu.width()/2});
 }
 
 function hideSubmitMenu(){

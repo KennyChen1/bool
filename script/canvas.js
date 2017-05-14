@@ -115,14 +115,14 @@ function setCanvasSize(){
 function drawNumbers(){
   context.clearText
 
-  context.font="10px Georgia";
+  context.font="10px sans-serif";
 
   for(var x = camera.begin.x; x <= camera.end.x; x++) {
     context.fillText(""+x, box * (x - camera.begin.x) + (box/2), box/5);
   }
 
   for(var y = camera.begin.y; y <= camera.end.y; y++) {
-    context.fillText(""+y, box/5, box * (y - camera.begin.y) + (box/2));
+    context.fillText(""+y, box/12, box * (y - camera.begin.y) + (box/2 + box/25));
   }
 }
 

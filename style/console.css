@@ -1,23 +1,28 @@
 .console .console-top{
     padding: 10px;
     height: 10%;
-    border-bottom: 5px solid black;
+    border-bottom: 5px solid #181818;
     border-width: 90%;
+}
+
+.console p{
+    color: #ebebeb;
 }
 
 /*make mouse-event, when you click one of the triggers hide the other 2*/
 .console .console-trigger{
-    margin: 0px 5px;
+    margin: 0 5px;
     padding: 5px 5px;
     height: 100%;
-    background-color: #A0A0A0;
+    background-color: #404040;
     color: white;
     float: left;
-    border-radius: 5px 5px 0 0;
+    border-radius: 2px 2px 0 0;
+    border: 1px solid #181818;
 }
 
 .console .console-trigger.on{
-    background-color: black;
+    background-color: #181818;
 }
 
 
@@ -47,7 +52,8 @@
 }
 
 .console .debug-msg{
-    padding: 0 10px;
+    padding: 0px 15px;
+    margin: 4px 0px;
 }
 
 .console .console-bottom{
@@ -159,7 +165,7 @@
 
 .console #quizlet .col{
     float: right;
-    padding: 6px 0px;
+    padding: 12px 0px;
     text-align: center;
     width: 120px;
     height: 120px;

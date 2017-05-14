@@ -929,6 +929,55 @@ function inputStack(){
 	}
 }
 
+/* onPlace functions */
+
+function clipComponentOnPlace(component){
+	if(component.psuedoComponent != null){
+		return;
+	}
+	for (var j = 0; j < 4; j++) {
+		component.direction = j;
+
+		var exitFlag = false;
+
+		var surround = getAllSurroundingCoord(component);
+
+		for (var i = 0; i < surround.length; i++) {
+			var s = surround[i]
+
+			surround[i] = getAtGrid(s.x, s.y);
+		}
+
+		// checks all inputLocations to see if any require surround blocks require a block to output to
+		for (var i = 0; i < surround.length; i++) {
+			if(surround[i] != null && componentIOMatch(component, surround[i])){
+				exitFlag = true;
+				break;
+			}
+		}
+
+		// checks all outputLocations ot see if any surround blocks require component to out to
+		for (var i = 0; i < surround.length; i++) {
+			if(surround[i] != null && componentIOMatch(surround[i], component)){
+				exitFlag = true;
+				break;
+			}
+		}
+
+		if(exitFlag){
+			break;
+		}
+	}
+
+
+}
+
+function checkInputsOnPlace(component){
+
+}
+
+/* Component Helpers */
+
 function flickStopCircuitEvaluation(){
 	killCircuitEvaluation();
 
@@ -1059,6 +1108,68 @@ function inputDirectionMatchOutputDirection(input, output){
 
 function isSignalGenerating(component){
 	return component.type == ON_BOX_COMPONENT;		
+}
+
+function coordsEqual(coord1, coord2){
+	return coord1.x == coord2.x && coord1.y == coord2.y;
+}
+
+function componentIOMatch(pushComponent, component){
+	if(pushComponent.psuedoComponent != null || component.psuedoComponent != null){
+		return false;
+	}
+	var il = getInputLocations(pushComponent);
+	var ol = getOutputLocations(component);
+
+	var ilFlag = false;
+	var olFlag = false;
+
+	for (var i = 0; i < il.length; i++) {
+		var ilComp = getAtGrid(il[i].x, il[i].y);
+
+		if(ilComp != null && component != null && ilComp.equals(component)){
+			ilFlag = true;
+		}
+	}
+
+	for (var i = 0; i < ol.length; i++) {
+		var olComp = getAtGrid(ol[i].x, ol[i].y);
+
+		if(olComp != null && pushComponent != null && olComp.equals(pushComponent)){
+			olFlag = true;
+		}
+	}
+
+	return ilFlag && olFlag;
+}
+
+function getAllSurroundingCoord(component){
+	var cl = component.locations();
+
+	var surround = [];
+
+	for (var i = 0; i < cl.length; i++) {
+		for (var j = 0; j < 4; j++) {
+			var currDir = j;
+
+			var adjDir = getAdjacentLocationByDirection(cl[i], j);
+
+			if(!anyIsLocation(adjDir, cl)){
+				surround.push(adjDir);
+			}
+		}
+	}
+
+	return surround;
+}
+
+function anyIsLocation(locationToCompare, locations){
+	for (var i = 0; i < locations.length; i++) {
+		if(locations[i].x == locationToCompare.x && locations[i].y == locationToCompare.y){
+			return true;
+		}
+	}
+	return false;
 }
 
 function getAdjacentLocationByDirection(location, direction){
