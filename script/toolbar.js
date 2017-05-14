@@ -61,8 +61,21 @@ function copyToClipBoard(){
 
   for(i = 0; i < clipboardtemp.length; i++){
     // have to figure out how to deep clone
+      tempx = copy(clipboardtemp[i])
+    
 
-    var x = clipboardtemp[i]
+  	tempx.x -= minx
+  	tempx.y -= miny
+    clipboard.push(tempx);
+  }
+
+  return true;
+
+}
+
+function copy(component){
+
+    var x = component
     var y = x.type
     var tempx;
     switch(y){
@@ -111,32 +124,7 @@ function copyToClipBoard(){
     tempx.delay = x.delay
     tempx.message = x.message
 
-    //tempx.logic = x.logic
-    /*
-
-    component(
-    type, 
-    label, 
-    inputs, 
-    outputs, 
-    direction, 
-    delay, 
-    width, 
-    height, 
-    x, 
-    y,
-    message
-  )
-    */
-
-
-  	tempx.x -= minx
-  	tempx.y -= miny
-    clipboard.push(tempx);
-  }
-
-  return true;
-
+  return tempx;
 }
 
 // Deletes all components from the workspace that are selected
