@@ -87,6 +87,8 @@ function component(
 	this.height = height;
 	this.x = x;
 	this.y = y;
+	this.flipped = false;
+
 	this.active = false;
 
 	this.print = function print(){
@@ -240,6 +242,25 @@ function component(
 	}
 
 	this.psuedoComponent; //misc variable, used for crossing to create a list of 2 i_wires.
+
+	this.setLoadValues = function setLoadValues(label, message, delay, flipped, direction){
+		this.label = label;
+		this.message = message;
+		this.delay = delay;
+		if(flipped == null){
+			this.flipped = false;
+		}
+		else{
+			this.flipped = flipped;
+		}
+
+		if(direction == null){
+			this.direction = UP;
+		}
+		else{
+			this.direction = direction;
+		}
+	}
 
 
 }

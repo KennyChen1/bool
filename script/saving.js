@@ -29,9 +29,11 @@ $("#loader").change(function(){
         grid = []
         //document.getElementById("inputTextToSave").value = textFromFileLoaded;
         for(i = 0; i < obj.length; i++){
-        	addToGrid(getComponentByType(obj[i].type, obj[i].x, obj[i].y))
-        	grid[i].direction = obj[i].direction
-            undoList.pop()
+        	addToGrid(getComponentByType(obj[i].type, obj[i].x, obj[i].y));
+        	grid[i].direction = obj[i].direction;
+            grid[i].setLoadValues(obj[i].label, obj[i].message, obj[i].delay, obj[i].flipped, obj[i].direction);    
+
+            undoList.pop();
         }
 
     };
