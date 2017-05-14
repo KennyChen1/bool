@@ -321,27 +321,34 @@ function calculateGridXY(x,y){
 
 // Camera movement
 $(document).keydown(function(e){
-  switch(e.which) {
-    case 37: 
-      moveCamera(LEFT, 1);// left
-      break;
+  var tag = e.target.tagName.toLowerCase();
+  console.log(tag);
 
-    case 38: 
-      moveCamera(UP, 1);// up
-      break;
+  if(tag == "input" || tag == "textarea"){}
+  else{
+    switch(e.which) {
+      case 37: 
+        moveCamera(LEFT, 1);// left
+        break;
 
-    case 39: 
-      moveCamera(RIGHT, 1);// right
-      break;
+      case 38: 
+        moveCamera(UP, 1);// up
+        break;
 
-    case 40: 
-      moveCamera(DOWN, 1);// down
-      break;
+      case 39: 
+        moveCamera(RIGHT, 1);// right
+        break;
 
-    default: 
-      return; // exit this handler for other keys
+      case 40: 
+        moveCamera(DOWN, 1);// down
+        break;
+
+      default: 
+        return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
   }
-  e.preventDefault(); // prevent the default action (scroll / move caret)
+  
 });
 
 // resize grid on window resize

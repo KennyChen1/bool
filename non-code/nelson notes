@@ -115,6 +115,7 @@ finished
 	example: Light Bulb
 
 	component.js 
+		> add to getAllComponents()
 		> make new constant at top -	var LIGHT_BOX_COMPONENT = "LIGHT"
 		> make new function -			function light_box(label, x, y){}
 		> if is wire or unarygate, add to isWire() or isUnaryGate() functions

@@ -47,19 +47,19 @@
 }
 
 .console .debug-msg{
-    padding: 0 20px;
+    padding: 0 10px;
 }
 
 .console .console-bottom{
     position: absolute;
-    visibility: hidden;
+    display:none;
     width: 100%;
     height: 80%;
     float: left;
 }
 
 .console .console-bottom.show{
-    visibility: visible;
+    display: block;
 }
 
 .console .bool-button{
@@ -141,6 +141,45 @@
 
 .console #boolean textarea{
     width: 20em;
+}
+
+/* Quizlet attributes */
+
+.console #quizlet{
+}
+
+.console #quizlet .row{
+    position: absolute;
+    float: left;
+    width: 70%;
+    left: 30%;
+    height: calc(100% - 1px);
+    overflow: auto;
+}
+
+.console #quizlet .col{
+    float: right;
+    padding: 6px 0px;
+    text-align: center;
+    width: 120px;
+    height: 120px;
+}
+
+.console #quizlet .info-pane{
+    padding: 0 10px;
+    width: calc(30% - 10px);
+    float: left;
+    position: absolute;
+    height: calc(100% - 1px);
+    overflow: auto;
+}
+
+.console #quizlet .info-pane .problem{
+    font-weight: bold;
+}
+
+.console #quizlet .info-pane .desc{
+    font-weight: bold;
 }
 
 

@@ -17,7 +17,14 @@ var selected = {
   }
 }
 
-var quizletConstraints;
+var circuitName = "";
+
+var quizlet = { //all quizlet constraints (to be saved/set when submit/loaded)
+	constraints: [],
+	problem: "",
+	answer: "",
+	desc: ""
+};
 
 var loopBeforeStop = 100; //amount of times pushOutput can be called before circuitEvaluation is killed
 

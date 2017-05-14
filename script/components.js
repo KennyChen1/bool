@@ -21,6 +21,7 @@ var ON_BOX_COMPONENT = "ON";
 var VAR_BOX_COMPONENT = "VAR";
 var SWITCH_BOX_COMPONENT = "SWITCH";
 var LIGHT_BOX_COMPONENT = "LIGHT";
+var EQ_BOX_COMPONENT = "EQUATION";
 
 //directions
 var UP = 0;
@@ -50,10 +51,11 @@ function getAllComponents(){
 		ALL_COMPONENTS.push(CROSSING_WIRE_COMPONENT);
 
 		ALL_COMPONENTS.push(PRINT_BOX_COMPONENT);
-		ALL_COMPONENTS.push(ON_BOX_COMPONENT);
-		ALL_COMPONENTS.push(VAR_BOX_COMPONENT);
+		//ALL_COMPONENTS.push(ON_BOX_COMPONENT);
+		//ALL_COMPONENTS.push(VAR_BOX_COMPONENT);
 		ALL_COMPONENTS.push(SWITCH_BOX_COMPONENT);
 		ALL_COMPONENTS.push(LIGHT_BOX_COMPONENT);
+		ALL_COMPONENTS.push(EQ_BOX_COMPONENT);
 	}
 
 	return ALL_COMPONENTS;
@@ -649,7 +651,7 @@ function print_box(label, x, y, message){
 	}
 
 	temp.use = function(){
-		if(temp.message != null && this.logic() == true){
+		if(temp.message != null && this.logic()){
 			consoleDisplayString(this.message);
 		}
 	}
@@ -841,6 +843,44 @@ function light_box(label, x, y){
 
 	return temp;
 }
+
+function eq_box(label, x, y){
+	var temp = new component(
+		EQ_BOX_COMPONENT,		//type
+		label, 					//label
+		4, 						//inputs
+		0, 						//outputs
+		UP,						//direction
+		0, 						//delay
+		1, 						//width
+		1,		 				//height
+		x, 						//x
+		y,						//y
+		null					//print message
+	);
+
+	temp.inputDirection = function(){
+		var arr = [];
+		arr.push(flip(temp.direction));
+		arr.push(temp.direction);
+		arr.push(clockwise(temp.direction));
+		arr.push(counterClockwise(temp.direction));
+
+		return arr
+	}
+
+	temp.outputDirection = function(){
+		var arr = [];
+		return arr;
+	}
+
+	temp.logic = function(){
+		return temp.getInput(0) || temp.getInput(1) || temp.getInput(2) || temp.getInput(3);
+	}
+
+	return temp;
+}
+
 
 /* Circuit Evaluation Helper Functions */
 
@@ -1163,6 +1203,7 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 // pushs output until it hits a logic gate or wire with a delay
 // once it hits a logic gate or wire with delay, it sets the input of that gate and pushs it to breadthTraverseList
 function pushOutputHelper(component, breadthTraverseList, prevComponent, wireBreadthTraverseList){ 
+	component.activate();
 
 	var ol = getOutputLocations(component);
 

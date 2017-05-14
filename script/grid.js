@@ -227,6 +227,8 @@ function deleteComponent(x,y){
 		}
 	}
 
+	updateQuizletConsole();
+
 	if(toRet.length == 0){
 		return null;
 	}
@@ -368,6 +370,9 @@ function getComponentByType(comp,x,y){
 	else if(comp === LIGHT_BOX_COMPONENT){
 		toPush = light_box(null, x,y);
 	}
+	else if(comp === EQ_BOX_COMPONENT){
+		toPush = eq_box(null, x, y);
+	}
 
 	return toPush;
 }
@@ -375,4 +380,5 @@ function getComponentByType(comp,x,y){
 function addToGrid(comp){
 	updateUndoList();
 	grid.push(comp);
+	updateQuizletConsole();
 }

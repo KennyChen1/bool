@@ -30,7 +30,6 @@
 	<script src = "script/images.js"></script>
 	<script src = "script/grid.js"></script>
 	<script src = "script/submit.js"></script>
-	<script src = "script/quizlet.js"></script>
 
 
 </head>
@@ -119,6 +118,7 @@
 				<!--<img class = "c-icon" src="img/cmenu-varbox.png" id = "VAR">-->
 				<img class = "c-icon" src="img/cmenu-switchbox.png" id = "SWITCH">
 				<img class = "c-icon" src="img/cmenu-light.png" id = "LIGHT">
+				<img class = "c-icon" src="img/cmenu-eq.png" id = "EQUATION">
 			</div>
 			
 		</div>
@@ -142,13 +142,6 @@
 				<div class = "console-trigger" id = "quizlet-trigger">
 					<span class = "console-label">Quizlet</span>
 				</div>
-
-				<!--
-				<div class = "name-container" id = "name-container">		
-					<span class = "name-label">Circuit Name</span>
-					<input id = "name-input" class = "name-input-textbox" type = "text" name = "circuit-name" value = "">
-				</div>
-				-->
 
 				<div id = "clear-console">Clear Debug</div>
 
@@ -232,8 +225,23 @@
 			</div>
 
 			<div class = "console-bottom" id = "quizlet">
-				<p>Quizlet information</p>
+
+				<div class = "info-pane">
+					<p class = "problem">Problem:</p>
+					<p class = "problem-desc"></p>
+
+					<p class = "desc">Description: </p>
+					<p class = "desc-desc"></p>
+				</div>
+
+				<div class = "row">
+					
+				</div>
+
+			
+
 			</div>
+
 
 		</div>
 
@@ -336,35 +344,26 @@
 
 			<div id = "div-problem">
 				<span class = "desc">Problem</span>
-				<input id = "quizlet-problem" class = "textbox" type = "text" name = "quizlet-problem" value = "">				
+				<textarea id = "quizlet-problem"></textarea>
+				<!--<input id = "quizlet-problem" class = "textbox" type = "text" name = "quizlet-problem" value = "">-->				
+			</div>
+
+			<div id = "div-desc">
+				<span class = "desc">Description</span>
+				<textarea id = "quizlet-desc"></textarea>
+				<!--<input id = "quizlet-desc" class = "textbox" type = "text" name = "quizlet-desc" value = "">-->				
 			</div>
 
 			<div id = "div-answer">
 				<span class = "desc">Answer</span>
-				<input id = "circuit-name" class = "textbox" type = "text" name = "circuit-name" value = "">				
+				<textarea id = "quizlet-answer"></textarea>
+				<!--<input id = "quizlet-answer" class = "textbox" type = "text" name = "quizlet-answer" value = "">-->			
 			</div>
-
-			<!--
-			<div id = "div-name">
-				<span class = "desc">Name</span>
-				<input id = "circuit-name" class = "textbox" type = "text" name = "circuit-name" value = "">				
-			</div>
-
-			<div id = "div-share">
-				<span class = "desc">Share</span>
-				<input id = "circuit-share" class = "textbox" type = "text" name = "circuit-share" value = "">				
-			</div>
-
-			<div id = "div-tags">
-				<span class = "desc">Tags</span>
-				<input id = "circuit-tags" class = "textbox" type = "text" name = "circuit-tags" value = "">				
-			</div>
-			-->
 
 		</div>
 
 		<div id = "div-submit">
-			<button type = "button" onclick = "makeNewQuizlet()">Submit</button>
+			<button type = "button" onclick = "submitQuizletConstraints()">Submit</button>
 			<button type = "button" onclick = "hideQuizletMaker()">Cancel</button>
 		</div>
 	</div>
@@ -383,6 +382,7 @@
 	<script src = "script/qm.js"></script>
 	<script src = "script/truth-table.js"></script>
 	<script src = "script/boolean-eq.js"></script>
+	<script src = "script/quizlet.js"></script>
 	<script src = "script/pathfinder.js"></script>
 
 </body>

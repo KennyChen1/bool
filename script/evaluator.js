@@ -198,7 +198,4 @@ function findBeginnings(island){
 
 }
 
-console.log("Hello World");
-console.log(grid);
-
 

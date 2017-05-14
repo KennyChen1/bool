@@ -11,6 +11,8 @@
 	border-radius: 20px;
 
 	overflow: auto;
+
+	height: 80%;
 }
 
 .quizlet-maker.show{
@@ -44,12 +46,17 @@
 }
 
 .quizlet-maker .non-constraints span{
-	
+}
+
+.quizlet-maker .non-constraints textarea{
+	float: right;
+	width: 14em;
+	height: 1em;
 }
 
 .quizlet-maker .non-constraints input{
 	float:right;
-	width: calc(100% - 120px);
+	width: 14em;
 }
 
 .quizlet-maker #div-submit{
