@@ -76,6 +76,9 @@ $("#grid-render").mouseup(function(e){
 			var cdom = calculateGridXY(downMouse.x, downMouse.y);
 			var cupm = calculateGridXY(upMouse.x, upMouse.y);
 
+			if(getAtGrid(cdom.x, cdom.y) == null)
+				printPath(cdom, cupm)
+
 			if(cdom.x === cupm.x && cdom.y === cupm.y){//upMouse and downMouse are on the same square
 				//trigger onclick function of component
 				var currSelectedComponent = getAtGrid(cdom.x, cdom.y);
@@ -125,7 +128,6 @@ $("#grid-render").mouseup(function(e){
 					if(newSelection.indexOf(massSelection[i]) != -1){
 						newSelection.splice(newSelection.indexOf(massSelection[i]), 1)
 					}
-
 
 					/*
 					var x1 = massSelection[i].x

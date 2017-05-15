@@ -3,6 +3,8 @@ function node(coords, g, h, parent){
 	this.y = coords.y;
 	this.g = g;
 
+	this.crossing = false;
+
 	this.h = h;
 	this.f = g+h;
 	this.parent = parent;
@@ -10,6 +12,9 @@ function node(coords, g, h, parent){
 
 
 function astar(start, goal){
+
+		if(start.x == goal.x && start.y == goal.y)
+			return;
 // g is the cost it took to get to the node, most likely the number of squares we passed by from the start.
 // each cost is 1, ie one square per move
 // h is our guess as to how much it'll cost to reach the goal from that node.
@@ -39,7 +44,10 @@ function astar(start, goal){
     z = 0;
     //while(z < 20){
     while(openSet.length){
-
+		if(z > 10000){
+			console.log("can't find path")
+			return;
+		}
     	z++;
 
     	// find the node with the least f on the open list, call it "q"
@@ -71,36 +79,129 @@ function astar(start, goal){
     	*/
     	successors = [];
 
-    	
-    	
-    	if((getAtGrid(minf.x,minf.y+1) == null) && minf.x  >= 0 && minf.y+1 >= 0){
+    		
+
+    	if((getAtGrid(minf.x,minf.y+1) == null || getAtGrid(minf.x,minf.y+1).type == "I" && getAtGrid(minf.x,minf.y+1).direction %2  != 0) 
+    		&& minf.x  >= 0 && minf.y+1 >= 0){
+
     		// move down
+
+    		
     		var totalDist = Math.abs(goal.x-minf.x) + Math.abs(goal.y-(minf.y+1));
-    		successors.push(new node({x: minf.x, y: minf.y+1}, minf.g+1, totalDist, minf))
+    		var push = new node({x: minf.x, y: minf.y+1}, minf.g+1, totalDist, minf)
+
+    		if(getAtGrid(minf.x,minf.y+1) != null && getAtGrid(minf.x,minf.y+1).type == "I"){
+    			push.crossing = true;
+    		}
+		    	/*	
+    		yyy = 0;
+
+    		if(push.parent && push.parent.parent &&  push.parent.parent.parent){	
+				if(push.crossing && push.parent.crossing && push.parent.parent.crossing){
+					yyy = push.parent.parent.y - push.parent.y
+					console.log(push)
+					console.log(push.parent)
+					console.log(push.parent.parent)
+					console.log(yyy)
+					console.log(" dfgdfsg  \n\n")
+				}
+				
+			}
+
+    		var xxx = 0;
+
+			if(push.parent.crossing && !push.parent.parent.crossing){	
+				xxx = push.parent.x - push.parent.parent.x
+			}
+			if(!xxx && !yyy){
+	    		successors.push(push)
+			}*/
+			var bool = false;
+			if(push.parent){
+				if(getAtGrid(push.parent.x,push.parent.y))
+					if(push.parent.crossing)
+						if(getAtGrid(push.parent.x,push.parent.y).direction % 2 == 0)							
+							bool = true;
+
+			} 
+			if(!bool)
+    			successors.push(push)
+
     	}
     	
-    	if((getAtGrid(minf.x,minf.y-1) == null) && minf.x >= 0 && minf.y-1 >= 0){
+    	if((getAtGrid(minf.x,minf.y-1) == null || getAtGrid(minf.x,minf.y-1).type == "I" && getAtGrid(minf.x,minf.y-1).direction %2 != 0) && minf.x >= 0 && minf.y-1 >= 0){
     		// move up
 	    	var totalDist = Math.abs(goal.x-minf.x) + Math.abs(goal.y-(minf.y-1));
-	    	successors.push(new node({x: minf.x, y: minf.y-1}, minf.g+1, totalDist, minf))
+    		var push = new node({x: minf.x, y: minf.y-1}, minf.g+1, totalDist, minf)
+			
+			if(getAtGrid(minf.x,minf.y-1) != null && getAtGrid(minf.x,minf.y-1).type == "I"){
+				push.crossing = true;
+			}	
+			
+			var bool = false;
+			if(push.parent){
+				if(getAtGrid(push.parent.x,push.parent.y))
+					if(push.parent.crossing)
+						if(getAtGrid(push.parent.x,push.parent.y).direction % 2 == 0)							
+							bool = true;
+
+			} 
+			if(!bool)
+    			successors.push(push)
     	}
 
-     	if((getAtGrid(minf.x+1, minf.y) == null) && minf.x+1 >= 0 && minf.y >= 0){
+     	if((getAtGrid(minf.x+1, minf.y) == null || getAtGrid(minf.x+1,minf.y).type == "I" && getAtGrid(minf.x+1,minf.y).direction %2 != 1) && minf.x+1 >= 0 && minf.y >= 0){
      		// move right
+
     		var totalDist = Math.abs(goal.x-(minf.x+1)) + Math.abs(goal.y-minf.y);    		
-    		successors.push(new node({x: minf.x+1, y: minf.y}, minf.g+1, totalDist, minf))
+			var push = new node({x: minf.x+1, y: minf.y}, minf.g+1, totalDist, minf)
+
+			if(push.parent && push.parent.parent)
+    			if(push.parent.crossing && !push.parent.parent)
+    				console.log(push.parent)
+
+			if(getAtGrid(minf.x+1,minf.y) != null && getAtGrid(minf.x+1, minf.y).type == "I"){
+				push.crossing = true;
+			}	
+
+			var bool = false;
+			if(push.parent){
+				if(getAtGrid(push.parent.x,push.parent.y))
+					if(push.parent.crossing)
+						if(getAtGrid(push.parent.x,push.parent.y).direction % 2 == 1)							
+							bool = true;
+
+			} 
+			if(!bool)
+    			successors.push(push)
+	
 		}
 
-     	if((getAtGrid(minf.x-1, minf.y) == null) && minf.x-1 >= 0 && minf.y >= 0){
+     	if((getAtGrid(minf.x-1, minf.y) == null || getAtGrid(minf.x-1,minf.y).type == "I" && getAtGrid(minf.x-1,minf.y).direction %2 != 1) && minf.x-1 >= 0 && minf.y >= 0){
 	    	// move left
 	    	var totalDist = Math.abs(goal.x-(minf.x-1)) + Math.abs(goal.y-minf.y);
-	    	successors.push(new node({x: minf.x-1, y: minf.y}, minf.g+1, totalDist, minf))
-    	}
+			var push = new node({x: minf.x-1, y: minf.y}, minf.g+1, totalDist, minf)
+			
+			if(getAtGrid(minf.x-1,minf.y) != null && getAtGrid(minf.x-1,minf.y).type == "I"){
+				push.crossing = true;
+			}		    	
+
+	    	var bool = false;
+			if(push.parent){
+				if(getAtGrid(push.parent.x,push.parent.y))
+					if(push.parent.crossing)
+						if(getAtGrid(push.parent.x,push.parent.y).direction % 2 == 1)							
+							bool = true;
+
+			} 
+			if(!bool)
+    			successors.push(push)  	
+	    }
 
     	for(i = 0; i < successors.length; i++){
     		//console.log(i)
     		if(successors[i].x == goal.x && successors[i].y == goal.y){
-    			console.log("found it")
+    			//console.log("found it")
     			return successors[i]
     		}
 
@@ -146,17 +247,51 @@ function astar(start, goal){
 /*
 	this places the wires on the the board
 */
-function printPath(){
-	x = new node({x:2, y:2}); // hard coded
-	y = new node({x:8, y:2})
-	z = astar(x, y);		// get the results
+function printPath(start, end){
 
+	if(start.x == end.x && start.y == end.y){
+		return false;
+	}
+
+	if(arguments.length == 0){	
+		start = new node({x:2, y:2}); // hard coded
+		end = new node({x:3, y:2})	
+	}
+	z = astar(start, end);		// get the results
+	updateUndoList()
 	// prev is needed to keep track of the direction
 	var prev = null;
 
-	// keep looping while there is still a parent
-	while(z != null){
+	
+	// case for the end of the search
+	if(prev == null){
+			var xxx = z.parent.x - z.x
+			var yyy = z.parent.y - z.y
 
+			//console.log (xxx  + " " + yyy)
+			var topush = new i_wire("", z.x, z.y);
+
+
+			if(xxx){
+				topush.direction = 1
+			} else if(yyy){
+				topush.direction = 2
+			}
+ 
+		grid.push(topush)
+	}
+
+	// keep looping while there is still a parent
+	while(z.parent != null){
+		if(z.crossing){
+			//console.log(z.x + " "+ z.y)
+			grid.splice(grid.indexOf(getAtGrid(z.x, z.y)),1)
+			grid.push(new crossing_wire("", z.x, z.y))
+
+			prev = z;
+			z = z.parent
+			continue;
+		}
 
 		// this if statement is here b/c not to include the square itself
 		if(prev != null){
@@ -167,14 +302,13 @@ function printPath(){
 			var yy = prev.y - z.y
 
 			// peek into the nextone see if it needs a corner piece
-			if(z.parent != null){
 
 				if((z.parent.x != prev.x) && (z.parent.y != prev.y)){
 					
 					var xxx = z.parent.x - z.x
 					var yyy = z.parent.y - z.y
 
-					console.log (xx + " " + yy  + " " + xxx  + " " + yyy)
+					//console.log (xx + " " + yy  + " " + xxx  + " " + yyy)
 					var topush = new l_wire("", z.x, z.y);
 
 
@@ -201,23 +335,28 @@ function printPath(){
 						topush.direction = 0;
 					}
 				}
-
 				grid.push(topush)
-
-			}
-
-
-
-			
-
-
-
 		}
 
+		
 
 		prev = z;
 		z = z.parent
 	}
+	// the start
+
+	if(z.parent == null){
+		var xx = prev.x - z.x 
+		var yy = prev.y - z.y
+		console.log("last one")
+		var topush = new i_wire("", z.x, z.y);
+
+		if(xx)
+			topush.direction = 1;
+		grid.push(topush)
+	}
+
+	updateGridInterface()
 }
 
 

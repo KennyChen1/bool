@@ -124,9 +124,9 @@ function trimSelection(){
   
 
   for(i = 0; i < selectedComps.length; i++){
-		if(selectedComps[i].locations()[1].x < minx)
+		if(selectedComps[i].locations()[0].x < minx)
   			minx = selectedComps[i].locations()[0].x
-  		if(selectedComps[i].locations()[1].y < miny)
+  		if(selectedComps[i].locations()[0].y < miny)
   			miny = selectedComps[i].locations()[0].y
 
   	if(selectedComps[i].width == 2){
