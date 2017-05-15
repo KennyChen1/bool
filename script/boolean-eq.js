@@ -45,8 +45,7 @@ function booleanIsEqual(exp1, exp2){
 
 }
 
-function mergeSort(arr)
-{
+function mergeSort(arr){
     if (arr.length < 2)
         return arr;
  
@@ -65,11 +64,11 @@ function merge(left, right)
     while (il < left.length && ir < right.length){
     	var ll = left[il]
     	var rr = right[ir]
-    	if(ll.length > 1){
-    		ll = left[ir][1]
+    	if(ll[0] ==  "!"){
+    		ll = left[ir].substring(1)
     	}
-    	if(rr.length > 1){
-    		rr = right[ir][1]
+    	if(rr[0] == "!"){
+    		rr = right[ir].substring(1)
     	}
 
         if (ll < rr){
