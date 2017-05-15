@@ -98,6 +98,11 @@ $(".attribute-editor #rotate").mousedown(function(e){
 	}
 });
 
+$(".attribute-editor #flip").mousedown(function(e){
+	currentGridComponent.flipped = !currentGridComponent.flipped;
+	updateGridInterface();
+});
+
 $(document).mousedown(function(e){
 	if(e.which === 3){
 		closeAttributeEditor();

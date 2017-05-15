@@ -11,8 +11,6 @@ Nelson's notes
 
 > new images for crossing, light_bulb, switch
 
-> flip AND, OR, XOR gates(change output directions accordingly and add flipped variable)
-
 > change attribute editor to only show needed inputs(textbox, etc)
 	- remove delay from all wires
 	- add flip to AND, XOR, OR
@@ -35,20 +33,29 @@ Check if name exists when submitting if not add (1)
 	> CROSS and T wires CANNOT be used as OR gates, two inputs into them is very buggy!
 
 --for Kenny--
-	> clipboard needs to paste in as components, not Objects
+
+	> mouse left-drag, places wires from mouse down to mouse up.
+		- based on found path, select the corresponding wire, rotate wires correctly.
+
+	> saving needs to save quizlet constraints
+
+	> pathfinding takes any arbitrary grid and finds the path from point src to point dest
+		- needs to write a getAtGrid() function for this arbitrary grid
+
+	FIN > Mass movement, does not allow components to be moved to blocks that the selection is already on
+		- so if the selection is 4x4, you cannot move it down.
+
+	FIN > clipboard needs to paste in as components, not Objects
 		- manually placing wire give correct component.logic()
 		- pasting a wire does not give correct component.logic()
 
-	> Add to truth-table.js functions
+	FIN > Add to truth-table.js functions
 		XOR support
 		multiple character Label support 
 
-	> Mass movement, does not allow components to be moved to blocks that the selection is already on
-		- so if the selection is 4x4, you cannot move it down.
-
-	> based on found path, select the corresponding wire, rotate wires correctly.
-
 	> function that checks if 2 boolean eqs are equal.
+
+- kenny finished
 
 
 
@@ -117,6 +124,8 @@ finished
 
 
 	> deep copy function for components
+
+	> flip AND, OR, XOR gates(change output directions accordingly and add flipped variable)
 
 
 

@@ -60,6 +60,10 @@
 
 .attribute-editor #save{
 	background-image: url(../img/attribute-editor/save.png);
+}
+
+.attribute-editor #flip{
+	background-image: url(../img/attribute-editor/flip.png);
 
 }
 

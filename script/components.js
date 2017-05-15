@@ -230,7 +230,9 @@ function component(
 	}
 
 	this.onplace = function onplace(){
-		console.log(this.type+".ondelete()");
+		console.log(this.type+".onplace()");
+		clipComponentOnPlace(this);
+		checkInputsOnPlace(this);
 	}
 
 	this.setInput = function setInput(prevComponent){
@@ -883,9 +885,6 @@ function eq_box(label, x, y){
 	temp.inputDirection = function(){
 		var arr = [];
 		arr.push(flip(temp.direction));
-		arr.push(temp.direction);
-		arr.push(clockwise(temp.direction));
-		arr.push(counterClockwise(temp.direction));
 
 		return arr
 	}
@@ -932,7 +931,7 @@ function inputStack(){
 /* onPlace functions */
 
 function clipComponentOnPlace(component){
-	if(component.psuedoComponent != null){
+	if(component.psuedoComponent != null || !(isWire(component) || isUnaryGate(component))){
 		return;
 	}
 	for (var j = 0; j < 4; j++) {
@@ -965,15 +964,24 @@ function clipComponentOnPlace(component){
 		}
 
 		if(exitFlag){
-			break;
+			return;
 		}
 	}
 
-
+	component.direction = UP
 }
 
 function checkInputsOnPlace(component){
-
+	if(!isWire(component)){
+		var il = getInputLocations(component);
+		for (var i = 0; i < il.length; i++) {
+			var ilComp = getAtGrid(il[i].x, il[i].y);
+			if(ilComp != null){
+				setInput(component, ilComp, null);
+			}
+		}	
+		evaluateComponents([component]);	
+	}
 }
 
 /* Component Helpers */
@@ -1003,7 +1011,7 @@ function allowCircuitEvaluation(){ //allow circuit to be reevaluated
 }
 
 function isWire(component){
-	return component.type === I_WIRE_COMPONENT || component.type === L_WIRE_COMPONENT || component.type === T_WIRE_COMPONENT || component.type === CROSS_WIRE_COMPONENT;
+	return component.type === I_WIRE_COMPONENT || component.type === L_WIRE_COMPONENT || component.type === T_WIRE_COMPONENT || component.type === CROSS_WIRE_COMPONENT || component.type === CROSSING_WIRE_COMPONENT;
 }
 
 function isUnaryGate(component){
@@ -1241,10 +1249,20 @@ function getOutputLocations(component){
 
 		if(component.width == 2 && component.height == 1){ // 2x1 gate
 			if(curr === UP || curr === RIGHT){
-				retOl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
+				if(component.flipped){
+					retOl.push(getAdjacentLocationByDirection(component.locations()[1], curr));
+				}
+				else{
+					retOl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
+				}
 			}
 			else{
-				retOl.push(getAdjacentLocationByDirection(component.locations()[1], curr));
+				if(component.flipped){
+					retOl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
+				}
+				else{
+					retOl.push(getAdjacentLocationByDirection(component.locations()[1], curr));
+				}
 			}
 			
 		}

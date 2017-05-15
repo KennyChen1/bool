@@ -146,10 +146,12 @@ function astar(start, goal){
 /*
 	this places the wires on the the board
 */
-function printPath(){
-	x = new node({x:2, y:2}); // hard coded
-	y = new node({x:8, y:2})
-	z = astar(x, y);		// get the results
+function printPath(src, dest){
+	//x = new node({x:2, y:2}); // hard coded
+	//y = new node({x:8, y:2})
+	//z = astar(x, y);		// get the results
+
+	z = astar(src, dest);
 
 	// prev is needed to keep track of the direction
 	var prev = null;

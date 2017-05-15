@@ -123,6 +123,7 @@ function copy(component){
     tempx.direction = x.direction
     tempx.delay = x.delay
     tempx.message = x.message
+    tempx.flipped = x.flipped
 
   return tempx;
 }

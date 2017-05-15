@@ -143,7 +143,7 @@ function drawBoard(){
   context.stroke();
 }
 
-function drawOnCanvas(x, y, image, direction){
+function drawOnCanvas(x, y, image, direction, flipped){
   //context.drawImage(image, x, y);
   context.save();
 
@@ -155,15 +155,31 @@ function drawOnCanvas(x, y, image, direction){
   //context.drawImage(image, x, y);
   switch(direction){
     case UP:
+      if(flipped){
+        context.scale(-1,1);
+        context.translate(-image.width, 0);
+      }
       context.drawImage(image, 0, 0);
       break;
     case RIGHT:
+      if(flipped){
+        context.scale(-1,1);
+        context.translate(-image.width, 0);
+      }      
       context.drawImage(image, 0, -image.height);
       break;
     case DOWN:
+      if(flipped){
+        context.scale(-1,1);
+        context.translate(image.width, 0);
+      }
       context.drawImage(image, -image.width, -image.height);
       break;
     case LEFT:
+      if(flipped){
+        context.scale(-1,1);
+       context.translate(image.width, 0);
+      } 
       context.drawImage(image, -image.width, 0);
       break;
     default:
@@ -230,7 +246,7 @@ function drawPsuedoComponents(component){
     var curr = component.psuedoComponent[i];
 
     var imgDraw = getImageByComponentType(curr);      
-    drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction);
+    drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction, false);
   }
 }
 
@@ -243,8 +259,8 @@ function drawComponents(){
         drawPsuedoComponents(curr);
       }
       else{
-        var imgDraw = getImageByComponentType(curr);      
-        drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction);
+        var imgDraw = getImageByComponentType(curr);     
+        drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction, curr.flipped);        
       }
     }
   }

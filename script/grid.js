@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+
+
+	//printPath({x: 10, y: 10}, {x: 15, y: 20});
+
 });
 
 /*
@@ -177,6 +181,7 @@ function moveComponent(fromX, fromY, toX, toY){
    // component can be moved
    if(canComponentBePlaced(curr)){
    	grid.push(curr);
+   	curr.onplace();
    	updateUndoList();
    	return true;
    }
@@ -356,6 +361,7 @@ function getComponentByType(comp,x,y){
 function addToGrid(comp){
 	updateUndoList();
 	grid.push(comp);
-	clipComponentOnPlace(comp);
+	//clipComponentOnPlace(comp);
+	comp.onplace();
 	updateQuizletConsole();
 }
