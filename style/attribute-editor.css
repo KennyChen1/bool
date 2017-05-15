@@ -1,5 +1,6 @@
 .attribute-editor{
-	background-color: green;
+	background-color: white;
+	border: 0.5px solid #666666;
 	padding: 0 20px;
 	display: inline-block;
 
@@ -21,16 +22,17 @@
 
 .attribute-editor .title{
 	text-align: center;
-	font-size: 18px;
+	font-size: 20px;
 }
 
 .attribute-editor .ae-input{
 	padding: 10px 0;
 	color: black;
 	text-align: right;
+	border: 2px solid border;
 }
 
-.attribute-editor .ae-details{
+.attribute-editor #ae-details{
 	text-align: center;
 }
 

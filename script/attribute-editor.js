@@ -8,7 +8,7 @@ function openAttributeEditor(x,y, screenX, screenY){
 
 	if(curr != null){
 		//console.log("openedattributeeditor");
-		var details = curr.type+" @ ("+curr.x+","+curr.y+") | direction: "+directionToString(curr.direction)+" | inputs: up "+curr.input[0].toString()+" | right "+curr.input[1].toString()+" | down "+curr.input[2].toString()+" |left"+curr.input[3].toString();
+		var details = curr.type+" @ ("+curr.x+","+curr.y+")"//" | direction: "+directionToString(curr.direction)+" | inputs: up "+curr.input[0].toString()+" | right "+curr.input[1].toString()+" | down "+curr.input[2].toString()+" |left"+curr.input[3].toString();
 		var delay = ""+curr.delay;
 		var message = "";
 		var label = "";

@@ -1,5 +1,3 @@
-
-
 var INCREMENT_CONSTRAINT = "+";
 var DECREMENT_CONSTRAINT = "-";
 var INFINITE_CONSTRAINT = "*";
@@ -234,6 +232,32 @@ function calcRemainCompAvail(){
 }
 
 /* Evaluate Quizlet to see if it is correct */
+
+function evaluateQuizlet(){
+	var quizletBoolEq = splitBoolEqProg(quizlet.answer);
+	var gridBoolEq = splitBoolEqProg(assembleAllBeqInSequence(grid));
+
+	if(quizletBoolEq.length == gridBoolEq.length){
+		for (var i = quizletBoolEq.length - 1; i >= 0; i--) {
+			var qbe = quizletBoolEq[i].exp;
+			for (var j = gridBoolEq.length - 1; j >= 0; j--) {
+				var gbe = gridBoolEq[j].exp;
+
+				if(booleanIsEqual(qbe,gbe)){
+					gridBoolEq.splice(j, 1);
+					break;
+				}
+			}			
+		}
+
+		if(gridBoolEq.length == 0){
+			console.log("CORRECT MATCH!!!");
+			return true;
+		}
+	}
+
+	return false;
+}
 
 $(document).ready(function(){
 	addComponentsToQuizletMaker();

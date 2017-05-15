@@ -18,9 +18,6 @@ Nelson's notes
 
 > reskin/recolor everything
 
-> onplace looks at surrounding blocks and checks input
-	- if logic is on, evaluate with itself as starting node
-
 
 Check if name exists when submitting if not add (1)
 	> check if name exists.
@@ -126,6 +123,9 @@ finished
 	> deep copy function for components
 
 	> flip AND, OR, XOR gates(change output directions accordingly and add flipped variable)
+
+	> onplace looks at surrounding blocks and checks input
+		- if logic is on, evaluate with itself as starting node
 
 
 

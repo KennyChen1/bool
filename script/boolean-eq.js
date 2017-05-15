@@ -69,7 +69,7 @@ function makeCircuitFromBoolEq(){
 }
 
 function makeBoolEqFromCircuit(){
-	setBooleanEquation(assembleAllBeqInSelected());
+	setBooleanEquation(assembleAllBeqInSequence(findAllSelected()));
 	//traverseDownwardFromRoot();
 }
 
@@ -385,8 +385,8 @@ function getCurrentlySelectedNode(){
 
 }
 
-function assembleAllBeqInSelected(){
-	var currSel = findAllSelected();
+function assembleAllBeqInSequence(beqSeq){
+	var currSel = beqSeq;
 
 	var traverseOn = [];
 
