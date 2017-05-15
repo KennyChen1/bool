@@ -30,14 +30,16 @@ drawBoard();
 
 function withinCameraView(x,y){
   var curr = getAtGrid(x,y);
-  var cl = curr.locations();
+  if(curr != null){
+    var cl = curr.locations();
 
-  for(var i=0;i<cl.length;i++){
-    var x = cl[i].x;
-    var y = cl[i].y;
+    for(var i=0;i<cl.length;i++){
+      var x = cl[i].x;
+      var y = cl[i].y;
 
-    if(x >= camera.begin.x && x <= camera.end.x && y >= camera.begin.y && y <= camera.end.y){
-      return true;
+      if(x >= camera.begin.x && x <= camera.end.x && y >= camera.begin.y && y <= camera.end.y){
+        return true;
+      }
     }
   }
 
