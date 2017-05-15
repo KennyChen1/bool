@@ -285,19 +285,22 @@ function updateGridInterface(){
   drawSelected();
 }
 
-function getMousePos(canvas, evt) {
+/*function getMousePos(canvas, evt) {
   var rect = canvas.getBoundingClientRect();
-    
+  console.log((evt.clientX - rect.left) + " " + (evt.clientY - rect.top))  
+
   return {
     x: evt.clientX - rect.left,
     y: evt.clientY - rect.top
   };
-}
+}*/
 
-function calculateGridXY(x,y){
+function calculateGridXY(canvas, evt){
+  var rect = canvas.getBoundingClientRect();
+
   return{
-    x: camera.begin.x + Math.floor(x/50),
-    y: camera.begin.y + Math.floor(y/50)
+    x: camera.begin.x + Math.floor((evt.clientX - rect.left)/50),
+    y: camera.begin.y + Math.floor((evt.clientY - rect.top)/50)
   };
 }
 
@@ -323,8 +326,8 @@ function calculateGridXY(x,y){
 
   canvas.addEventListener('drop',function(e){
 
-    var mp = getMousePos(canvas,e);
-    var gridPos = calculateGridXY(mp.x,mp.y);
+    //var mp = getMousePos(canvas,e);
+    var gridPos = calculateGridXY(canvas,e);
 
     var toPlace = getComponentByType(dragSrcEl.id, gridPos.x, gridPos.y);
 

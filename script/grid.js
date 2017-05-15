@@ -67,10 +67,12 @@ function condenseSelected(selectedgrid){
  function findAllSelected(newSelected){
  	var returnFound = []
 
- 	if(arguments.length != 0)
+ 	if(arguments.length != 0){
  		region = newSelected
- 	else
+ 	}
+ 	else{
  		region = selected
+ 	}
 
  	for(i = 0; i < grid.length; i++){
  		if((grid[i].x >= region.begin.x && grid[i].x < region.begin.x + region.size.width)
@@ -81,7 +83,7 @@ function condenseSelected(selectedgrid){
  			&& (grid[i].locations()[1].y >= region.begin.y && grid[i].locations()[1].y < region.begin.y + region.size.height)){
  			returnFound.push(grid[i]);
  	}
- }
+ 	}
   } // end of for loop
 
   return returnFound;
@@ -127,28 +129,34 @@ function trimSelection(){
 
   
 
-  for(i = 0; i < selectedComps.length; i++){
-		if(selectedComps[i].locations()[0].x < minx)
-  			minx = selectedComps[i].locations()[0].x
-  		if(selectedComps[i].locations()[0].y < miny)
-  			miny = selectedComps[i].locations()[0].y
 
-  	if(selectedComps[i].width == 2){
 
-  		if(selectedComps[i].locations()[1].x > maxx)
-  			maxx = selectedComps[i].locations()[1].x
-  		if(selectedComps[i].locations()[1].y > maxy)
-  			maxy = selectedComps[i].locations()[1].y      
-  	} else if(selectedComps[i].width == 1){ 
-    // width is 1 does the same thing as the width == 2 but little different
+  if(selectedComps.length > 0){
+	  for(i = 0; i < selectedComps.length; i++){
+			if(selectedComps[i].locations()[0].x < minx)
+	  			minx = selectedComps[i].locations()[0].x
+	  		if(selectedComps[i].locations()[0].y < miny)
+	  			miny = selectedComps[i].locations()[0].y
 
-    if(selectedComps[i].locations()[0].x > maxx)
-    	maxx = selectedComps[i].locations()[0].x
-    if(selectedComps[i].locations()[0].y > maxy)
-    	maxy = selectedComps[i].locations()[0].y    
-    } // end if of else
-  } // end of for
+	  	if(selectedComps[i].width == 2){
 
+	  		if(selectedComps[i].locations()[1].x > maxx)
+	  			maxx = selectedComps[i].locations()[1].x
+	  		if(selectedComps[i].locations()[1].y > maxy)
+	  			maxy = selectedComps[i].locations()[1].y      
+	  	} else if(selectedComps[i].width == 1){ 
+	    // width is 1 does the same thing as the width == 2 but little different
+
+	    if(selectedComps[i].locations()[0].x > maxx)
+	    	maxx = selectedComps[i].locations()[0].x
+	    if(selectedComps[i].locations()[0].y > maxy)
+	    	maxy = selectedComps[i].locations()[0].y    
+	    } // end if of else
+	  } // end of for
+  } else{
+  	minx = 0
+  	miny = 0
+  }
   selected.begin.x = minx
   selected.begin.y = miny
 

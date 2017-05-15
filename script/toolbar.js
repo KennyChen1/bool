@@ -40,7 +40,7 @@ function copyToClipBoard(){
   //var clipboard = findAllSelected(grid.slice());
 
   // finds all the thing within a region and makes a copy
-	clipboardtemp = findAllSelected(grid);
+	clipboardtemp = findAllSelected();
 
   // translate it to 0,0
 	if(clipboardtemp.length == 0)
@@ -68,7 +68,7 @@ function copyToClipBoard(){
   	tempx.y -= miny
     clipboard.push(tempx);
   }
-
+  console.log("copied to clipboard")
   return true;
 
 }
@@ -156,26 +156,32 @@ function cut(){
 function pasteToWorkspace(){
   // nothing in the clipboard, don't do anything
 
-  clipboardCopy = jQuery.extend(true, {}, clipboard);
+  //clipboardCopy = jQuery.extend(true, {}, clipboard);
+  var clipboardCopy = []
 
-
-  if(clipboardCopy.length == 0){
+  if(clipboard.length == 0){
+    console.log("nothing to paste")
     return false;
   } else{
-    for(i = 0; i < Object.keys(clipboardCopy).length; i++){
-      clipboardCopy[i].x += selected.begin.x;
-      clipboardCopy[i].y += selected.begin.y;
-      if(canComponentBePlaced(clipboardCopy[i]) == false){
+    for(i = 0; i < clipboard.length; i++){
+
+      var pasteCopy = copy(clipboard[i])
+      pasteCopy.x += selected.begin.x;
+      pasteCopy.y += selected.begin.y;
+      clipboardCopy.push(pasteCopy)
+      if(canComponentBePlaced(pasteCopy) == false){
+        console.log("failed to place pasted component at " + pasteCopy.x + " " + pasteCopy.y)
         return false;
       }
     }
     updateUndoList()
     // if it gets here it is assummed that all the things 
     // to be pasted can be placed on to the board
-    for(i = 0; i < Object.keys(clipboardCopy).length; i++){
+    for(i = 0; i < clipboardCopy.length; i++){
       grid.push(clipboardCopy[i])
     }
 
+      console.log("pasted successfully")
       updateGridInterface()  
   }
 
