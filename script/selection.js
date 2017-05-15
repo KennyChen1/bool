@@ -38,8 +38,10 @@ $("#grid-render").mousedown(function(e){
 
  	}
  	if(e.which === 1){ //leftclick
+ 		closeAttributeEditor();
+ 		resetSelected();
  		if((selected.size.width < 1 && selected.size.height < 1) || selectedSameSquare()){ //nothing selected
- 			closeAttributeEditor();
+ 			//closeAttributeEditor();
  			downMouse = calculateGridXY(canvas, e);
  		}
  		else{
@@ -115,14 +117,16 @@ $("#grid-render").mouseup(function(e){
  				
  				//console.log("failed")
  				//console.log((selected.begin.x - massSelection[0].x) + " " + (selected.begin.y - massSelection[0].y))
- 			} else{ 				
+ 			} else if(downMouse.x >= selected.begin.x && downMouse.y >= selected.begin.y 
+ 				&& downMouse.x < selected.begin.x + selected.size.width 
+ 					&& downMouse.y < selected.begin.y + selected.size.height){ 				
 				updateUndoList()
 
 
 				newx  = upMouse.x - (downMouse.x - selected.begin.x)
 				newy = upMouse.y - (downMouse.y - selected.begin.y)
 
-				console.log(newx + " " + newy)
+				console.log("mass movement")
 
 				var newSelected = {
 				  begin: {
