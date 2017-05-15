@@ -163,9 +163,13 @@ $("#grid-render").mouseup(function(e){
 				
 				// if it makes it out of the loop everything selected can be moved
 
+				var minx = 0;
+				var miny = 0;
 				for(var i = 0; i < massSelection.length; i++){
 					// should get distance from origin x/y and orgin x y
 					// y2-y1, x2-x1
+
+
 					x1 = massSelection[i].x
 					y1 = massSelection[i].y
 					x2 = selected.begin.x
@@ -174,12 +178,24 @@ $("#grid-render").mouseup(function(e){
 					newx = upMouse.x - (downMouse.x - x2) + (x1-x2)
 					newy = upMouse.y - (downMouse.y - y2) + (y1-y2)
 
+					if(minx > newx)
+						minx = newx
+					if(miny > newy)
+						miny = newy
+
 					massSelection[i].x = newx;
 					massSelection[i].y = newy;
 
 					//moveComponent(x1, y1, newx, newy);
 					//undoList.pop()
 				}
+				
+				for(var i = 0; i < massSelection.length; i++){
+					massSelection[i].x -= minx
+					massSelection[i].y -= miny
+
+				}
+				console.log(massSelection)
 
 				selected.begin.x = upMouse.x - (downMouse.x - selected.begin.x)
 				selected.begin.y = upMouse.y - (downMouse.y - selected.begin.y)
