@@ -79,7 +79,14 @@ $("#grid-render").mouseup(function(e){
 			if(getAtGrid(cdom.x, cdom.y) == null)
 				printPath(cdom, cupm)
 
+
+
 			if(cdom.x === cupm.x && cdom.y === cupm.y){//upMouse and downMouse are on the same square
+
+				selected.size.width = 0
+				selected.size.height = 0
+				massSelection = []
+				updateGridInterface();
 				//trigger onclick function of component
 				var currSelectedComponent = getAtGrid(cdom.x, cdom.y);
 				if(currSelectedComponent != null){
@@ -97,8 +104,12 @@ $("#grid-render").mouseup(function(e){
 			var cupm = calculateGridXY(upMouse.x, upMouse.y);
 
  			if((massSelection.length == 0) || ((cupm.x == cdom.x) && (cupm.y == cdom.y))){
- 				console.log("failed")
- 				console.log((selected.begin.x - massSelection[0].x) + " " + (selected.begin.y - massSelection[0].y))
+ 				selected.size.width = 0
+				selected.size.height = 0
+				massSelection = []
+				updateGridInterface();
+ 				//console.log("failed")
+ 				//console.log((selected.begin.x - massSelection[0].x) + " " + (selected.begin.y - massSelection[0].y))
  			} else{ 				
 				updateUndoList()
 
