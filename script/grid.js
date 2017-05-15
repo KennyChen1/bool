@@ -64,16 +64,21 @@ function condenseSelected(selectedgrid){
 /*
  * returns all the components that are found within the selected region
  */
- function findAllSelected(gridlist){
+ function findAllSelected(newSelected){
  	var returnFound = []
 
+ 	if(arguments.length != 0)
+ 		region = newSelected
+ 	else
+ 		region = selected
+
  	for(i = 0; i < grid.length; i++){
- 		if((grid[i].x >= selected.begin.x && grid[i].x < selected.begin.x + selected.size.width)
- 			&& (grid[i].y >= selected.begin.y && grid[i].y < selected.begin.y + selected.size.height)){
+ 		if((grid[i].x >= region.begin.x && grid[i].x < region.begin.x + region.size.width)
+ 			&& (grid[i].y >= region.begin.y && grid[i].y < region.begin.y + region.size.height)){
  			returnFound.push(grid[i]);
  	} else if(grid[i].width == 2){
- 		if((grid[i].locations()[1].x >= selected.begin.x && grid[i].locations()[1].x< selected.begin.x + selected.size.width)
- 			&& (grid[i].locations()[1].y >= selected.begin.y && grid[i].locations()[1].y < selected.begin.y + selected.size.height)){
+ 		if((grid[i].locations()[1].x >= region.begin.x && grid[i].locations()[1].x< region.begin.x + region.size.width)
+ 			&& (grid[i].locations()[1].y >= region.begin.y && grid[i].locations()[1].y < region.begin.y + region.size.height)){
  			returnFound.push(grid[i]);
  	}
  }
@@ -95,33 +100,57 @@ function condenseSelected(selectedgrid){
     // there exists a component that cannot be rotated
     // probably should be placed into debug menu
     return;
-}
+	}
 
-updateUndoList();
-
-  // preserve the box
-  maxx = 0
-  maxy = 0;
-
-  //rotates everything
+	//rotates everything
   for(i = 0; i < selectedComps.length; i++){
   	selectedComps[i].direction = (selectedComps[i].direction+1)%4
   }
 
+	updateUndoList();
+
+	trimSelection()
+
+	updateGridInterface()  
+
+}
+
+function trimSelection(){
+	var selectedComps = findAllSelected();
+	// preserve the box
+
+	minx = Number.MAX_VALUE; // 1.7976931348623157e+308
+	miny = Number.MAX_VALUE;
+
+	var maxx = 0
+	var maxy = 0;
+
+  
+
   for(i = 0; i < selectedComps.length; i++){
+		if(selectedComps[i].locations()[0].x < minx)
+  			minx = selectedComps[i].locations()[0].x
+  		if(selectedComps[i].locations()[0].y < miny)
+  			miny = selectedComps[i].locations()[0].y
+
   	if(selectedComps[i].width == 2){
+
   		if(selectedComps[i].locations()[1].x > maxx)
   			maxx = selectedComps[i].locations()[1].x
   		if(selectedComps[i].locations()[1].y > maxy)
   			maxy = selectedComps[i].locations()[1].y      
   	} else if(selectedComps[i].width == 1){ 
     // width is 1 does the same thing as the width == 2 but little different
+
     if(selectedComps[i].locations()[0].x > maxx)
     	maxx = selectedComps[i].locations()[0].x
     if(selectedComps[i].locations()[0].y > maxy)
     	maxy = selectedComps[i].locations()[0].y    
     } // end if of else
   } // end of for
+
+  selected.begin.x = minx
+  selected.begin.y = miny
 
   selected.size.width = maxx - selected.begin.x + 1
   selected.size.height = maxy - selected.begin.y + 1

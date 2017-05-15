@@ -47,7 +47,7 @@ $("#grid-render").mousedown(function(e){
  		}
  		else{
  			downMouse = getMousePos(canvas, e);
- 			massSelection = findAllSelected(grid);
+ 			massSelection = findAllSelected();
  		}
  	}
 
@@ -62,7 +62,7 @@ $("#grid-render").mouseup(function(e){
 		upMouse = getMousePos(canvas,e);
 
 		changeSelected(downMouse, upMouse);
-
+		trimSelection()
 		if(selectedSameSquare()){
 			var pos = $(".grid").offset();
 			openAttributeEditor(selected.begin.x, selected.begin.y, upMouse.x * box + pos.left, upMouse.y * box +pos.top);
@@ -75,6 +75,9 @@ $("#grid-render").mouseup(function(e){
 
 			var cdom = calculateGridXY(downMouse.x, downMouse.y);
 			var cupm = calculateGridXY(upMouse.x, upMouse.y);
+
+			if(getAtGrid(cdom.x, cdom.y) == null)
+				printPath(cdom, cupm)
 
 			if(cdom.x === cupm.x && cdom.y === cupm.y){//upMouse and downMouse are on the same square
 				//trigger onclick function of component
@@ -99,8 +102,34 @@ $("#grid-render").mouseup(function(e){
  			} else{ 				
 				updateUndoList()
 
+
+				newx  = cupm.x - (cdom.x - selected.begin.x)
+				newy = cupm.y - (cdom.y - selected.begin.y)
+
+				console.log(newx + " " + newy)
+
+				var newSelected = {
+				  begin: {
+				    x: newx,
+				    y: newy
+				  },
+
+				  size: {
+				    width: selected.size.width,
+				    height: selected.size.height
+				  }
+				}
+
+				newSelection = findAllSelected(newSelected)
+
+				
 				// loops to see if everything can be moved
 				for(var i = 0; i < massSelection.length; i++){
+					if(newSelection.indexOf(massSelection[i]) != -1){
+						newSelection.splice(newSelection.indexOf(massSelection[i]), 1)
+					}
+
+					/*
 					var x1 = massSelection[i].x
 					var y1 = massSelection[i].y
 					var x2 = selected.begin.x
@@ -114,13 +143,19 @@ $("#grid-render").mouseup(function(e){
 					var temp = copy(massSelection[i])
 					temp.x = newx;
 					temp.y = newy;
-
+					
+					
 					if(canComponentBePlaced(temp) == false){
 						console.log("cannot be placed at: (" + newx + ", "+ newy + ")")
 						massSelection = []
 						return false;
-					}
+					}*/
 				}
+				if(newSelection.length != 0){
+					console.log("new region not empty")
+					return false;
+				}
+				
 				// if it makes it out of the loop everything selected can be moved
 
 				for(var i = 0; i < massSelection.length; i++){
@@ -131,11 +166,16 @@ $("#grid-render").mouseup(function(e){
 					x2 = selected.begin.x
 					y2 = selected.begin.y
 
+
+
 					newx = cupm.x - (cdom.x - x2) + (x1-x2)
 					newy = cupm.y - (cdom.y - y2) + (y1-y2)
 
-					moveComponent(x1, y1, newx, newy);
-					undoList.pop()
+					massSelection[i].x = newx;
+					massSelection[i].y = newy;
+
+					//moveComponent(x1, y1, newx, newy);
+					//undoList.pop()
 				}
 
 				selected.begin.x = cupm.x - (cdom.x - selected.begin.x)
