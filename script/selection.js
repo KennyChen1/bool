@@ -40,7 +40,9 @@ $("#grid-render").mousedown(function(e){
  	if(e.which === 1){ //leftclick
  		closeAttributeEditor();
  		if((selected.size.width < 1 && selected.size.height < 1) || selectedSameSquare()){ //nothing selected
- 			//closeAttributeEditor();
+ 			if(findAllSelected().length == 0){
+ 				resetSelected();
+ 			}
  			downMouse = calculateGridXY(canvas, e);
  		}
  		else{
