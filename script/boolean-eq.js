@@ -402,11 +402,13 @@ function assembleAllBeqInSelected(){
 		var bexp = traverseDownwardFromRoot(traverseOn[i]);
 
 		var toPush = "";
-		if(traverseOn[i].label == "" || traverseOn[i].label == null){
-			toPush = bexp+BE_END;
-		}
-		else{
-			toPush = traverseOn[i].label + BE_EQ + bexp + BE_END;
+		if(bexp != "" && bexp != null){
+			if(traverseOn[i].label == "" || traverseOn[i].label == null){
+				toPush = bexp+BE_END;
+			}
+			else{
+				toPush = traverseOn[i].label + BE_EQ + bexp + BE_END;
+			}
 		}
 		boolEq = boolEq + toPush;
 	}
@@ -559,17 +561,25 @@ function assembleBeqFromParseTree(rootNode){
 
 	if(rootNode.extra.length > 0){
 
-		ret = ""+BE_LPAREN;
+		ret = "";
+
+		var values = []
 
 		for (var i = 0; i < rootNode.extra.length; i++) {
-			ret = ret + assembleBeqFromParseTree(rootNode.extra[i]);
-
-			if(i != rootNode.extra.length-1){
-				ret = ret+BE_OR;
+			if(rootNode.extra[i] != null){
+				var value = assembleBeqFromParseTree(rootNode.extra[i]);
+				if(value != BE_LOW && value != null && value != ""){
+					values.push(value);
+				}
 			}
 		}
 
-		ret = ret+BE_RPAREN
+		for (var i = 0; i < values.length; i++) {
+			ret = ret + values[i];
+			if(i != values.length-1){
+				ret = ret+BE_OR;
+			}
+		}
 
 	}
 	else{
@@ -577,14 +587,64 @@ function assembleBeqFromParseTree(rootNode){
 			ret = rootNode.data;
 		}
 		else if(rootNode.left == null && rootNode.right != null){
-			ret = rootNode.data+BE_LPAREN+assembleBeqFromParseTree(rootNode.right)+BE_RPAREN;
+			var value = assembleBeqFromParseTree(rootNode.right);
+			if(rootNode.right == BE_NOT){
+				if(value == BE_LOW){
+					ret = BE_HIGH;
+				}
+				else if(value == BE_HIGH){
+					ret = BE_LOW;
+				}
+				else{
+					console.log("Error in assembleBeqFromParseTree");
+				}
+			}
+			else{
+				ret = rootNode.data+BE_LPAREN+value+BE_RPAREN;
+			}
 		}
 		else if(rootNode.left != null && rootNode.right != null){
-			ret = BE_LPAREN+assembleBeqFromParseTree(rootNode.left)+rootNode.data+assembleBeqFromParseTree(rootNode.right)+BE_RPAREN;
+			var value1 = assembleBeqFromParseTree(rootNode.left);
+			var value2 = assembleBeqFromParseTree(rootNode.right);
+			if(rootNode.data == BE_OR){
+				if(value1 == BE_HIGH || value2 == BE_HIGH){
+					return BE_HIGH;
+				}
+				else if(value1 == BE_LOW){
+					return value2;
+				}
+				else if(value2 == BE_LOW){
+					return value1;
+				}
+				else{
+					ret = BE_LPAREN+value1+rootNode.data+value2+BE_RPAREN;
+				}
+			}
+			else if(rootNode.data == BE_AND){
+				if(value1 == BE_LOW || value2 == BE_LOW){
+					return BE_LOW;
+				}
+				else if(value1 == BE_HIGH){
+					return value2;
+				}
+				else if(value2 == BE_HIGH){
+					return value1;
+				}
+				else{
+					ret = BE_LPAREN+value1+rootNode.data+value2+BE_RPAREN;
+				}
+			}
+			else{
+				ret = BE_LPAREN+value1+rootNode.data+value2+BE_RPAREN;
+			}
 		}
 		else{
 			console.log("assembleBeqFromParseTree, error.");
 		}
+	}
+
+	if(ret == BE_LPAREN+BE_RPAREN){
+		ret = "";
 	}
 
 	return ret;

@@ -229,9 +229,15 @@ function component(
 		console.log(this.type+".ondelete()");
 	}
 
-	this.onplace = function onplace(){
+	var onPlaceFlag = false;
+
+	this.onplace = function onplace(shouldClip){
 		console.log(this.type+".onplace()");
-		clipComponentOnPlace(this);
+
+		if(shouldClip){
+			clipComponentOnPlace(this);
+		}
+		
 		checkInputsOnPlace(this);
 	}
 
@@ -256,12 +262,9 @@ function component(
 			this.flipped = flipped;
 		}
 
-		if(direction == null){
-			this.direction = UP;
-		}
-		else{
-			this.direction = direction;
-		}
+
+		this.direction = direction;
+		
 	}
 
 

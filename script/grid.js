@@ -390,7 +390,12 @@ function getComponentByType(comp,x,y){
 function addToGrid(comp){
 	updateUndoList();
 	grid.push(comp);
-	//clipComponentOnPlace(comp);
-	comp.onplace();
+	comp.onplace(true);
+	updateQuizletConsole();
+}
+
+function addToGridOnLoad(comp){
+	grid.push(comp);
+	comp.onplace(false);
 	updateQuizletConsole();
 }
