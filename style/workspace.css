@@ -19,6 +19,10 @@ p, a, div, button{
 .workspace{ 
 	width: 100%;
 	height: 100%;
+	 -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+
 }
 
 .workspace .grid{
@@ -64,6 +68,9 @@ p, a, div, button{
 	/*border: 2px solid #AEB0B3;*/
 
 	overflow: auto;
+	
+	
+ 
 }
 
 .workspace .cmenu .title{
