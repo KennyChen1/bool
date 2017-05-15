@@ -229,7 +229,6 @@ function simpEq(){
 	return returnSol;
 }
 
-
 //replaced into AND NOT and OR
 function convertString(string){
 	return string.replace(/\*/g, " AND ").replace(/\+/g, " OR ").replace(/!/g, " NOT\ ").trim().replace(/ +/g, " ")

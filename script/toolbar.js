@@ -22,11 +22,14 @@ $(document).on("keydown", function(e){
        writetofile()
     } else if (e.keyCode == 65 && (e.ctrlKey || e.metaKey)){
        selected.begin.x = 0
-       selected.begin.x = 0
+       selected.begin.y = 0
        selected.size.height = 1000
        selected.size.width = 1000
        e.preventDefault();
        updateGridInterface();
+       trimSelection();
+
+
     }
 
 });
