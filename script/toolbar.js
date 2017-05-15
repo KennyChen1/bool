@@ -22,11 +22,14 @@ $(document).on("keydown", function(e){
        writetofile()
     } else if (e.keyCode == 65 && (e.ctrlKey || e.metaKey)){
        selected.begin.x = 0
-       selected.begin.x = 0
+       selected.begin.y = 0
        selected.size.height = 1000
        selected.size.width = 1000
        e.preventDefault();
        updateGridInterface();
+       trimSelection();
+
+
     }
 
 });
@@ -179,6 +182,9 @@ function pasteToWorkspace(){
     // to be pasted can be placed on to the board
     for(i = 0; i < clipboardCopy.length; i++){
       grid.push(clipboardCopy[i])
+      if(clipboardCopy[i].type == "CROSSING"){
+        clipboardCopy[i].move(clipboardCopy[i].x, clipboardCopy[i].y)
+      }
     }
 
       console.log("pasted successfully")
@@ -190,7 +196,7 @@ function pasteToWorkspace(){
 function updateUndoList(){
   var newUndoList = []
   for(i = 0; i < grid.length; i++){
-    newUndoList.push(jQuery.extend(true, {}, grid[i]));
+    newUndoList.push(copy(grid[i]));
   }
 
 
@@ -206,7 +212,7 @@ function undo(){
         var newGridList = []
 
         for(i = 0; i < grid.length; i++){
-          newGridList.push(jQuery.extend(true, {}, grid[i]));
+          newGridList.push(copy(grid[i]));
         }
         redoList.push(newGridList)
       

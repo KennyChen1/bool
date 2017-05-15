@@ -153,15 +153,20 @@ function trimSelection(){
 	    	maxy = selectedComps[i].locations()[0].y    
 	    } // end if of else
 	  } // end of for
-  } else{
-  	minx = 0
-  	miny = 0
-  }
-  selected.begin.x = minx
-  selected.begin.y = miny
 
-  selected.size.width = maxx - selected.begin.x + 1
-  selected.size.height = maxy - selected.begin.y + 1
+
+	  selected.begin.x = minx
+	  selected.begin.y = miny
+
+	  selected.size.width = maxx - selected.begin.x + 1
+	  selected.size.height = maxy - selected.begin.y + 1
+  } else{
+  	selected.begin.x = -1
+  	selected.begin.y = -1
+
+  	selected.size.width = 1
+  	selected.size.width = 1
+  }
 
   updateGridInterface()  
 

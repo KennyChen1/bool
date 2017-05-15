@@ -7,13 +7,21 @@
 */
 function booleanIsEqual(exp1, exp2){
 
+
 	// get tt string
 	var tt1 = eqToTable(exp1)
 	var tt2 = eqToTable(exp2)
 
-	// truth table to expression 
+
+	// truth table to simpleifed expression 
 	var sim1 = truthTableToBool(tt1)
 	var sim2 = truthTableToBool(tt2)
+	
+	sim1 = mergeSort(sim1.split(" + ")).join(" + ")
+	sim2 = mergeSort(sim2.split(" + ")).join(" + ")
+
+	console.log(sim1)
+	console.log(sim2)
 
 	// make truth table from simplified expression
 	var stt1 = eqToTable(sim1)
@@ -31,9 +39,48 @@ function booleanIsEqual(exp1, exp2){
 	str1 = str1.join("\n")
 	str2 = str2.join("\n")
 
+
 	// return the solutuon
 	return str1 == str2
 
+}
+
+function mergeSort(arr)
+{
+    if (arr.length < 2)
+        return arr;
+ 
+    var middle = parseInt(arr.length / 2);
+    var left   = arr.slice(0, middle);
+    var right  = arr.slice(middle, arr.length);
+
+    return merge(mergeSort(left), mergeSort(right));
+}
+ 
+function merge(left, right)
+{
+    var result = [];
+	var	il = 0;
+    var ir = 0;
+    while (il < left.length && ir < right.length){
+    	var ll = left[il]
+    	var rr = right[ir]
+    	if(ll.length > 1){
+    		ll = left[ir][1]
+    	}
+    	if(rr.length > 1){
+    		rr = right[ir][1]
+    	}
+
+        if (ll < rr){
+            result.push(left[il++]);
+        } else {
+        	console.log(right[ir])
+            result.push(right[ir++]);
+        }
+    }
+ 
+    return result.concat(left.slice(il)).concat(right.slice(ir));
 }
 
 

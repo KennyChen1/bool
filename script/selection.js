@@ -19,8 +19,8 @@ function changeSelected(begin, end){
 }
 
 function resetSelected(){
-	selected.begin.x = 0;
-	selected.begin.y = 0;
+	selected.begin.x = -1;
+	selected.begin.y = -1;
 	selected.size.width = 0;
 	selected.size.height = 0;
 }
@@ -55,7 +55,6 @@ $("#grid-render").mousedown(function(e){
  			massSelection = findAllSelected();
  		}
  	}
-		console.log(downMouse)
 });
 
 /*
@@ -68,7 +67,7 @@ $("#grid-render").mouseup(function(e){
 
 		// get the mouse up grid coordinates
 		upMouse = calculateGridXY(canvas,e);
-		console.log(upMouse)
+
 		// changes the selected region
 		changeSelected(downMouse, upMouse);
 		
