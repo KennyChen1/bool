@@ -14,8 +14,6 @@ function changeSelected(begin, end){
 	selected.begin.x = begin.x;
 	selected.begin.y = begin.y;
 
-	console.log(selected.begin.x)
-	console.log(selected.begin.y)
 	selected.count = 0
 	//console.log(selected.size.width+" "+selected.size.height);
 }
@@ -55,7 +53,7 @@ $("#grid-render").mousedown(function(e){
  			massSelection = findAllSelected();
  		}
  	}
-console.log(downMouse)
+		console.log(downMouse)
 });
 
 /*
@@ -74,7 +72,7 @@ $("#grid-render").mouseup(function(e){
 		
 		// trim  the region too
 		trimSelection();
-		
+		massSelection = findAllSelected()
 
 		if(upMouse.x == downMouse.x && upMouse.y == downMouse.y){
 			if(findAllSelected().length == 0){
@@ -119,8 +117,7 @@ $("#grid-render").mouseup(function(e){
 			upMouse = calculateGridXY(canvas, e);
 
  			if((massSelection.length == 0) || ((upMouse.x == downMouse.x) && (upMouse.y == downMouse.y))){
- 				
- 				//console.log("failed")
+ 				console.log(massSelection)
  				//console.log((selected.begin.x - massSelection[0].x) + " " + (selected.begin.y - massSelection[0].y))
  			} else if(downMouse.x >= selected.begin.x && downMouse.y >= selected.begin.y 
  				&& downMouse.x < selected.begin.x + selected.size.width 
@@ -193,6 +190,7 @@ $("#grid-render").mouseup(function(e){
 				for(var i = 0; i < massSelection.length; i++){
 					massSelection[i].x -= minx
 					massSelection[i].y -= miny
+					massSelection[i].move(massSelection[i].x, massSelection[i].y)
 
 				}
 				console.log(massSelection)
@@ -205,7 +203,7 @@ $("#grid-render").mouseup(function(e){
 				if(selected.begin.y < 0)
 					selected.begin.y = 0
 
-				massSelection = []
+				massSelection = findAllSelected();
  			}
 
  		}
