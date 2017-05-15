@@ -16,14 +16,14 @@
 
 .user-menu .auth{
 	position: absolute;
-	background-image: url(../img/bool-icon.png);
-	right: 0px;
+	background-image: url(../img/bool-logo.png);
 
 	height: 100%;
 	padding-left: 100%;
 
 	background-size: auto 100%;
 	background-repeat: no-repeat;
-
-	padding-left: 50%;
+	margin-left: 5px;
+	margin-right: 15px;
+	margin-top: 10px;
 }

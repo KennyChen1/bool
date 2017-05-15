@@ -32,6 +32,13 @@
 	border: 2px solid border;
 }
 
+.attribute-editor #ae-delay-check{
+	padding: 10px 0;
+	color: black;
+	text-align: left;
+	border: 2px solid border;
+}
+
 .attribute-editor #ae-details{
 	text-align: center;
 }

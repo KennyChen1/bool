@@ -115,34 +115,38 @@ function setCanvasSize(){
 }
 
 function drawNumbers(){
-  context.clearText
+  if(displayGridNumbers){
+    context.clearText
 
-  context.font="10px sans-serif";
+    context.font="10px sans-serif";
 
-  for(var x = camera.begin.x; x <= camera.end.x; x++) {
-    context.fillText(""+x, box * (x - camera.begin.x) + (box/2), box/5);
-  }
+    for(var x = camera.begin.x; x <= camera.end.x; x++) {
+      context.fillText(""+x, box * (x - camera.begin.x) + (box/2), box/5);
+    }
 
-  for(var y = camera.begin.y; y <= camera.end.y; y++) {
-    context.fillText(""+y, box/12, box * (y - camera.begin.y) + (box/2 + box/25));
+    for(var y = camera.begin.y; y <= camera.end.y; y++) {
+      context.fillText(""+y, box/12, box * (y - camera.begin.y) + (box/2 + box/25));
+    }
   }
 }
 
 function drawBoard(){
   drawNumbers();
 
-  for(var x = 0; x <= cw; x += 50) {
-      context.moveTo(0.5 + x + p, p);
-      context.lineTo(0.5 + x + p, ch + p);
-  }
+  if(displayGridLines){
+    for(var x = 0; x <= cw; x += 50) {
+        context.moveTo(0.5 + x + p, p);
+        context.lineTo(0.5 + x + p, ch + p);
+    }
 
-  for(var y = 0; y <= ch; y += 50) {
-      context.moveTo(p, 0.5 + y + p);
-      context.lineTo(cw + p, 0.5 + y + p);
-  }
+    for(var y = 0; y <= ch; y += 50) {
+        context.moveTo(p, 0.5 + y + p);
+        context.lineTo(cw + p, 0.5 + y + p);
+    }
 
-  context.strokeStyle = "black";
-  context.stroke();
+    context.strokeStyle = "black";
+    context.stroke();
+  }
 }
 
 function drawOnCanvas(x, y, image, direction, flipped){

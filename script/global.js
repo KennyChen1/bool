@@ -32,6 +32,8 @@ var loopBeforeStop = 100; //amount of times pushOutput can be called before circ
 var defaultDelayTime = 400; //delay in milliseconds
 var displayDelay = true; // will display delay in the grid
 var displayLabel = true; // will display label in the grid(first 3 letters)
+var displayGridLines = true; // show grid lines
+var displayGridNumbers = true;
 
 undoList = [];
 redoList = [];

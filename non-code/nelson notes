@@ -2,19 +2,18 @@ Nelson's notes
  
 > submitting and loading for circuits(in workspace) -- POST request
 
-> new images for crossing, light_bulb, switch, reskin everything
-
 > slider toggle for delay
+
+
+VERY LOW PRIORITY
+> fix clipOnPlace
+	- L wires, cross wires, checking if a component can be rotated
 
 > sort quizlet counter components by number which ones have finite amounts(don't show ones that are infinite)
 
 > change attribute editor to only show needed inputs(textbox, etc)
 	- remove delay from all wires
-	- add flip to AND, XOR, OR
 	- remove message from all but print
-
-> fix clipOnPlace
-	- L wires, cross wires, checking if a component can be rotated
 
 datastore/app server
 	> save to datastore
@@ -151,6 +150,8 @@ finished
 		else: accept
 
 	> saving needs to save quizlet constraints
+
+	> new images for crossing, light_bulb, switch, reskin everything
 
 
 
