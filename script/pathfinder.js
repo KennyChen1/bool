@@ -14,7 +14,9 @@ function node(coords, g, h, parent){
 function astar(start, goal){
 
 		if(start.x == goal.x && start.y == goal.y)
-			return;
+			return false;
+		//if(getAtGrid(goal.x, goal.y))
+			//return null;
 // g is the cost it took to get to the node, most likely the number of squares we passed by from the start.
 // each cost is 1, ie one square per move
 // h is our guess as to how much it'll cost to reach the goal from that node.
@@ -266,6 +268,10 @@ function printPath(start, end){
 	
 	// case for the end of the search
 	if(prev == null){
+
+			console.log(z.x + " S " + z.y)
+
+
 			var xxx = z.parent.x - z.x
 			var yyy = z.parent.y - z.y
 
@@ -278,8 +284,8 @@ function printPath(start, end){
 			} else if(yyy){
 				topush.direction = 2
 			}
- 
-		grid.push(topush)
+		if(!getAtGrid(end.x, end.y))
+			grid.push(topush)
 	}
 
 	// keep looping while there is still a parent
