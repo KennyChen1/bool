@@ -11,8 +11,11 @@ function changeSelected(begin, end){
 	selected.size.width = end.x - begin.x+1;
 	selected.size.height = end.y - begin.y+1;
 
-	selected.begin.x = begin.x + camera.begin.x;
-	selected.begin.y = begin.y + camera.begin.y;
+	selected.begin.x = begin.x;
+	selected.begin.y = begin.y;
+
+	console.log(selected.begin.x)
+	console.log(selected.begin.y)
 	selected.count = 0
 	//console.log(selected.size.width+" "+selected.size.height);
 }
@@ -43,6 +46,8 @@ $("#grid-render").mousedown(function(e){
  			if(findAllSelected().length == 0){
  				resetSelected();
  			}
+
+
  			downMouse = calculateGridXY(canvas, e);
  		}
  		else{
@@ -50,7 +55,7 @@ $("#grid-render").mousedown(function(e){
  			massSelection = findAllSelected();
  		}
  	}
-
+console.log(downMouse)
 });
 
 /*
@@ -62,7 +67,7 @@ $("#grid-render").mouseup(function(e){
 
 		// get the mouse up grid coordinates
 		upMouse = calculateGridXY(canvas,e);
-
+		console.log(upMouse)
 		// changes the selected region
 		changeSelected(downMouse, upMouse);
 		
@@ -72,8 +77,7 @@ $("#grid-render").mouseup(function(e){
 		
 
 		if(upMouse.x == downMouse.x && upMouse.y == downMouse.y){
-			if(findAllSelected().length == 0){	
-				console.log(findAllSelected())
+			if(findAllSelected().length == 0){
 				selected.begin.x = upMouse.x
 				selected.begin.y = upMouse.y
 				selected.size.width = 1
@@ -167,8 +171,6 @@ $("#grid-render").mouseup(function(e){
 					x2 = selected.begin.x
 					y2 = selected.begin.y
 
-
-
 					newx = upMouse.x - (downMouse.x - x2) + (x1-x2)
 					newy = upMouse.y - (downMouse.y - y2) + (y1-y2)
 
@@ -181,6 +183,11 @@ $("#grid-render").mouseup(function(e){
 
 				selected.begin.x = upMouse.x - (downMouse.x - selected.begin.x)
 				selected.begin.y = upMouse.y - (downMouse.y - selected.begin.y)
+
+				if(selected.begin.x < 0)
+					selected.begin.x = 0
+				if(selected.begin.y < 0)
+					selected.begin.y = 0
 
 				massSelection = []
  			}
