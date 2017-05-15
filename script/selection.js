@@ -39,7 +39,6 @@ $("#grid-render").mousedown(function(e){
  	}
  	if(e.which === 1){ //leftclick
  		closeAttributeEditor();
- 		resetSelected();
  		if((selected.size.width < 1 && selected.size.height < 1) || selectedSameSquare()){ //nothing selected
  			//closeAttributeEditor();
  			downMouse = calculateGridXY(canvas, e);
