@@ -29,8 +29,9 @@ tags = ""; // tags
 
 
 var loopBeforeStop = 100; //amount of times pushOutput can be called before circuitEvaluation is killed
-
 var defaultDelayTime = 400; //delay in milliseconds
+var displayDelay = true; // will display delay in the grid
+var displayLabel = true; // will display label in the grid(first 3 letters)
 
 undoList = [];
 redoList = [];

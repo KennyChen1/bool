@@ -6,8 +6,6 @@ Nelson's notes
 
 > slider toggle for delay
 
-> hot keys for rotate, rotate all, rotate individually, delete, flip
-
 > sort quizlet counter components by number which ones have finite amounts(don't show ones that are infinite)
 
 > change attribute editor to only show needed inputs(textbox, etc)
@@ -30,6 +28,11 @@ datastore/app server
 	> CROSS and T wires CANNOT be used as OR gates, two inputs into them is very buggy!
 
 --for Kenny--
+
+	> hot keys for rotate, rotate all, rotate individually, delete, flip
+	> make hot keys not get recognized in input boxes -- reference canvas.js(bottom)
+
+	> get rid of text selection on component menu
 
 	> ctrl-a starts at 0,8
 		-ctrl-a and then rotate, it selects wrong and stuff disappears
@@ -54,7 +57,7 @@ datastore/app server
 	> function that checks if 2 boolean eqs are equal.
 
 --for Mike--
-	> uploading
+	FIN > uploading
 	> 12345 menu
 
 	> search combos

@@ -343,7 +343,7 @@ function calculateGridXY(canvas, evt){
 // Camera movement
 $(document).keydown(function(e){
   var tag = e.target.tagName.toLowerCase();
-  console.log(tag);
+  //console.log(tag);
 
   if(tag == "input" || tag == "textarea"){}
   else{

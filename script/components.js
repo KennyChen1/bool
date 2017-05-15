@@ -1005,6 +1005,7 @@ function flickStopCircuitEvaluation(){
 
 	setTimeout(function(){
 		allowCircuitEvaluation();
+		updateGridInterface();
 	}, flickTime);
 }
 
