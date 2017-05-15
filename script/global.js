@@ -47,11 +47,39 @@ function savePacker(){
   }
 }
 
-function loadPacker(obj){
+function loadPacker(obj, loadGrid){
+  clearAll();
   owner = obj.owner;
   shared = obj.shared;
   circuitName = obj.name;
-  grid = obj.circuitContent;
+  if(loadGrid){
+    grid = obj.circuitContent;
+  }
+  else{
+    updateUndoList();
+    for(i = 0; i < obj.circuitContent.length; i++){
+        var curr = obj.circuitContent[i];
+        var toAdd = getComponentByType(curr.type, curr.x, curr.y);
+        toAdd.setLoadValues(curr.label, curr.message, curr.delay, curr.flipped, curr.direction); 
+        addToGridOnLoad(toAdd);   
+
+        undoList.pop();
+    }
+  }
   quizlet = obj.quizletConstraints;
   tags = obj.tags;
+}
+
+function clearAll(){
+  owner = ""; //owner
+  shared = ""; //shared
+  circuitName = ""; //name
+  grid = []; //all components on grid, circuit-content
+  quizlet = { //all quizlet constraints (to be saved/set when submit/loaded)
+    constraints: [],
+    problem: "",
+    answer: "",
+    desc: ""
+  };
+  tags = ""; // tags
 }

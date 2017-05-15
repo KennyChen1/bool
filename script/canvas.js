@@ -262,7 +262,7 @@ function drawComponents(){
       }
       else{
         var imgDraw = getImageByComponentType(curr);     
-        drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction, curr.flipped);        
+        drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction, curr.getFlipped());        
       }
     }
   }

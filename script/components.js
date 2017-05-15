@@ -156,6 +156,15 @@ function component(
 		return ret;
 	}
 
+	this.getFlipped = function getFlipped(){
+		if(isWire(this)){
+			return false;
+		}
+		else{
+			return this.flipped;
+		}
+	}
+
 	this.equals = function equal(otherComponent){
 		return this.x === otherComponent.x && this.y === otherComponent.y && this.type === otherComponent.type;
 	}

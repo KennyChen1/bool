@@ -187,6 +187,11 @@
     overflow: auto;
 }
 
+.console #quizlet #solution-display{
+    padding: 10px 0 0 0;
+    float: right;
+}
+
 .console #quizlet .info-pane .problem{
     font-weight: bold;
 }

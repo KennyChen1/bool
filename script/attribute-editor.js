@@ -79,18 +79,24 @@ function saveAttributes(){
 	}
 }
 
-$(".attribute-editor #save").mousedown(function(e){
+$(".attribute-editor").mouseup(function(e){
+	if(e.which === 3){
+		e.preventDefault();
+	}
+});
+
+$(".attribute-editor #save").click(function(e){
 	saveAttributes();
 	closeAttributeEditor();
 });
 
-$(".attribute-editor #delete").mousedown(function(e){
+$(".attribute-editor #delete").click(function(e){
 	deleteComponent(currentGridComponent.x, currentGridComponent.y);
 	closeAttributeEditor();
 	updateGridInterface();
 });
 
-$(".attribute-editor #rotate").mousedown(function(e){
+$(".attribute-editor #rotate").click(function(e){
 	if(canComponentBeRotated(currentGridComponent)){
 		rotateSelected();
 		//closeAttributeEditor();
@@ -98,7 +104,7 @@ $(".attribute-editor #rotate").mousedown(function(e){
 	}
 });
 
-$(".attribute-editor #flip").mousedown(function(e){
+$(".attribute-editor #flip").click(function(e){
 	currentGridComponent.flipped = !currentGridComponent.flipped;
 	updateGridInterface();
 });

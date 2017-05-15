@@ -251,14 +251,14 @@ function eqToTable(){
 
 	if(arguments.length == 0){
 		// gets the variables
-		variables = getBooleanEquation().split(/[ +*!()^]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });
+		variables = getFirstBooleanExp().split(/[ +*!()^]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });
 
 
-		letters = getBooleanEquation().replace(/[^a-zA-Z]+/g, '');
+		letters = getFirstBooleanExp().replace(/[^a-zA-Z]+/g, '');
 
 		// strCopt is the boolean  with || and && instead of + and *
 		// replace * with &&
-		strCopt = getBooleanEquation().split('*').join('&&');
+		strCopt = getFirstBooleanExp().split('*').join('&&');
 		// replace + with ||
 	} else{
 		variables = arguments[0].split(/[ +*!()^]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });

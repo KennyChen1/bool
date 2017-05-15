@@ -64,8 +64,21 @@ function setBooleanEquation(boolEq){
 	var booleq = $(".console #boolean #textbox #boolean-tb").val(boolEq);
 }
 
+function getFirstBooleanExp(){
+	var boolEq = getBooleanEquation();
+	var allBeq = splitBoolEqProg(boolEq);
+	if(allBeq.length >= 1){
+		return allBeq[0].exp;
+	}
+	return "";
+}
+
 function makeCircuitFromBoolEq(){
-	buildCircuit(getBooleanEquation());
+	var boolEq = getBooleanEquation();
+	var allBeq = splitBoolEqProg(boolEq);
+	if(allBeq.length >= 1){
+		clipboard = buildCircuit(allBeq[0].exp);
+	}
 }
 
 function makeBoolEqFromCircuit(){

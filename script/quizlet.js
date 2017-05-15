@@ -233,6 +233,16 @@ function calcRemainCompAvail(){
 
 /* Evaluate Quizlet to see if it is correct */
 
+function evaluateAndShowQuizlet(){
+	var quizletImg = $(".console #quizlet #solution-display img");
+	if(evaluateQuizlet()){
+		quizletImg.attr('src', CONSOLE_CHECK.src);
+	}
+	else{
+		quizletImg.attr('src', CONSOLE_X.src)
+	}
+}
+
 function evaluateQuizlet(){
 	var quizletBoolEq = splitBoolEqProg(quizlet.answer);
 	var gridBoolEq = splitBoolEqProg(assembleAllBeqInSequence(grid));

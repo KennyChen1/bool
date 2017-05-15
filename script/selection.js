@@ -34,6 +34,8 @@ canvas.addEventListener("contextmenu", function(e){
 massSelection = []
 
 $("#grid-render").mousedown(function(e){
+	e.preventDefault();
+	
 	if(e.which === 3){ //rightclick
 		downMouse = calculateGridXY(canvas,e);
 
@@ -60,6 +62,7 @@ $("#grid-render").mousedown(function(e){
  * This handles moving components on the screen
  */
 $("#grid-render").mouseup(function(e){
+	e.preventDefault();
 
 	if(e.which === 3){ //rightclick
 

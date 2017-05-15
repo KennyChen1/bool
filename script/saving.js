@@ -25,9 +25,12 @@ $("#loader").change(function(){
     fileReader.onload = function(fileLoadedEvent) 
     {
         obj = JSON.parse(fileLoadedEvent.target.result);
-        updateUndoList()
+        //updateUndoList();
+
+        loadPacker(obj, false);
         //grid = []
         //document.getElementById("inputTextToSave").value = textFromFileLoaded;
+        /*
         for(i = 0; i < obj.circuitContent.length; i++){
             var curr = obj.circuitContent[i];
             var toAdd = getComponentByType(curr.type, curr.x, curr.y);
@@ -35,7 +38,7 @@ $("#loader").change(function(){
         	addToGridOnLoad(toAdd);   
 
             undoList.pop();
-        }
+        }*/
 
     };
     updateGridInterface();

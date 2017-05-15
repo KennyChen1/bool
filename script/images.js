@@ -2,6 +2,8 @@ var path = "img/c-icon/";
 
 var active_path = "img/c-icon-active/";
 
+var console_path = "img/console/";
+
 // Logic Gates
 var AND_IMAGE = loadImage(path + "and.png"); 
 var OR_IMAGE = loadImage(path + "or.png");
@@ -51,6 +53,11 @@ var ON_ACTIVE_IMAGE = loadImage(active_path + "on.png");
 var SWITCH_ACTIVE_IMAGE = loadImage(active_path + "switch.png");
 var LIGHT_ACTIVE_IMAGE = loadImage(active_path + "light.png");
 var EQ_ACTIVE_IMAGE = loadImage(active_path + "eq.png");
+
+
+// Console Images
+var CONSOLE_CHECK = loadImage(console_path + "check.png");
+var CONSOLE_X = loadImage(console_path + "xmark.png")
 
 function loadImage(path){
 	var imageObj = new Image();
