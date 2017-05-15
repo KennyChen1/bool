@@ -8,6 +8,13 @@ $(".toolbar #run").click(function(e){
 
 
 $(document).on("keydown", function(e){
+
+  var tag = e.target.tagName.toLowerCase();
+  //console.log(tag);
+
+  if(tag == "input" || tag == "textarea"){}
+  else{
+
     if (e.keyCode == 67 && (e.ctrlKey || e.metaKey)){
        copyToClipBoard()
     } else if (e.keyCode == 86 && (e.ctrlKey || e.metaKey)){
@@ -28,9 +35,23 @@ $(document).on("keydown", function(e){
        e.preventDefault();
        updateGridInterface();
        trimSelection();
+    } else if(e.keyCode == 46){
+        deleteSelected()
+    } else if(e.keyCode == 82){
+        rotateSelected()
+    } else if(e.keyCode == 84){
+        rotateAxis()
+    } else if(e.keyCode == 70){
 
-
+        var flipper = findAllSelected()
+        for(i = 0; i < flipper.length; i++){
+          flipper[i].flipped = !flipper[i].flipped
+        }
+        updateGridInterface();
+    } 
+    else{
     }
+  }
 
 });
 
