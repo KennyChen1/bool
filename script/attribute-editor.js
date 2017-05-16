@@ -1,14 +1,21 @@
 var attributeEditor = $(".attribute-editor");
 
+// the variable that is selected to the attribute editor
 var currentGridComponent;
 
+/* Opens the attribute editor for editing components 
+ *	parameters 
+ *		x - the x coordinates of the grid
+ *		y - the y coordinates of the grid
+ *		screenx - the offset of the click
+ *		screeny - the offset of the click
+ *	returns nothing
+ */
 function openAttributeEditor(x,y, screenX, screenY){
 	var curr = getAtGrid(x,y);
-	//console.log(curr);
 
 	if(curr != null){
-		//console.log("openedattributeeditor");
-		var details = curr.type+" @ ("+curr.x+","+curr.y+")"//" | direction: "+directionToString(curr.direction)+" | inputs: up "+curr.input[0].toString()+" | right "+curr.input[1].toString()+" | down "+curr.input[2].toString()+" |left"+curr.input[3].toString();
+		var details = curr.type+" @ ("+curr.x+","+curr.y+")"
 		var delay = ""+curr.delay;
 		var message = "";
 		var label = "";
@@ -19,8 +26,6 @@ function openAttributeEditor(x,y, screenX, screenY){
 			label = label+curr.label;
 		}
 
-		//var screenX = currMouseScreen.x;
-		//var screenY = currMouseScreen.y;
 		var bodySizeX = $("body").outerWidth(true);
 		var bodySizeY = $("body").outerHeight(true);
 
@@ -59,10 +64,16 @@ function openAttributeEditor(x,y, screenX, screenY){
 	}
 }
 
+/* Closes the attribute editor 
+ * 		precondition - the attribute editor must be open already *
+ */
 function closeAttributeEditor(){
 	attributeEditor.removeClass("show");
 }
 
+/* Apply the changes the component attributes base on the text fields
+ * 		precondition - the attribute editor must be open already 
+ */
 function saveAttributes(){
 	var tdelay = $(".attribute-editor #ae-delay-text").val();
 	var tmessage = $(".attribute-editor #ae-message-text").val();
@@ -79,34 +90,50 @@ function saveAttributes(){
 	}
 }
 
+
+/* The event handler to disable opening the context menu on the attribute editor
+ */
 $(".attribute-editor").contextmenu(function(){
 	return false;
 });
 
+/* The event handler to apply the selected component changes
+ * 		preconditions - the attribute editor must be open
+ */
 $(".attribute-editor #save").click(function(e){
 	saveAttributes();
 	closeAttributeEditor();
 });
 
+/* The event handler to delete the selected component from the grid
+ * 		preconditions - the attribute editor must be open
+ */
 $(".attribute-editor #delete").click(function(e){
 	deleteComponent(currentGridComponent.x, currentGridComponent.y);
 	closeAttributeEditor();
 	updateGridInterface();
 });
 
+/* The event handler to rotate clockwise the selected component
+ * 		preconditions - the attribute editor must be open
+ */
 $(".attribute-editor #rotate").click(function(e){
 	if(canComponentBeRotated(currentGridComponent)){
 		rotateSelected();
-		//closeAttributeEditor();
 		updateGridInterface();
 	}
 });
 
+/* The event handler to flip the selected component
+ * 		preconditions - the attribute editor must be open
+ */
 $(".attribute-editor #flip").click(function(e){
 	currentGridComponent.flipped = !currentGridComponent.flipped;
 	updateGridInterface();
 });
 
+/* The event handler to close the attribute editor
+ */
 $(document).mousedown(function(e){
 	if(e.which === 3){
 		closeAttributeEditor();

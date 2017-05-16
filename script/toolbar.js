@@ -1,5 +1,4 @@
 /* functionality for toolbar div*/
-
 $(".toolbar #run").click(function(e){
 	e.preventDefault();
 	evaluate();
@@ -7,89 +6,101 @@ $(".toolbar #run").click(function(e){
 });
 
 
-$(document).on("keydown", function(e){
+/* 
+ * hot keys for the tool bar functions
+ */
+ $(document).on("keydown", function(e){
 
   var tag = e.target.tagName.toLowerCase();
-  //console.log(tag);
-
+  
   if(tag == "input" || tag == "textarea"){}
-  else{
+    else{
 
-    if (e.keyCode == 67 && (e.ctrlKey || e.metaKey)){
-       copyToClipBoard()
+      if (e.keyCode == 67 && (e.ctrlKey || e.metaKey)){
+      // ctrl + c
+      copyToClipBoard()
     } else if (e.keyCode == 86 && (e.ctrlKey || e.metaKey)){
-       pasteToWorkspace()
+      // ctrl + v
+      pasteToWorkspace()
     } else if (e.keyCode == 88 && (e.ctrlKey || e.metaKey)){
-       cut()
+      // ctrl + x
+      cut()
     } else if (e.keyCode == 89 && (e.ctrlKey || e.metaKey)){
-       redo()
+      // ctrl + y
+      redo()
     } else if (e.keyCode == 90 && (e.ctrlKey || e.metaKey)){
-       undo()
+      // ctrl + z
+      undo()
     } else if (e.keyCode == 83 && (e.ctrlKey || e.metaKey)){
-       writetofile()
+      // ctrl + s
+      writetofile()
     } else if (e.keyCode == 65 && (e.ctrlKey || e.metaKey)){
-       selected.begin.x = 0
-       selected.begin.y = 0
-       selected.size.height = 1000
-       selected.size.width = 1000
-       e.preventDefault();
-       updateGridInterface();
-       trimSelection();
+      // ctrl + a
+      selected.begin.x = 0
+      selected.begin.y = 0
+      selected.size.height = 1000
+      selected.size.width = 1000
+      e.preventDefault();
+      updateGridInterface();
+      trimSelection();
     } else if(e.keyCode == 46){
-        deleteSelected()
+      // del
+      deleteSelected()
     } else if(e.keyCode == 82){
+        // r
         rotateSelected()
-    } else if(e.keyCode == 84){
+      } else if(e.keyCode == 84){
+        // t
         rotateAxis()
-    } else if(e.keyCode == 70){
-
+      } else if(e.keyCode == 70){
+        // f
         var flipper = findAllSelected()
         for(i = 0; i < flipper.length; i++){
           flipper[i].flipped = !flipper[i].flipped
         }
         updateGridInterface();
-    } 
-    else{
+      } 
+      else{
+      }
     }
-  }
 
-});
-
+  });
 
 
-// takes the shit places it into the clipboard
+
+/*  places a copy of all selected components into an array
+ * 
+ */
 function copyToClipBoard(){
   // clear the clipboard
-  clipboard = [];
-  //var clipboard = findAllSelected(grid.slice());
+  clipboard = [];  
 
   // finds all the thing within a region and makes a copy
-	clipboardtemp = findAllSelected();
+  clipboardtemp = findAllSelected();
 
   // translate it to 0,0
-	if(clipboardtemp.length == 0)
-		return false;
+  if(clipboardtemp.length == 0)
+    return false;
 
   minx = selected.begin.x + selected.size.width + 3;
   miny = selected.begin.y + selected.size.height + 3;
 
-    // finds the min
-  for(i = 0; i < clipboardtemp.length; i++){
-    if(clipboardtemp[i].width > 0){
-      if(clipboardtemp[i].locations()[0].x < minx)
-        minx = clipboardtemp[i].locations()[0].x
-      if(clipboardtemp[i].locations()[0].y < miny)
-        miny = clipboardtemp[i].locations()[0].y      
+    // finds the min x and y
+    for(i = 0; i < clipboardtemp.length; i++){
+      if(clipboardtemp[i].width > 0){
+        if(clipboardtemp[i].locations()[0].x < minx)
+          minx = clipboardtemp[i].locations()[0].x
+        if(clipboardtemp[i].locations()[0].y < miny)
+          miny = clipboardtemp[i].locations()[0].y      
+      }
     }
-  }
 
-  for(i = 0; i < clipboardtemp.length; i++){
-    // have to figure out how to deep clone
-      tempx = copy(clipboardtemp[i])
-    
+    for(i = 0; i < clipboardtemp.length; i++){
+    // deep copy the components so further changes are not changing the original
+    var tempx = copy(clipboardtemp[i])    
 
-  	tempx.x -= minx
-  	tempx.y -= miny
+    tempx.x -= minx
+    tempx.y -= miny
     clipboard.push(tempx);
   }
   console.log("copied to clipboard")
@@ -97,110 +108,121 @@ function copyToClipBoard(){
 
 }
 
+/* initialize a new component that is identical to 'component'
+ *    component - the component thats needs to be copied
+ * returns the new copy or null if the component passed in invalid
+ */
 function copy(component){
+  var x = component
+  var y = x.type
+  var tempx;
 
-    var x = component
-    var y = x.type
-    var tempx;
-    switch(y){
-      case "AND":
-        tempx = new and_gate(x.label, x.x, x.y);
-      break;
+  //determines the type and creates a new component
+  switch(y){
+    case "AND":
+    tempx = new and_gate(x.label, x.x, x.y);
+    break;
 
-      case "XOR":
-        tempx = new xor_gate(x.label, x.x, x.y);
-      break;
+    case "XOR":
+    tempx = new xor_gate(x.label, x.x, x.y);
+    break;
 
-      case "OR":
-        tempx = new or_gate(x.label, x.x, x.y);
-      break;
+    case "OR":
+    tempx = new or_gate(x.label, x.x, x.y);
+    break;
 
-      case "NOT":
-        tempx = new not_gate(x.label, x.x, x.y);
-      break;
+    case "NOT":
+    tempx = new not_gate(x.label, x.x, x.y);
+    break;
 
-      case "BUFFER":
-        tempx = new buffer_gate(x.label, x.x, x.y);
-      break;
+    case "BUFFER":
+    tempx = new buffer_gate(x.label, x.x, x.y);
+    break;
 
-      case "CROSS":
-        tempx = new cross_wire(x.label, x.x, x.y);
-      break;
+    case "CROSS":
+    tempx = new cross_wire(x.label, x.x, x.y);
+    break;
 
-      case "I":
-        tempx = new i_wire(x.label, x.x, x.y);
-      break;
+    case "I":
+    tempx = new i_wire(x.label, x.x, x.y);
+    break;
 
-      case "T":
-        tempx = new t_wire(x.label, x.x, x.y);
-      break;
+    case "T":
+    tempx = new t_wire(x.label, x.x, x.y);
+    break;
 
-      case "L":
-        tempx = new l_wire(x.label, x.x, x.y);
-      break;
+    case "L":
+    tempx = new l_wire(x.label, x.x, x.y);
+    break;
 
-      case "CROSSING":
-        tempx = new crossing_wire(x.label, x.x, x.y);
-      break;
+    case "CROSSING":
+    tempx = new crossing_wire(x.label, x.x, x.y);
+    break;
 
-      case "SWITCH":
-        tempx = new switch_box(x.label, x.x, x.y);
-      break;
+    case "SWITCH":
+    tempx = new switch_box(x.label, x.x, x.y);
+    break;
 
-      case "PRINT":
-        tempx = new print_box(x.label, x.x, x.y);
-      break;
+    case "PRINT":
+    tempx = new print_box(x.label, x.x, x.y);
+    break;
 
-      case "LIGHT":
-        tempx = new light_box(x.label, x.x, x.y);
-      break;
+    case "LIGHT":
+    tempx = new light_box(x.label, x.x, x.y);
+    break;
 
-      case EQ_BOX_COMPONENT:
-        tempx = new eq_box(x.label, x.x, x.y);
-      break;
+    case EQ_BOX_COMPONENT:
+    tempx = new eq_box(x.label, x.x, x.y);
+    break;
 
-      default:
-        console.log("Circuit type incorrect!");
+    default:
+    console.log("Circuit type incorrect!");
+    return null;
 
-    }
+  }
 
-    tempx.direction = x.direction
-    tempx.delay = x.delay
-    tempx.message = x.message
-    tempx.flipped = x.flipped
+  tempx.direction = x.direction
+  tempx.delay = x.delay
+  tempx.message = x.message
+  tempx.flipped = x.flipped
 
   return tempx;
 }
 
-// Deletes all components from the workspace that are selected
+/* Deletes all components from the workspace that are selected
+*/
 function deleteSelected(){
 	for(i = grid.length-1; i >= 0; i--){
-	    if((grid[i].x >= selected.begin.x && grid[i].x < selected.begin.x + selected.size.width)
-	      && (grid[i].y >= selected.begin.y && grid[i].y < selected.begin.y + selected.size.height)){
-	          grid.splice(i, 1);
-	    } else if(grid[i].width == 2){
-	      if((grid[i].locations()[1].x >= selected.begin.x && grid[i].locations()[1].x< selected.begin.x + selected.size.width)
-	        && (grid[i].locations()[1].y >= selected.begin.y && grid[i].locations()[1].y < selected.begin.y + selected.size.height)){
-	          grid.splice(i, 1);
+   if((grid[i].x >= selected.begin.x && grid[i].x < selected.begin.x + selected.size.width)
+     && (grid[i].y >= selected.begin.y && grid[i].y < selected.begin.y + selected.size.height)){
+     grid.splice(i, 1);
+ } else if(grid[i].width == 2){
+   if((grid[i].locations()[1].x >= selected.begin.x && grid[i].locations()[1].x< selected.begin.x + selected.size.width)
+     && (grid[i].locations()[1].y >= selected.begin.y && grid[i].locations()[1].y < selected.begin.y + selected.size.height)){
+     grid.splice(i, 1);
 	        }// end of if
 	      }// end else if
     }// end of for
     updateGridInterface()  
 }
 
+/* Deletes all components from the workspace that are selected and places it into the clipboard
+ * returns false if it fails to copy to the clipboard
+*/
 function cut(){
   if(copyToClipBoard() == false){
     return false
   } else{
-     deleteSelected()
-  }  
-    updateGridInterface()  
+   deleteSelected()
+ }  
+ updateGridInterface()  
 }
 
+/*
+ */
 function pasteToWorkspace(){
   // nothing in the clipboard, don't do anything
 
-  //clipboardCopy = jQuery.extend(true, {}, clipboard);
   var clipboardCopy = []
 
   if(clipboard.length == 0){
@@ -228,8 +250,8 @@ function pasteToWorkspace(){
       }
     }
 
-      console.log("pasted successfully")
-      updateGridInterface()  
+    console.log("pasted successfully")
+    updateGridInterface()  
   }
 
 }
@@ -239,8 +261,6 @@ function updateUndoList(){
   for(i = 0; i < grid.length; i++){
     newUndoList.push(copy(grid[i]));
   }
-
-
   undoList.push(newUndoList); 
 
 }
@@ -250,13 +270,13 @@ function undo(){
     return false;
   } else{
     var lastAction = undoList.pop()
-        var newGridList = []
+    var newGridList = []
 
-        for(i = 0; i < grid.length; i++){
-          newGridList.push(copy(grid[i]));
-        }
-        redoList.push(newGridList)
-      
+    for(i = 0; i < grid.length; i++){
+      newGridList.push(copy(grid[i]));
+    }
+    redoList.push(newGridList)
+
     
     grid = lastAction;
 
@@ -270,19 +290,19 @@ function redo(){
   if(redoList.length == 0){
     return false;
   }
-    var redoAction = redoList.pop()
+  var redoAction = redoList.pop()
 
-    var undoGridCopy = []
+  var undoGridCopy = []
 
-    for(i = 0; i < grid.length; i++){
-      undoGridCopy.push(jQuery.extend(true, {}, grid[i]));
-    }
+  for(i = 0; i < grid.length; i++){
+    undoGridCopy.push(jQuery.extend(true, {}, grid[i]));
+  }
 
-    undoList.push(undoGridCopy);
+  undoList.push(undoGridCopy);
 
-    grid = redoAction;
+  grid = redoAction;
 
-    updateGridInterface()  
+  updateGridInterface()  
 
-    return true;
+  return true;
 }
