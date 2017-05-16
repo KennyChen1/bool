@@ -1,5 +1,6 @@
 .submit-menu{
 	visibility: hidden;
+	border: 0.5px solid #666666;
 	background-color: white;
 	padding: 10px 20px;
 	display: inline-block;

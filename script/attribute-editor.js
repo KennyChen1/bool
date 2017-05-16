@@ -79,10 +79,8 @@ function saveAttributes(){
 	}
 }
 
-$(".attribute-editor").mouseup(function(e){
-	if(e.which === 3){
-		e.preventDefault();
-	}
+$(".attribute-editor").contextmenu(function(){
+	return false;
 });
 
 $(".attribute-editor #save").click(function(e){

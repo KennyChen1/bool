@@ -57,6 +57,10 @@ $("#grid-render").mousedown(function(e){
  	}
 });
 
+$("#grid-render").contextmenu(function(){
+	return false;
+});
+
 /*
  * This handles moving components on the screen
  */

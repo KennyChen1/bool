@@ -1,5 +1,6 @@
 .quizlet-maker{
 	position: fixed;
+	border: 0.5px solid #666666;
 	background-color: white;
 	padding: 20px 20px;
 	display: inline-block;
@@ -22,6 +23,8 @@
 .quizlet-maker .title{
 	font-size: 20px;
 	text-align: center;
+	margin: 8px 5px;
+	font-weight: bold;
 }
 
 .quizlet-maker #constraints .constraint-textbox{

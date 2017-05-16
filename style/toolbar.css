@@ -47,6 +47,12 @@
     display: block;
     text-align: left;
 }
+.toolbar .dropdown-content a .hotkey{
+    right: 0px;
+    margin-left: 2em;
+    float: right;
+    font-weight: bold;
+}
 
 .toolbar .dropdown-content a:hover {background-color: #f1f1f1}
 
