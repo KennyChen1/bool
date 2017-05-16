@@ -42,12 +42,18 @@ $("#grid-render").mousedown(function(e){
  	}
  	if(e.which === 1){ //leftclick
  		closeAttributeEditor();
+ 		 			downMouse = calculateGridXY(canvas, e);
+
+ 		if(downMouse.x < selected.begin.x || downMouse.y < selected.begin.y || 
+ 			downMouse.x < selected.begin.x  + selected.size.width || downMouse.y < selected.begin.y + selected.size.height){
+ 			resetSelected()
+ 		}
+
+
  		if((selected.size.width < 1 && selected.size.height < 1) || selectedSameSquare()){ //nothing selected
  			if(findAllSelected().length == 0){
  				resetSelected();
  			}
-
-
  			downMouse = calculateGridXY(canvas, e);
  		}
  		else{
@@ -123,7 +129,13 @@ $("#grid-render").mouseup(function(e){
 			upMouse = calculateGridXY(canvas, e);
 
  			if((massSelection.length == 0) || ((upMouse.x == downMouse.x) && (upMouse.y == downMouse.y))){
- 				console.log(massSelection)
+ 				if(massSelection.length > 0){
+ 					var currSelectedComponent = getAtGrid(downMouse.x, downMouse.y);
+					if(currSelectedComponent != null){
+						currSelectedComponent.onclick();
+					}
+ 				}
+ 				//console.log(massSelection)
  				//console.log((selected.begin.x - massSelection[0].x) + " " + (selected.begin.y - massSelection[0].y))
  			} else if(downMouse.x >= selected.begin.x && downMouse.y >= selected.begin.y 
  				&& downMouse.x < selected.begin.x + selected.size.width 
