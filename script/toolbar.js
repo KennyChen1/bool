@@ -8,6 +8,13 @@ $(".toolbar #run").click(function(e){
 
 
 $(document).on("keydown", function(e){
+
+  var tag = e.target.tagName.toLowerCase();
+  //console.log(tag);
+
+  if(tag == "input" || tag == "textarea"){}
+  else{
+
     if (e.keyCode == 67 && (e.ctrlKey || e.metaKey)){
        copyToClipBoard()
     } else if (e.keyCode == 86 && (e.ctrlKey || e.metaKey)){
@@ -22,12 +29,29 @@ $(document).on("keydown", function(e){
        writetofile()
     } else if (e.keyCode == 65 && (e.ctrlKey || e.metaKey)){
        selected.begin.x = 0
-       selected.begin.x = 0
+       selected.begin.y = 0
        selected.size.height = 1000
        selected.size.width = 1000
        e.preventDefault();
        updateGridInterface();
+       trimSelection();
+    } else if(e.keyCode == 46){
+        deleteSelected()
+    } else if(e.keyCode == 82){
+        rotateSelected()
+    } else if(e.keyCode == 84){
+        rotateAxis()
+    } else if(e.keyCode == 70){
+
+        var flipper = findAllSelected()
+        for(i = 0; i < flipper.length; i++){
+          flipper[i].flipped = !flipper[i].flipped
+        }
+        updateGridInterface();
+    } 
+    else{
     }
+  }
 
 });
 
@@ -40,7 +64,7 @@ function copyToClipBoard(){
   //var clipboard = findAllSelected(grid.slice());
 
   // finds all the thing within a region and makes a copy
-	var clipboardtemp = findAllSelected(grid);
+	clipboardtemp = findAllSelected();
 
   // translate it to 0,0
 	if(clipboardtemp.length == 0)
@@ -61,16 +85,91 @@ function copyToClipBoard(){
 
   for(i = 0; i < clipboardtemp.length; i++){
     // have to figure out how to deep clone
-    var tempx = jQuery.extend(true, {}, clipboardtemp[i])
-
+      tempx = copy(clipboardtemp[i])
+    
 
   	tempx.x -= minx
   	tempx.y -= miny
     clipboard.push(tempx);
   }
-
+  console.log("copied to clipboard")
   return true;
 
+}
+
+function copy(component){
+
+    var x = component
+    var y = x.type
+    var tempx;
+    switch(y){
+      case "AND":
+        tempx = new and_gate(x.label, x.x, x.y);
+      break;
+
+      case "XOR":
+        tempx = new xor_gate(x.label, x.x, x.y);
+      break;
+
+      case "OR":
+        tempx = new or_gate(x.label, x.x, x.y);
+      break;
+
+      case "NOT":
+        tempx = new not_gate(x.label, x.x, x.y);
+      break;
+
+      case "BUFFER":
+        tempx = new buffer_gate(x.label, x.x, x.y);
+      break;
+
+      case "CROSS":
+        tempx = new cross_wire(x.label, x.x, x.y);
+      break;
+
+      case "I":
+        tempx = new i_wire(x.label, x.x, x.y);
+      break;
+
+      case "T":
+        tempx = new t_wire(x.label, x.x, x.y);
+      break;
+
+      case "L":
+        tempx = new l_wire(x.label, x.x, x.y);
+      break;
+
+      case "CROSSING":
+        tempx = new crossing_wire(x.label, x.x, x.y);
+      break;
+
+      case "SWITCH":
+        tempx = new switch_box(x.label, x.x, x.y);
+      break;
+
+      case "PRINT":
+        tempx = new print_box(x.label, x.x, x.y);
+      break;
+
+      case "LIGHT":
+        tempx = new light_box(x.label, x.x, x.y);
+      break;
+
+      case EQ_BOX_COMPONENT:
+        tempx = new eq_box(x.label, x.x, x.y);
+      break;
+
+      default:
+        console.log("Circuit type incorrect!");
+
+    }
+
+    tempx.direction = x.direction
+    tempx.delay = x.delay
+    tempx.message = x.message
+    tempx.flipped = x.flipped
+
+  return tempx;
 }
 
 // Deletes all components from the workspace that are selected
@@ -101,26 +200,35 @@ function cut(){
 function pasteToWorkspace(){
   // nothing in the clipboard, don't do anything
 
-  clipboardCopy = jQuery.extend(true, {}, clipboard);
+  //clipboardCopy = jQuery.extend(true, {}, clipboard);
+  var clipboardCopy = []
 
-
-  if(clipboardCopy.length == 0){
+  if(clipboard.length == 0){
+    console.log("nothing to paste")
     return false;
   } else{
-    for(i = 0; i < Object.keys(clipboardCopy).length; i++){
-      clipboardCopy[i].x += selected.begin.x;
-      clipboardCopy[i].y += selected.begin.y;
-      if(canComponentBePlaced(clipboardCopy[i]) == false){
+    for(i = 0; i < clipboard.length; i++){
+
+      var pasteCopy = copy(clipboard[i])
+      pasteCopy.x += selected.begin.x;
+      pasteCopy.y += selected.begin.y;
+      clipboardCopy.push(pasteCopy)
+      if(canComponentBePlaced(pasteCopy) == false){
+        console.log("failed to place pasted component at " + pasteCopy.x + " " + pasteCopy.y)
         return false;
       }
     }
     updateUndoList()
     // if it gets here it is assummed that all the things 
     // to be pasted can be placed on to the board
-    for(i = 0; i < Object.keys(clipboardCopy).length; i++){
+    for(i = 0; i < clipboardCopy.length; i++){
       grid.push(clipboardCopy[i])
+      if(clipboardCopy[i].type == "CROSSING"){
+        clipboardCopy[i].move(clipboardCopy[i].x, clipboardCopy[i].y)
+      }
     }
 
+      console.log("pasted successfully")
       updateGridInterface()  
   }
 
@@ -129,7 +237,7 @@ function pasteToWorkspace(){
 function updateUndoList(){
   var newUndoList = []
   for(i = 0; i < grid.length; i++){
-    newUndoList.push(jQuery.extend(true, {}, grid[i]));
+    newUndoList.push(copy(grid[i]));
   }
 
 
@@ -145,7 +253,7 @@ function undo(){
         var newGridList = []
 
         for(i = 0; i < grid.length; i++){
-          newGridList.push(jQuery.extend(true, {}, grid[i]));
+          newGridList.push(copy(grid[i]));
         }
         redoList.push(newGridList)
       

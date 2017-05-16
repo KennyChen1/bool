@@ -2,6 +2,8 @@ var path = "img/c-icon/";
 
 var active_path = "img/c-icon-active/";
 
+var console_path = "img/console/";
+
 // Logic Gates
 var AND_IMAGE = loadImage(path + "and.png"); 
 var OR_IMAGE = loadImage(path + "or.png");
@@ -22,9 +24,10 @@ var CROSSING_IMAGE = loadImage(path + "crossing.png"); 	// +
 // Blackboxes
 var PRINT_IMAGE = loadImage(path + "print.png");
 var ON_IMAGE = loadImage(path + "on.png");
-var VAR_IMAGE = loadImage(path + "var.png");
+//var VAR_IMAGE = loadImage(path + "var.png");
 var SWITCH_IMAGE = loadImage(path + "switch.png");
 var LIGHT_IMAGE = loadImage(path + "light.png");
+var EQ_IMAGE = loadImage(path + "eq.png");
 
 // Logic Gates
 var AND_ACTIVE_IMAGE = loadImage(active_path + "and.png"); 
@@ -46,9 +49,15 @@ var CROSSING_ACTIVE_IMAGE = loadImage(active_path + "crossing.png"); 	// +
 // Blackboxes
 var PRINT_ACTIVE_IMAGE = loadImage(active_path + "print.png");
 var ON_ACTIVE_IMAGE = loadImage(active_path + "on.png");
-var VAR_ACTIVE_IMAGE = loadImage(active_path + "var.png");
+//var VAR_ACTIVE_IMAGE = loadImage(active_path + "var.png");
 var SWITCH_ACTIVE_IMAGE = loadImage(active_path + "switch.png");
 var LIGHT_ACTIVE_IMAGE = loadImage(active_path + "light.png");
+var EQ_ACTIVE_IMAGE = loadImage(active_path + "eq.png");
+
+
+// Console Images
+var CONSOLE_CHECK = loadImage(console_path + "check.png");
+var CONSOLE_X = loadImage(console_path + "xmark.png")
 
 function loadImage(path){
 	var imageObj = new Image();
@@ -110,6 +119,9 @@ function getImageByComponentType(component){
 		else if(comp === LIGHT_BOX_COMPONENT){
 			image = LIGHT_ACTIVE_IMAGE;
 		}
+		else if(comp === EQ_BOX_COMPONENT){
+			image = EQ_ACTIVE_IMAGE;
+		}
 	}
 	else{
 		if(comp === AND_GATE_COMPONENT){
@@ -160,6 +172,9 @@ function getImageByComponentType(component){
 		}
 		else if(comp === LIGHT_BOX_COMPONENT){
 			image = LIGHT_IMAGE;
+		}
+		else if(comp === EQ_BOX_COMPONENT){
+			image = EQ_IMAGE;
 		}
 	}
 

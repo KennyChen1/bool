@@ -1,60 +1,70 @@
 Nelson's notes
+ 
+> submitting and loading for circuits(in workspace) -- POST request
+
+> slider toggle for delay
 
 
-> new images for crossing, light_bulb, switch
+VERY LOW PRIORITY
+> fix clipOnPlace
+	- L wires, cross wires, checking if a component can be rotated
 
-> deep copy function for components
-
-> flip AND, OR, XOR gates(change output directions accordingly and add flipped variable)
-
-> saving/loading doesn't save the delay
+> sort quizlet counter components by number which ones have finite amounts(don't show ones that are infinite)
 
 > change attribute editor to only show needed inputs(textbox, etc)
 	- remove delay from all wires
-	- add flip to AND, XOR, OR
 	- remove message from all but print
 
-> reskin/recolor everything
-
-> onplace looks at surrounding blocks and checks input
-	- if logic is on, evaluate with itself as starting node
-
-> boolean equation to circuit - placing wires down
-	- pathfinder algo - pathfind from gate A to gate B
-		- i_wires are traversable, when u crossover an i_wire, it replaces it with a crossing wire.
-		- breadth search, maybe A*?
-	- clip onplace function, automatically set direction to match inputs/outputs of already placed wires/gates 
-	- based on the found path, select the corresponding wire.
-		> say we have path = [prevLoc, currLoc, nextLoc];
-			when we are on currLoc and 
-				prevLoc is above
-				nextLoc is right
-			then we would want an L_wire facing up.
-
-Check if name exists when submitting if not add (1)
-	> check if name exists.
-		if exists: add a (1). eg) helloworld(1).
-		else: accept
+datastore/app server
+	> save to datastore
+	> save as to datastore
+	> load from datastore
+	> open using sharable link
+	> open from profile page
 
 --bugs to fix--
 	Prob won't fix unless we are doing this after project over
 	> CROSS and T wires CANNOT be used as OR gates, two inputs into them is very buggy!
 
 --for Kenny--
-	> clipboard needs to paste in as components, not Objects
+
+	> hot keys for rotate, rotate all, rotate individually, delete, flip
+	> make hot keys not get recognized in input boxes -- reference canvas.js(bottom)
+
+	FIN > get rid of text selection on component menu
+
+	FIN > ctrl-a starts at 0,8
+		-ctrl-a and then rotate, it selects wrong and stuff disappears
+
+	FIN > pathfinding takes any arbitrary grid and finds the path from point src to point dest
+		- needs to write a getAtGrid() function for this arbitrary grid
+
+	FIN > mouse left-drag, places wires from mouse down to mouse up.
+		- based on found path, select the corresponding wire, rotate wires correctly.
+
+	FIN > Mass movement, does not allow components to be moved to blocks that the selection is already on
+		- so if the selection is 4x4, you cannot move it down.
+
+	FIN > clipboard needs to paste in as components, not Objects
 		- manually placing wire give correct component.logic()
 		- pasting a wire does not give correct component.logic()
 
-	> Add to truth-table.js functions
+	FIN > Add to truth-table.js functions
 		XOR support
 		multiple character Label support 
 
-	> Mass movement, does not allow components to be moved to blocks that the selection is already on
-		- so if the selection is 4x4, you cannot move it down.
-
-	> based on found path, select the corresponding wire, rotate wires correctly.
-
 	> function that checks if 2 boolean eqs are equal.
+
+--for Mike--
+	FIN > uploading
+	> 12345 menu
+
+	> search combos
+	> seen/unseen notifications - reef
+	> icons for open circuit, clone as owner
+
+	> import to new splash screen & profile page
+	> documentation
 
 
 
@@ -107,6 +117,41 @@ finished
 		look at all the components that come back
 			if any of them have a delay less than waitTime, insert them into the queue
 
+	> saving/loading doesn't save delay/label/message
+
+	> boolean equation to circuit - placing wires down
+	- pathfinder algo - pathfind from gate A to gate B
+		- i_wires are traversable, when u crossover an i_wire, it replaces it with a crossing wire.
+		- breadth search, maybe A*?
+	- clip onplace function, automatically set direction to match inputs/outputs of already placed wires/gates 
+	- based on the found path, select the corresponding wire.
+		> say we have path = [prevLoc, currLoc, nextLoc];
+			when we are on currLoc and 
+				prevLoc is above
+				nextLoc is right
+			then we would want an L_wire facing up.
+
+
+	> deep copy function for components
+
+	> flip AND, OR, XOR gates(change output directions accordingly and add flipped variable)
+
+	> onplace looks at surrounding blocks and checks input
+		- if logic is on, evaluate with itself as starting node
+
+	> multi-line booleq
+	example: 
+		Cin = A * B; - looks for equation box with Cin and converts it to booleq, then checks if equal to the equation give
+		A+B = A # B; - look for eq_box with A+B as label and ...
+
+	Check if name exists when submitting if not add (1)
+	> check if name exists.
+		if exists: add a (1). eg) helloworld(1).
+		else: accept
+
+	> saving needs to save quizlet constraints
+
+	> new images for crossing, light_bulb, switch, reskin everything
 
 
 
@@ -114,6 +159,7 @@ finished
 	example: Light Bulb
 
 	component.js 
+		> add to getAllComponents()
 		> make new constant at top -	var LIGHT_BOX_COMPONENT = "LIGHT"
 		> make new function -			function light_box(label, x, y){}
 		> if is wire or unarygate, add to isWire() or isUnaryGate() functions

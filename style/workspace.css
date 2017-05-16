@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Lora|Noto+Sans|PT+Serif|Source+Sans+Pro');
 html{ 
 	width: calc(100% - 20px);
 	height: calc(100% - 20px);
@@ -8,12 +9,20 @@ body{
 	height: 100%;
 	margin: 10px;
 	overflow: hidden;
-	background-color: black;
+	background-color: #181818;
+}
+
+p, a, div, button{
+	font-family: 'Source Sans Pro', sans-serif;
 }
 
 .workspace{ 
 	width: 100%;
 	height: 100%;
+	 -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+
 }
 
 .workspace .grid{
@@ -24,7 +33,12 @@ body{
 	height: calc(100% - 300px);
 	width: calc(100% - 210px - 30px);
 
-	background-color: white;
+	margin: 3px 0 0 0;
+
+	/*border: 2px solid #AEB0B3;*/
+	border-radius: 3px;
+
+	background-color: #E0E0E0;
 }
 
 .workspace .grid-render{
@@ -41,15 +55,22 @@ body{
 .workspace .cmenu{
 	position: absolute;
 
-	left: calc(100% - 210px - 10px);
-	top: calc(10% + 34px);
+	left: calc(100% - 212px - 10px);
+	top: calc(10% + 32px);
 
-	width: 210px;
+	width: 212px;
 	height: calc(90% - 44px);
 
-	background-color: #C98474;
+	background-color: #404040;
+
+	border-radius: 3px;
+
+	/*border: 2px solid #AEB0B3;*/
 
 	overflow: auto;
+	
+	
+ 
 }
 
 .workspace .cmenu .title{
@@ -57,15 +78,46 @@ body{
 	font-size: 20px;
 	margin: 6px;
 	color: white;
-	border-bottom: 2px solid black;
+	border-bottom: 0.5px solid white;
 }
 
 .workspace .cmenu .onebyone{
-	margin: 0 10px;
 }
 
 .workspace .cmenu .twobytwo{
-	margin: 0 5px;
+}
+
+.workspace .cmenu .cmenu-comp{
+	border-bottom: 0.5px solid white;
+	width: calc(100% - 20px);
+	margin: 2px;
+	margin-left: 5px;
+	padding: 5px;
+}
+
+.workspace .cmenu .onebyone .cmenu-comp{
+}
+
+.workspace .cmenu .onebyone .cmenu-comp img{
+	padding-left: 20px;
+	width: 50px;
+	height: 50px;
+}
+
+.workspace .cmenu .twobytwo .cmenu-comp img{
+	padding-left: 10px;
+	width: 100px;
+	height: 50px;
+}
+
+.workspace .cmenu .cmenu-comp p{
+	width: 20px;
+	height: 10px;
+	margin-bottom: 6px;
+	margin-right: 30px;
+	left: 60px;
+	color: white;
+	float: right;
 }
 
 .workspace .console{
@@ -76,5 +128,10 @@ body{
 	width: calc(100% - 210px - 30px);
 	height: calc(300px - 54px);
 
-	background-color: grey;
+	background-color: #404040;
+
+	border-radius: 3px;
+
+	/*border: 2px solid #AEB0B3;
+	border-top: 0px;*/
 }

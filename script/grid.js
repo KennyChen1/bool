@@ -1,29 +1,9 @@
 $(document).ready(function(){
-  /*
-  var andGate = and_gate("hello", 5,5);
-  var wire1 = i_wire(null, 5,6);
-  var wire2 = i_wire(null, 5,7);
-  var wire3 = i_wire(null, 5,8);
-  var notGate = not_gate("goodbye", 5,9);
-  var notGateRight = not_gate("goodbye2", 6,6);
 
-  wire1.direction = DOWN;
-  wire2.direction = DOWN;
-  wire3.direction = DOWN;
 
-  addToGrid(andGate);
-  addToGrid(wire1);
-  addToGrid(wire2);
-  addToGrid(wire3);
-  addToGrid(notGate);
-  addToGrid(notGateRight);
 
-  var bftList = [];
-  pushOutput(notGate, bftList);
-  pushOutput(notGateRight, bftList)
+	//printPath({x: 10, y: 10}, {x: 15, y: 20});
 
-  console.log(bftList);
-  */
 });
 
 /*
@@ -84,19 +64,26 @@ function condenseSelected(selectedgrid){
 /*
  * returns all the components that are found within the selected region
  */
- function findAllSelected(gridlist){
+ function findAllSelected(newSelected){
  	var returnFound = []
 
+ 	if(arguments.length != 0){
+ 		region = newSelected
+ 	}
+ 	else{
+ 		region = selected
+ 	}
+
  	for(i = 0; i < grid.length; i++){
- 		if((grid[i].x >= selected.begin.x && grid[i].x < selected.begin.x + selected.size.width)
- 			&& (grid[i].y >= selected.begin.y && grid[i].y < selected.begin.y + selected.size.height)){
+ 		if((grid[i].x >= region.begin.x && grid[i].x < region.begin.x + region.size.width)
+ 			&& (grid[i].y >= region.begin.y && grid[i].y < region.begin.y + region.size.height)){
  			returnFound.push(grid[i]);
  	} else if(grid[i].width == 2){
- 		if((grid[i].locations()[1].x >= selected.begin.x && grid[i].locations()[1].x< selected.begin.x + selected.size.width)
- 			&& (grid[i].locations()[1].y >= selected.begin.y && grid[i].locations()[1].y < selected.begin.y + selected.size.height)){
+ 		if((grid[i].locations()[1].x >= region.begin.x && grid[i].locations()[1].x< region.begin.x + region.size.width)
+ 			&& (grid[i].locations()[1].y >= region.begin.y && grid[i].locations()[1].y < region.begin.y + region.size.height)){
  			returnFound.push(grid[i]);
  	}
- }
+ 	}
   } // end of for loop
 
   return returnFound;
@@ -115,36 +102,71 @@ function condenseSelected(selectedgrid){
     // there exists a component that cannot be rotated
     // probably should be placed into debug menu
     return;
-}
+	}
 
-updateUndoList();
-
-  // preserve the box
-  maxx = 0
-  maxy = 0;
-
-  //rotates everything
+	//rotates everything
   for(i = 0; i < selectedComps.length; i++){
   	selectedComps[i].direction = (selectedComps[i].direction+1)%4
   }
 
-  for(i = 0; i < selectedComps.length; i++){
-  	if(selectedComps[i].width == 2){
-  		if(selectedComps[i].locations()[1].x > maxx)
-  			maxx = selectedComps[i].locations()[1].x
-  		if(selectedComps[i].locations()[1].y > maxy)
-  			maxy = selectedComps[i].locations()[1].y      
-  	} else if(selectedComps[i].width == 1){ 
-    // width is 1 does the same thing as the width == 2 but little different
-    if(selectedComps[i].locations()[0].x > maxx)
-    	maxx = selectedComps[i].locations()[0].x
-    if(selectedComps[i].locations()[0].y > maxy)
-    	maxy = selectedComps[i].locations()[0].y    
-    } // end if of else
-  } // end of for
+	updateUndoList();
 
-  selected.size.width = maxx - selected.begin.x + 1
-  selected.size.height = maxy - selected.begin.y + 1
+	trimSelection()
+
+	updateGridInterface()  
+
+}
+
+function trimSelection(){
+	var selectedComps = findAllSelected();
+	// preserve the box
+
+	minx = Number.MAX_VALUE; // 1.7976931348623157e+308
+	miny = Number.MAX_VALUE;
+
+	var maxx = 0
+	var maxy = 0;
+
+  
+
+
+
+  if(selectedComps.length > 0){
+	  for(i = 0; i < selectedComps.length; i++){
+			if(selectedComps[i].locations()[0].x < minx)
+	  			minx = selectedComps[i].locations()[0].x
+	  		if(selectedComps[i].locations()[0].y < miny)
+	  			miny = selectedComps[i].locations()[0].y
+
+	  	if(selectedComps[i].width == 2){
+
+	  		if(selectedComps[i].locations()[1].x > maxx)
+	  			maxx = selectedComps[i].locations()[1].x
+	  		if(selectedComps[i].locations()[1].y > maxy)
+	  			maxy = selectedComps[i].locations()[1].y      
+	  	} else if(selectedComps[i].width == 1){ 
+	    // width is 1 does the same thing as the width == 2 but little different
+
+	    if(selectedComps[i].locations()[0].x > maxx)
+	    	maxx = selectedComps[i].locations()[0].x
+	    if(selectedComps[i].locations()[0].y > maxy)
+	    	maxy = selectedComps[i].locations()[0].y    
+	    } // end if of else
+	  } // end of for
+
+
+	  selected.begin.x = minx
+	  selected.begin.y = miny
+
+	  selected.size.width = maxx - selected.begin.x + 1
+	  selected.size.height = maxy - selected.begin.y + 1
+  } else{
+  	selected.begin.x = -1
+  	selected.begin.y = -1
+
+  	selected.size.width = 1
+  	selected.size.width = 1
+  }
 
   updateGridInterface()  
 
@@ -201,6 +223,7 @@ function moveComponent(fromX, fromY, toX, toY){
    // component can be moved
    if(canComponentBePlaced(curr)){
    	grid.push(curr);
+   	curr.onplace();
    	updateUndoList();
    	return true;
    }
@@ -226,6 +249,8 @@ function deleteComponent(x,y){
 		    toRet.push(toDel);
 		}
 	}
+
+	updateQuizletConsole();
 
 	if(toRet.length == 0){
 		return null;
@@ -368,6 +393,9 @@ function getComponentByType(comp,x,y){
 	else if(comp === LIGHT_BOX_COMPONENT){
 		toPush = light_box(null, x,y);
 	}
+	else if(comp === EQ_BOX_COMPONENT){
+		toPush = eq_box(null, x, y);
+	}
 
 	return toPush;
 }
@@ -375,4 +403,12 @@ function getComponentByType(comp,x,y){
 function addToGrid(comp){
 	updateUndoList();
 	grid.push(comp);
+	comp.onplace(true);
+	updateQuizletConsole();
+}
+
+function addToGridOnLoad(comp){
+	grid.push(comp);
+	comp.onplace(false);
+	updateQuizletConsole();
 }

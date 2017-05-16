@@ -11,6 +11,7 @@
 	<link rel = "stylesheet" type="text/css" href="style/submit.css">
 	<link rel = "stylesheet" type="text/css" href="style/user-menu.css">
 	<link rel = "stylesheet" type="text/css" href="style/quizlet.css">
+	<link rel = "stylesheet" type="text/css" href="style/settings-menu.css">
 
 	<link rel="icon" 
 	type="favicon.ico" 
@@ -30,6 +31,7 @@
 	<script src = "script/images.js"></script>
 	<script src = "script/grid.js"></script>
 	<script src = "script/submit.js"></script>
+	<script src = "script/settings-menu.js"></script>
 
 
 </head>
@@ -56,28 +58,29 @@
 				<a href="#" class="dropbtn">File</a>
 				<div class="dropdown-content">
 		  			<a href="">New Circuit Workspace</a>
-		  			<a href="#">New Circuit Quizlet</a>
+		  			<a href="#" onclick = "promptSettingsMenu()">Settings</a>
+		  			<a href="#" onclick = "promptQuizletMaker()">Quizlet Constraints</a>
 		  			<a href="#" onclick = "writetofile()">Save</a>
 		  			<a href="#">
 		  				<label for = "loader" class = "loading">Load</label>
 		  				<input id = "loader" type="file">
 		  			</a>
 		  			<a href = "#" onclick = "promptSubmitMenu()">Submit</a>
-		  			<!--<a id="run">Run</a>
-		  			<a href="#">Toggle Dynamic Evaluator</a>-->
+		  			<!--<a id="run">Run</a>-->
+		  			<a href="#" onclick = "flickStopCircuitEvaluation()">Reset Circuit Evaluation</a>
 				</div>
 			</li>
 			<li class="dropdown">
 			<a href="#" class="dropbtn">Edit</a>
 				<div class="dropdown-content">
-		  			<a href="#" onclick = "undo()">Undo  ctrl-z</a>
-		  			<a href="#" onclick = "redo()">Redo  ctrl-y</a>
-		  			<a href="#" onclick = "cut()">Cut   ctrl-x</a>
-		  			<a href="#" onclick = "copyToClipBoard()">Copy  ctrl-c</a>
-		  			<a href="#" onclick = "pasteToWorkspace()">Paste ctrl-v</a>
-		  			<a href="#" onclick = "rotateAxis()">Rotate All</a>
-		  			<a href="#" onclick = "rotateSelected()">Rotate Indivually</a>
-		  			<a href="#" onclick = "deleteSelected()">Delete Selected</a>
+		  			<a href="#" onclick = "undo()">Undo<span class="hotkey">ctrl-z</span></a>
+		  			<a href="#" onclick = "redo()">Redo<span class="hotkey">ctrl-y</span></a>
+		  			<a href="#" onclick = "cut()">Cut<span class="hotkey"> ctrl-x</span></a>
+		  			<a href="#" onclick = "copyToClipBoard()">Copy<span class="hotkey">ctrl-c</span></a>
+		  			<a href="#" onclick = "pasteToWorkspace()">Paste <span class="hotkey">ctrl-v</span></a>
+		  			<a href="#" onclick = "rotateAxis()">Rotate All<span class="hotkey"></span></a>
+		  			<a href="#" onclick = "rotateSelected()">Rotate Indivually<span class="hotkey">r</span></a>
+		  			<a href="#" onclick = "deleteSelected()">Delete Selected<span class="hotkey">del</span></a>
 				</div>
 			</li>
 		</ul>
@@ -95,29 +98,54 @@
 			<div class = "title">Components</div>
 
 			<div class = "twobytwo">
-				<img class = "c-icon" src="img/cmenu-and.png" id = "AND">
-				<img class = "c-icon" src="img/cmenu-xor.png" id = "XOR">
-				<img class = "c-icon" src="img/cmenu-or.png" id = "OR">
-				<img class = "c-icon" src="img/cmenu-not.png" id = "NOT">
-				<img class = "c-icon" src="img/cmenu-buffer.png" id = "BUFFER">
-				<!--<img class = "c-icon" src="img/cmenu-nand.png" id = "NAND">
-				<img class = "c-icon" src="img/cmenu-nor.png" id = "NOR">-->
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/and.png" id = "AND"> <p>and</p>
+				</div>
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/xor.png" id = "XOR"> <p>xor</p>
+				</div>
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/or.png" id = "OR"> <p>or</p>
+				</div>
 			</div>
 
 			<div class = "onebyone">
-				<img class = "c-icon" src="img/cmenu-plus.png" id = "CROSS">
-				<img class = "c-icon" src="img/cmenu-minus.png" id = "I">
-				<img class = "c-icon" src="img/cmenu-t.png" id = "T">
-				<img class = "c-icon" src="img/cmenu-l.png" id = "L">
-				<img class = "c-icon" src="img/cmenu-crossing.png" id = "CROSSING">
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/not.png" id = "NOT"> <p>not</p>
+				</div>
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/buffer.png" id = "BUFFER"> <p>buffer</p>
+				</div>
+				<div class = "cmenu-comp"> 
+					<img class = "c-icon" src="img/c-menu/cross.png" id = "CROSS"> <p>wire</p>
+				</div>
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/minus.png" id = "I"> <p>wire</p>
+				</div>
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/t.png" id = "T"> <p>wire</p>
+				</div>
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/l.png" id = "L"> <p>wire</p>
+				</div>
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/crossing.png" id = "CROSSING"> <p>crossing</p>
+				</div>
 			</div>
 
-			<div class = "twobytwo">
-				<!--<img class = "c-icon" src="img/cmenu-onbox.png" id = "ON">-->
-				<img class = "c-icon" src="img/cmenu-printbox.png" id = "PRINT">
-				<!--<img class = "c-icon" src="img/cmenu-varbox.png" id = "VAR">-->
-				<img class = "c-icon" src="img/cmenu-switchbox.png" id = "SWITCH">
-				<img class = "c-icon" src="img/cmenu-light.png" id = "LIGHT">
+			<div class = "onebyone">
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/print.png" id = "PRINT"> <p>print</p>
+				</div>
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/switch.png" id = "SWITCH"> <p>switch</p>
+				</div>
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/light.png" id = "LIGHT"> <p>light</p>
+				</div>
+				<div class = "cmenu-comp">
+					<img class = "c-icon" src="img/c-menu/eq.png" id = "EQUATION"> <p>boolean eq</p>
+				</div>
 			</div>
 			
 		</div>
@@ -142,14 +170,7 @@
 					<span class = "console-label">Quizlet</span>
 				</div>
 
-				<!--
-				<div class = "name-container" id = "name-container">		
-					<span class = "name-label">Circuit Name</span>
-					<input id = "name-input" class = "name-input-textbox" type = "text" name = "circuit-name" value = "">
-				</div>
-				-->
-
-				<div id = "clear-console">Clear Debug</div>
+				<div id = "clear-console" class = "bool-button">Clear Debug</div>
 
 			</div>
 
@@ -231,8 +252,25 @@
 			</div>
 
 			<div class = "console-bottom" id = "quizlet">
-				<p>Quizlet information</p>
+
+				<div class = "info-pane">
+					<div id = "solution-display"><img class = "c-icon" src="img/console/xmark.png"></div>
+					<div id = "check-solution" class = "bool-button" onclick = "evaluateAndShowQuizlet()">Check Solution</div>
+					<p class = "problem">Problem:</p>
+					<p class = "problem-desc"></p>
+
+					<p class = "desc">Description: </p>
+					<p class = "desc-desc"></p>
+				</div>
+
+				<div class = "row">
+					
+				</div>
+
+			
+
 			</div>
+
 
 		</div>
 
@@ -261,13 +299,14 @@
 			</div>
 
 			<div class = "button-container">	
+				<div class = "ae-button" id = "flip"></div>
 				<div class = "ae-button" id = "rotate"></div>
 				<div class = "ae-button" id = "delete"></div>
 				<div class = "ae-button" id = "save"></div>
 			</div>
 	</div>
 
-	<div class = "blanket"></div>
+	<div class = "blanket" onclick = "hideAllMenus()"></div>
 
 	<div class = "submit-menu">
 		
@@ -314,45 +353,88 @@
 
 	<div class = "quizlet-maker">
 		
-		<p>Quizlet Maker</p>
+		<p class = "title">Quizlet Constraints</p>
 
 		<div id = "constraints">
-			<form>
-				<span class = "desc">Public</span>
-				<input type = "radio" class = "privacy" name = "privacy" id = "public" checked = "checked">
-				<span class = "desc">Private</span>
-				<input type = "radio" class = "privacy" name = "privacy" id = "private">
-			</form>
+			
+			<!--<div>
+				<span class = "constraint-label">AND GATE</span>
+				<span class = 'constraint-input-right'>
+					<input id = "and-constraint" class = "textbox" type = "text" name = "and-constraint" value = "">
+					<button class = "constraint-button" id = "and-constraint-up">+</button>
+					<button class = "constraint-button" id = "and-constraint-down">-</button>
+					<button class = "constraint-button" id = "and-constraint-inf">*</button>	
+				</span>
+			</div>
+			-->
+			
 		</div>
 
-		<div id = "div-problem">
-			<span class = "desc">Problem</span>
-			<input id = "quizlet-problem" class = "textbox" type = "text" name = "quizlet-problem" value = "">				
-		</div>
+		<div class = "non-constraints">
 
-		<div id = "div-answer">
-			<span class = "desc">Answer</span>
-			<input id = "circuit-name" class = "textbox" type = "text" name = "circuit-name" value = "">				
-		</div>
+			<div id = "div-problem">
+				<span class = "desc">Problem</span>
+				<textarea id = "quizlet-problem"></textarea>
+				<!--<input id = "quizlet-problem" class = "textbox" type = "text" name = "quizlet-problem" value = "">-->				
+			</div>
 
-		<div id = "div-name">
-			<span class = "desc">Name</span>
-			<input id = "circuit-name" class = "textbox" type = "text" name = "circuit-name" value = "">				
-		</div>
+			<div id = "div-desc">
+				<span class = "desc">Description</span>
+				<textarea id = "quizlet-desc"></textarea>
+				<!--<input id = "quizlet-desc" class = "textbox" type = "text" name = "quizlet-desc" value = "">-->				
+			</div>
 
-		<div id = "div-share">
-			<span class = "desc">Share</span>
-			<input id = "circuit-share" class = "textbox" type = "text" name = "circuit-share" value = "">				
-		</div>
+			<div id = "div-answer">
+				<span class = "desc">Answer</span>
+				<textarea id = "quizlet-answer"></textarea>
+				<!--<input id = "quizlet-answer" class = "textbox" type = "text" name = "quizlet-answer" value = "">-->			
+			</div>
 
-		<div id = "div-tags">
-			<span class = "desc">Tags</span>
-			<input id = "circuit-tags" class = "textbox" type = "text" name = "circuit-tags" value = "">				
 		</div>
 
 		<div id = "div-submit">
-			<button type = "button" onclick = "submitToDatastore()">Submit</button>
-			<button type = "button" onclick = "hideSubmitMenu()">Cancel</button>
+			<button type = "button" onclick = "submitQuizletConstraints()">Submit</button>
+			<button type = "button" onclick = "hideQuizletMaker()">Cancel</button>
+		</div>
+	</div>
+
+	<div class = "settings">
+		
+		<p class = "title">Settings</p>
+
+		<div id = "loops">
+			<span class = "desc">Loop before end evaluation</span>
+			<input class = "textbox" type = "text" name = "circuit-tags" value = "">				
+		</div>
+
+		<div id = "delay-time">
+			<span class = "desc">Default Delay Time</span>
+			<input class = "textbox" type = "text" name = "circuit-tags" value = "">				
+		</div>
+
+		<div id = "display-delay">
+			<span class = "desc">Display Delays</span>
+			<input type="checkbox"> 				
+		</div>
+
+		<div id = "display-labels">
+			<span class = "desc">Display Labels</span>
+			<input type="checkbox"> 				
+		</div>
+
+		<div id = "display-lines">
+			<span class = "desc">Display Grid Lines</span>
+			<input id="display-delay" type="checkbox"> 				
+		</div>
+
+		<div id = "display-numbers">
+			<span class = "desc">Display Grid Numbers</span>
+			<input type="checkbox"> 				
+		</div>
+
+		<div id = "div-submit">
+			<button type = "button" onclick = "submitSettings()">Submit</button>
+			<button type = "button" onclick = "hideSettingsMenu()">Cancel</button>
 		</div>
 	</div>
 
@@ -370,6 +452,7 @@
 	<script src = "script/qm.js"></script>
 	<script src = "script/truth-table.js"></script>
 	<script src = "script/boolean-eq.js"></script>
+	<script src = "script/quizlet.js"></script>
 	<script src = "script/pathfinder.js"></script>
 
 </body>

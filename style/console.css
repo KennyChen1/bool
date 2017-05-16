@@ -1,23 +1,28 @@
 .console .console-top{
     padding: 10px;
     height: 10%;
-    border-bottom: 5px solid black;
+    border-bottom: 5px solid #181818;
     border-width: 90%;
+}
+
+.console p{
+    color: #ebebeb;
 }
 
 /*make mouse-event, when you click one of the triggers hide the other 2*/
 .console .console-trigger{
-    margin: 0px 5px;
+    margin: 0 5px;
     padding: 5px 5px;
     height: 100%;
-    background-color: #A0A0A0;
+    background-color: #404040;
     color: white;
     float: left;
-    border-radius: 5px 5px 0 0;
+    border-radius: 2px 2px 0 0;
+    border: 1px solid #181818;
 }
 
 .console .console-trigger.on{
-    background-color: black;
+    background-color: #181818;
 }
 
 
@@ -38,36 +43,48 @@
 .console #clear-console{
     position: relative;
     float: right;
-    background-color: white;
+    /*background-color: white;
     border: 2px solid black;
-    border-radius: 5px; 
+    border-radius: 5px; */
     padding: 5px;
     margin: 0 10px;
     top: -4px;
 }
 
 .console .debug-msg{
-    padding: 0 20px;
+    padding: 0px 15px;
+    margin: 4px 0px;
 }
 
 .console .console-bottom{
     position: absolute;
-    visibility: hidden;
+    display:none;
     width: 100%;
     height: 80%;
     float: left;
 }
 
 .console .console-bottom.show{
-    visibility: visible;
+    display: block;
 }
 
-.console .bool-button{
-    background-color: white;
-    border: 2px solid black;
-    border-radius: 5px; 
-    width: 100px;
+.bool-button{
+    background-color: #9cbbdf;
+    color: #121212;
+    padding: 4px 40px;
+    margin: 5px 0;
+    border: 0px solid white;
+    border-radius: 20px; 
     text-align: center;
+}
+
+.bool-button:hover{
+     background-color: white;
+}
+
+.bool-button:active{
+    background-color: #181818;
+    color: white;
 }
 
 .console #debug{
@@ -126,10 +143,6 @@
     margin: 20px;
 }
 
-.console #boolean .build-circuit .bool-button{
-    width: 150px;
-}
-
 .console #boolean .build-circuit{
     margin-right: 20px;
     float: left;
@@ -141,6 +154,57 @@
 
 .console #boolean textarea{
     width: 20em;
+}
+
+/* Quizlet attributes */
+
+.console #quizlet{
+}
+
+.console #quizlet .row{
+    position: absolute;
+    float: left;
+    width: 70%;
+    left: 30%;
+    height: calc(100% - 1px);
+    overflow: auto;
+}
+
+.console #quizlet .col{
+    float: right;
+    padding: 12px 0px;
+    text-align: center;
+    width: 120px;
+    height: 120px;
+}
+
+.console #quizlet .info-pane{
+    padding: 0 10px;
+    width: calc(30% - 10px);
+    float: left;
+    position: absolute;
+    height: calc(100% - 1px);
+    overflow: auto;
+}
+
+.console #quizlet #solution-display{
+    padding: 10px 0 0 0;
+    float: right;
+}
+
+.console #quizlet .info-pane .problem{
+    font-weight: bold;
+}
+
+.console #quizlet .info-pane #check-solution{
+    margin: 15px;
+    padding: 4px 10px;
+    float: right;
+    font-weight: bold;
+}
+
+.console #quizlet .info-pane .desc{
+    font-weight: bold;
 }
 
 

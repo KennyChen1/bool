@@ -5,8 +5,8 @@ var XOR_GATE_COMPONENT = "XOR";
 var NOT_GATE_COMPONENT = "NOT";
 var BUFFER_GATE_COMPONENT = "BUFFER";
 
-var NAND_GATE_COMPONENT = "NAND";
-var NOR_GATE_COMPONENT = "NOR";
+//var NAND_GATE_COMPONENT = "NAND";
+//var NOR_GATE_COMPONENT = "NOR";
 
 // Circuit Passthroughs/Wires
 var L_WIRE_COMPONENT = "L"; 				// L
@@ -21,6 +21,7 @@ var ON_BOX_COMPONENT = "ON";
 var VAR_BOX_COMPONENT = "VAR";
 var SWITCH_BOX_COMPONENT = "SWITCH";
 var LIGHT_BOX_COMPONENT = "LIGHT";
+var EQ_BOX_COMPONENT = "EQUATION";
 
 //directions
 var UP = 0;
@@ -28,7 +29,37 @@ var DOWN = 2;
 var LEFT = 3;
 var RIGHT = 1;
 
+var ALL_COMPONENTS = [];
+getAllComponents(); //populates ALL_COMPONENTS
+
+var flickTime = 500;
 var stopCircuitEvaluation = false;
+
+function getAllComponents(){
+
+	if(ALL_COMPONENTS.length <= 0){
+		ALL_COMPONENTS.push(AND_GATE_COMPONENT);
+		ALL_COMPONENTS.push(OR_GATE_COMPONENT);
+		ALL_COMPONENTS.push(XOR_GATE_COMPONENT);
+		ALL_COMPONENTS.push(NOT_GATE_COMPONENT);
+		ALL_COMPONENTS.push(BUFFER_GATE_COMPONENT);
+
+		ALL_COMPONENTS.push(L_WIRE_COMPONENT);
+		ALL_COMPONENTS.push(I_WIRE_COMPONENT);
+		ALL_COMPONENTS.push(T_WIRE_COMPONENT);
+		ALL_COMPONENTS.push(CROSS_WIRE_COMPONENT);
+		ALL_COMPONENTS.push(CROSSING_WIRE_COMPONENT);
+
+		ALL_COMPONENTS.push(PRINT_BOX_COMPONENT);
+		//ALL_COMPONENTS.push(ON_BOX_COMPONENT);
+		//ALL_COMPONENTS.push(VAR_BOX_COMPONENT);
+		ALL_COMPONENTS.push(SWITCH_BOX_COMPONENT);
+		ALL_COMPONENTS.push(LIGHT_BOX_COMPONENT);
+		ALL_COMPONENTS.push(EQ_BOX_COMPONENT);
+	}
+
+	return ALL_COMPONENTS;
+}
 
 function component(
 		type, 
@@ -56,6 +87,8 @@ function component(
 	this.height = height;
 	this.x = x;
 	this.y = y;
+	this.flipped = false;
+
 	this.active = false;
 
 	this.print = function print(){
@@ -123,6 +156,15 @@ function component(
 		return ret;
 	}
 
+	this.getFlipped = function getFlipped(){
+		if(isWire(this)){
+			return false;
+		}
+		else{
+			return this.flipped;
+		}
+	}
+
 	this.equals = function equal(otherComponent){
 		return this.x === otherComponent.x && this.y === otherComponent.y && this.type === otherComponent.type;
 	}
@@ -172,11 +214,8 @@ function component(
 
 	this.reset = function reset(){ //resets component for reevaluation
 		for(var h=0;h<this.input.length;h++){
-			this.input[h] = false;
+			this.input[h] = new inputStack();
 		}
-
-		this.active = false;
-
 
 		this.prevOutput = null;
 	}
@@ -199,8 +238,16 @@ function component(
 		console.log(this.type+".ondelete()");
 	}
 
-	this.onplace = function onplace(){
-		console.log(this.type+".ondelete()");
+	var onPlaceFlag = false;
+
+	this.onplace = function onplace(shouldClip){
+		console.log(this.type+".onplace()");
+
+		if(shouldClip){
+			clipComponentOnPlace(this);
+		}
+		
+		checkInputsOnPlace(this);
 	}
 
 	this.setInput = function setInput(prevComponent){
@@ -212,6 +259,22 @@ function component(
 	}
 
 	this.psuedoComponent; //misc variable, used for crossing to create a list of 2 i_wires.
+
+	this.setLoadValues = function setLoadValues(label, message, delay, flipped, direction){
+		this.label = label;
+		this.message = message;
+		this.delay = delay;
+		if(flipped == null){
+			this.flipped = false;
+		}
+		else{
+			this.flipped = flipped;
+		}
+
+
+		this.direction = direction;
+		
+	}
 
 
 }
@@ -623,7 +686,7 @@ function print_box(label, x, y, message){
 	}
 
 	temp.use = function(){
-		if(temp.message != null && this.logic() == true){
+		if(temp.message != null && this.logic()){
 			consoleDisplayString(this.message);
 		}
 	}
@@ -816,6 +879,41 @@ function light_box(label, x, y){
 	return temp;
 }
 
+function eq_box(label, x, y){
+	var temp = new component(
+		EQ_BOX_COMPONENT,		//type
+		label, 					//label
+		4, 						//inputs
+		0, 						//outputs
+		UP,						//direction
+		0, 						//delay
+		1, 						//width
+		1,		 				//height
+		x, 						//x
+		y,						//y
+		null					//print message
+	);
+
+	temp.inputDirection = function(){
+		var arr = [];
+		arr.push(flip(temp.direction));
+
+		return arr
+	}
+
+	temp.outputDirection = function(){
+		var arr = [];
+		return arr;
+	}
+
+	temp.logic = function(){
+		return temp.getInput(0) || temp.getInput(1) || temp.getInput(2) || temp.getInput(3);
+	}
+
+	return temp;
+}
+
+
 /* Circuit Evaluation Helper Functions */
 
 function inputStack(){
@@ -842,6 +940,81 @@ function inputStack(){
 	}
 }
 
+/* onPlace functions */
+
+function clipComponentOnPlace(component){
+	if(component.psuedoComponent != null || !(isWire(component) || isUnaryGate(component))){
+		return;
+	}
+	for (var j = 0; j < 4; j++) {
+		component.direction = j;
+
+		var exitFlag = false;
+
+		var surround = getAllSurroundingCoord(component);
+
+		for (var i = 0; i < surround.length; i++) {
+			var s = surround[i]
+
+			surround[i] = getAtGrid(s.x, s.y);
+		}
+
+		// checks all inputLocations to see if any require surround blocks require a block to output to
+		for (var i = 0; i < surround.length; i++) {
+			if(surround[i] != null && componentIOMatch(component, surround[i])){
+				exitFlag = true;
+				break;
+			}
+		}
+
+		// checks all outputLocations ot see if any surround blocks require component to out to
+		for (var i = 0; i < surround.length; i++) {
+			if(surround[i] != null && componentIOMatch(surround[i], component)){
+				exitFlag = true;
+				break;
+			}
+		}
+
+		if(exitFlag){
+			return;
+		}
+	}
+
+	component.direction = UP
+}
+
+function checkInputsOnPlace(component){
+	if(!isWire(component)){
+		var il = getInputLocations(component);
+		for (var i = 0; i < il.length; i++) {
+			var ilComp = getAtGrid(il[i].x, il[i].y);
+			if(ilComp != null){
+				setInput(component, ilComp, null);
+			}
+		}	
+		evaluateComponents([component]);	
+	}
+}
+
+/* Component Helpers */
+
+function flickStopCircuitEvaluation(){
+	killCircuitEvaluation();
+
+	resetAllComponents();
+
+	setTimeout(function(){
+		allowCircuitEvaluation();
+		updateGridInterface();
+	}, flickTime);
+}
+
+function resetAllComponents(){
+	for (var i = grid.length - 1; i >= 0; i--) {
+		grid[i].reset();
+	}
+}
+
 function killCircuitEvaluation(){ //kills the circuit evaluation (DOES NOT PAUSE EVALUATION)
 	stopCircuitEvaluation = true;
 }
@@ -851,7 +1024,7 @@ function allowCircuitEvaluation(){ //allow circuit to be reevaluated
 }
 
 function isWire(component){
-	return component.type === I_WIRE_COMPONENT || component.type === L_WIRE_COMPONENT || component.type === T_WIRE_COMPONENT || component.type === CROSS_WIRE_COMPONENT;
+	return component.type === I_WIRE_COMPONENT || component.type === L_WIRE_COMPONENT || component.type === T_WIRE_COMPONENT || component.type === CROSS_WIRE_COMPONENT || component.type === CROSSING_WIRE_COMPONENT;
 }
 
 function isUnaryGate(component){
@@ -958,6 +1131,68 @@ function isSignalGenerating(component){
 	return component.type == ON_BOX_COMPONENT;		
 }
 
+function coordsEqual(coord1, coord2){
+	return coord1.x == coord2.x && coord1.y == coord2.y;
+}
+
+function componentIOMatch(pushComponent, component){
+	if(pushComponent.psuedoComponent != null || component.psuedoComponent != null){
+		return false;
+	}
+	var il = getInputLocations(pushComponent);
+	var ol = getOutputLocations(component);
+
+	var ilFlag = false;
+	var olFlag = false;
+
+	for (var i = 0; i < il.length; i++) {
+		var ilComp = getAtGrid(il[i].x, il[i].y);
+
+		if(ilComp != null && component != null && ilComp.equals(component)){
+			ilFlag = true;
+		}
+	}
+
+	for (var i = 0; i < ol.length; i++) {
+		var olComp = getAtGrid(ol[i].x, ol[i].y);
+
+		if(olComp != null && pushComponent != null && olComp.equals(pushComponent)){
+			olFlag = true;
+		}
+	}
+
+	return ilFlag && olFlag;
+}
+
+function getAllSurroundingCoord(component){
+	var cl = component.locations();
+
+	var surround = [];
+
+	for (var i = 0; i < cl.length; i++) {
+		for (var j = 0; j < 4; j++) {
+			var currDir = j;
+
+			var adjDir = getAdjacentLocationByDirection(cl[i], j);
+
+			if(!anyIsLocation(adjDir, cl)){
+				surround.push(adjDir);
+			}
+		}
+	}
+
+	return surround;
+}
+
+function anyIsLocation(locationToCompare, locations){
+	for (var i = 0; i < locations.length; i++) {
+		if(locations[i].x == locationToCompare.x && locations[i].y == locationToCompare.y){
+			return true;
+		}
+	}
+	return false;
+}
+
 function getAdjacentLocationByDirection(location, direction){
 	var pushLocationX;
 	var pushLocationY;
@@ -1027,10 +1262,20 @@ function getOutputLocations(component){
 
 		if(component.width == 2 && component.height == 1){ // 2x1 gate
 			if(curr === UP || curr === RIGHT){
-				retOl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
+				if(component.flipped){
+					retOl.push(getAdjacentLocationByDirection(component.locations()[1], curr));
+				}
+				else{
+					retOl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
+				}
 			}
 			else{
-				retOl.push(getAdjacentLocationByDirection(component.locations()[1], curr));
+				if(component.flipped){
+					retOl.push(getAdjacentLocationByDirection(component.locations()[0], curr));
+				}
+				else{
+					retOl.push(getAdjacentLocationByDirection(component.locations()[1], curr));
+				}
 			}
 			
 		}
@@ -1121,6 +1366,7 @@ function pushOutput(component, breadthTraverseList, prevComponent){
 // pushs output until it hits a logic gate or wire with a delay
 // once it hits a logic gate or wire with delay, it sets the input of that gate and pushs it to breadthTraverseList
 function pushOutputHelper(component, breadthTraverseList, prevComponent, wireBreadthTraverseList){ 
+	component.activate();
 
 	var ol = getOutputLocations(component);
 
@@ -1166,7 +1412,7 @@ function pushOutputHelper(component, breadthTraverseList, prevComponent, wireBre
 				}
 			}
 
-			if(cont && pci){
+			if(cont && pci && !stopCircuitEvaluation){
 				console.log(component.type+" pushing to "+pushComponent.type);
 				console.log(component.getInput(0)+"|"+component.getInput(1)+"|"+component.getInput(2)+"|"+component.getInput(3));
 

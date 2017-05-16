@@ -1,6 +1,7 @@
 .attribute-editor{
-	background-color: green;
-	padding: 0 20px;
+	background-color: white;
+	border: 0.5px solid #666666;
+	padding: 0 10px;
 	display: inline-block;
 
 	visibility: hidden;
@@ -21,21 +22,31 @@
 
 .attribute-editor .title{
 	text-align: center;
-	font-size: 18px;
+	font-weight: bold;
+	font-size: 20px;
+	margin: 8px 5px;
 }
 
 .attribute-editor .ae-input{
-	padding: 10px 0;
+	padding: 5px 0;
 	color: black;
 	text-align: right;
+	border: 2px solid border;
 }
 
-.attribute-editor .ae-details{
+.attribute-editor #ae-delay-check{
+	padding: 10px 0;
+	color: black;
+	text-align: left;
+	border: 2px solid border;
+}
+
+.attribute-editor #ae-details{
 	text-align: center;
 }
 
 .attribute-editor .button-container{
-	margin: 30px auto;
+	margin: 20px auto;
 	display: flex;
 	justify-content: space-between;
 }
@@ -45,8 +56,8 @@
 	display: flex;
 	justify-content: space-between;
 
-	width: 60px;
-	height: 60px;
+	width: 50px;
+	height: 50px;
 }
 
 .attribute-editor #rotate{
@@ -60,6 +71,10 @@
 
 .attribute-editor #save{
 	background-image: url(../img/attribute-editor/save.png);
+}
+
+.attribute-editor #flip{
+	background-image: url(../img/attribute-editor/flip.png);
 
 }
 

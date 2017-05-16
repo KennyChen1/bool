@@ -1,12 +1,102 @@
+/*
+	compares if exp1 and exp2 are logically equivallent
+	exp1 and exp2 are boolean expressions
+
+	true if logically equal
+	false otherwise
+*/
+function booleanIsEqual(exp1, exp2){
+
+
+	// get tt string
+	var tt1 = eqToTable(exp1)
+	var tt2 = eqToTable(exp2)
+
+
+	// truth table to simpleifed expression 
+	var sim1 = truthTableToBool(tt1)
+	var sim2 = truthTableToBool(tt2)
+	
+	sim1 = mergeSort(sim1.split(" + ")).join(" + ")
+	sim2 = mergeSort(sim2.split(" + ")).join(" + ")
+
+	console.log(sim1)
+	console.log(sim2)
+
+	// make truth table from simplified expression
+	var stt1 = eqToTable(sim1)
+	var stt2 = eqToTable(sim2)
+
+	// split up the rows
+	var str1 = stt1.split("\n")
+	var str2 = stt2.split("\n")
+
+	// remove the first row which is the header
+	str1.shift()
+	str2.shift()
+
+	// combine the leftover rows
+	str1 = str1.join("\n")
+	str2 = str2.join("\n")
+
+
+	// return the solutuon
+	return str1 == str2
+
+}
+
+function mergeSort(arr){
+    if (arr.length < 2)
+        return arr;
+ 
+    var middle = parseInt(arr.length / 2);
+    var left   = arr.slice(0, middle);
+    var right  = arr.slice(middle, arr.length);
+
+    return merge(mergeSort(left), mergeSort(right));
+}
+ 
+function merge(left, right)
+{
+    var result = [];
+	var	il = 0;
+    var ir = 0;
+    while (il < left.length && ir < right.length){
+    	var ll = left[il]
+    	var rr = right[ir]
+    	if(ll[0] ==  "!"){
+    		ll = left[ir].substring(1)
+    	}
+    	if(rr[0] == "!"){
+    		rr = right[ir].substring(1)
+    	}
+
+        if (ll < rr){
+            result.push(left[il++]);
+        } else {
+        	console.log(right[ir])
+            result.push(right[ir++]);
+        }
+    }
+ 
+    return result.concat(left.slice(il)).concat(right.slice(ir));
+}
+
+
+
+
 /* Syntax for Boolean Equations Parser*/
 var BE_OR = "+";
 var BE_AND = "*";
 var BE_NOT = "!";
-var BE_XOR = "#";
+var BE_XOR = "^";
 var BE_HIGH = "1";
 var BE_LOW = "0";
 var BE_LPAREN = "(";
 var BE_RPAREN = ")";
+
+var BE_END = ";";
+var BE_EQ = "=";
 
 function getBooleanEquation(){
 	var booleq = $(".console #boolean #textbox #boolean-tb").val();
@@ -20,12 +110,26 @@ function setBooleanEquation(boolEq){
 	var booleq = $(".console #boolean #textbox #boolean-tb").val(boolEq);
 }
 
+function getFirstBooleanExp(){
+	var boolEq = getBooleanEquation();
+	var allBeq = splitBoolEqProg(boolEq);
+	if(allBeq.length >= 1){
+		return allBeq[0].exp;
+	}
+	return "";
+}
+
 function makeCircuitFromBoolEq(){
-	buildCircuit(getBooleanEquation());
+	var boolEq = getBooleanEquation();
+	var allBeq = splitBoolEqProg(boolEq);
+	if(allBeq.length >= 1){
+		clipboard = buildCircuit(allBeq[0].exp);
+	}
 }
 
 function makeBoolEqFromCircuit(){
-	traverseDownwardFromRoot();
+	setBooleanEquation(assembleAllBeqInSequence(findAllSelected()));
+	//traverseDownwardFromRoot();
 }
 
 /* Boolean Equation to Circuit */
@@ -63,6 +167,42 @@ function isLetter(str){
 }
 
 /* Functions for parsing and tokenizing the boolean equations */
+
+//splits a multilined bool equation;
+function splitBoolEqProg(boolEq){
+	boolEq = boolEq.replace(/\s/g, '');
+
+	var statements = boolEq.split(BE_END);
+
+	var ret = [];
+
+	for (var i = 0; i < statements.length; i++) {
+		if(statements[i] != "" && statements[i] != null){
+			console.log(i+" | "+statements[i]);
+			var beqLabel = "";
+			var beqExp = "";
+
+			var splitted = statements[i].split(BE_EQ);
+
+			if(splitted.length == 1){
+				beqExp = splitted[0];
+			}
+			else if(splitted.length == 2){
+				beqLabel = splitted[0];
+				beqExp = splitted[1];
+			}
+			else{
+				console.log("splitBoolEqProg, error, too many = or no =");
+				console.log(splitted);
+			}
+
+			ret.push({label: beqLabel, exp: beqExp});
+		}
+	}
+
+	return ret;
+}
+
 function tokenizeBoolEq(boolEq){
 	boolEq = boolEq.replace(/\s/g, '');
 
@@ -208,7 +348,7 @@ function buildCircuit(boolEq){
 
 	var tempClipboard = [];
 
-	clipboard = breadthTraverseParseTree([parseTree], tempClipboard, 0);
+	return breadthTraverseParseTree([parseTree], tempClipboard, 0);
 }
 
 function breadthTraverseParseTree(list, tempClipboard, count){
@@ -304,19 +444,55 @@ function getCurrentlySelectedNode(){
 
 }
 
-function traverseDownwardFromRoot(){
-	var currSel = getCurrentlySelectedNode();
+function assembleAllBeqInSequence(beqSeq){
+	var currSel = beqSeq;
+
+	var traverseOn = [];
+
+	var boolEq = "";
+
+	for (var i = 0; i < currSel.length; i++) {
+		if(currSel[i].type == EQ_BOX_COMPONENT){
+			traverseOn.push(currSel[i]);
+		}
+	}
+
+	for (var i = 0; i < traverseOn.length; i++) {
+		var bexp = traverseDownwardFromRoot(traverseOn[i]);
+
+		var toPush = "";
+		if(bexp != "" && bexp != null){
+			if(traverseOn[i].label == "" || traverseOn[i].label == null){
+				toPush = bexp+BE_END;
+			}
+			else{
+				toPush = traverseOn[i].label + BE_EQ + bexp + BE_END;
+			}
+		}
+		boolEq = boolEq + toPush;
+	}
+
+	//setBooleanEquation(boolEq);
+
+	return boolEq;
+
+}
+
+function traverseDownwardFromRoot(currSel){
+	//var currSel = getCurrentlySelectedNode();
 	if(currSel != null){
 		console.log(currSel);
 		var toPrint = tdr(currSel);
 
-		console.log(toPrint);
+		//console.log(toPrint);
 
 		var boolEq = assembleBeqFromParseTree(toPrint)
 
 		console.log(boolEq);
 
-		setBooleanEquation(boolEq);
+		//setBooleanEquation(boolEq);
+
+		return boolEq;
 	}
 }
 
@@ -332,6 +508,16 @@ function tdr(component, prevComponent){
 	}
 	else if(component.type === SWITCH_BOX_COMPONENT){
 		ret = new parseNode(component.label);
+	}
+	else if(component.type === EQ_BOX_COMPONENT){
+		ret = new parseNode("");
+		var il = getInputLocations(component);
+
+		//var retLeft = getAtGrid(il[0].x, il[0].y);
+		var retRight = getAtGrid(il[0].x, il[0].y);
+
+		//ret.left = tdr(retLeft, component);
+		ret.right = tdr(retRight, component);
 	}
 	else if(component.type === AND_GATE_COMPONENT){
 		ret = new parseNode(BE_AND);
@@ -374,12 +560,23 @@ function tdr(component, prevComponent){
 	else{// is wire, so do its checks and continue
 		var il = getInputLocations(component);
 
+		if(component.type === T_WIRE_COMPONENT){
+			ret = new parseNode(BE_OR);
+		}
+		else if(component.type === CROSS_WIRE_COMPONENT){
+			ret = new parseNode(BE_OR);
+		}
+
 		for (var i = 0; i < il.length; i++) {
 			var currOl = il[i];
 
 			var pushComponent = getAtGrid(currOl.x, currOl.y); //the next component in the evaluation
 
 			if(pushComponent != null){
+
+				if(pushComponent.type == CROSSING_WIRE_COMPONENT){
+					pushComponent = crossingWireDecompose(pushComponent, component);
+				}
 
 				var pushComponentOl = getOutputLocations(pushComponent);
 
@@ -400,8 +597,15 @@ function tdr(component, prevComponent){
 
 				if(cont && pci){
 					//console.log(component.type+" pushing to "+pushComponent.type);
-																		
-					ret = tdr(pushComponent,component); 
+					if(component.type === T_WIRE_COMPONENT){
+						ret.extra.push(tdr(pushComponent,component));
+					}
+					else if(component.type === CROSS_WIRE_COMPONENT){
+						ret.extra.push(tdr(pushComponent,component));
+					}																		
+					else{
+						ret = tdr(pushComponent,component);
+					} 
 				}
 			}
 		}
@@ -414,17 +618,92 @@ function tdr(component, prevComponent){
 function assembleBeqFromParseTree(rootNode){
 	var ret;
 
-	if(rootNode.right == null && rootNode.left == null){
-		ret = rootNode.data;
-	}
-	else if(rootNode.left == null && rootNode.right != null){
-		ret = rootNode.data+BE_LPAREN+assembleBeqFromParseTree(rootNode.right)+BE_RPAREN;
-	}
-	else if(rootNode.left != null && rootNode.right != null){
-		ret = BE_LPAREN+assembleBeqFromParseTree(rootNode.left)+rootNode.data+assembleBeqFromParseTree(rootNode.right)+BE_RPAREN;
+	if(rootNode.extra.length > 0){
+
+		ret = "";
+
+		var values = []
+
+		for (var i = 0; i < rootNode.extra.length; i++) {
+			if(rootNode.extra[i] != null){
+				var value = assembleBeqFromParseTree(rootNode.extra[i]);
+				if(value != BE_LOW && value != null && value != ""){
+					values.push(value);
+				}
+			}
+		}
+
+		for (var i = 0; i < values.length; i++) {
+			ret = ret + values[i];
+			if(i != values.length-1){
+				ret = ret+BE_OR;
+			}
+		}
+
 	}
 	else{
-		console.log("assembleBeqFromParseTree, error.");
+		if(rootNode.right == null && rootNode.left == null){
+			ret = rootNode.data;
+		}
+		else if(rootNode.left == null && rootNode.right != null){
+			var value = assembleBeqFromParseTree(rootNode.right);
+			if(rootNode.right == BE_NOT){
+				if(value == BE_LOW){
+					ret = BE_HIGH;
+				}
+				else if(value == BE_HIGH){
+					ret = BE_LOW;
+				}
+				else{
+					console.log("Error in assembleBeqFromParseTree");
+				}
+			}
+			else{
+				ret = rootNode.data+BE_LPAREN+value+BE_RPAREN;
+			}
+		}
+		else if(rootNode.left != null && rootNode.right != null){
+			var value1 = assembleBeqFromParseTree(rootNode.left);
+			var value2 = assembleBeqFromParseTree(rootNode.right);
+			if(rootNode.data == BE_OR){
+				if(value1 == BE_HIGH || value2 == BE_HIGH){
+					return BE_HIGH;
+				}
+				else if(value1 == BE_LOW){
+					return value2;
+				}
+				else if(value2 == BE_LOW){
+					return value1;
+				}
+				else{
+					ret = BE_LPAREN+value1+rootNode.data+value2+BE_RPAREN;
+				}
+			}
+			else if(rootNode.data == BE_AND){
+				if(value1 == BE_LOW || value2 == BE_LOW){
+					return BE_LOW;
+				}
+				else if(value1 == BE_HIGH){
+					return value2;
+				}
+				else if(value2 == BE_HIGH){
+					return value1;
+				}
+				else{
+					ret = BE_LPAREN+value1+rootNode.data+value2+BE_RPAREN;
+				}
+			}
+			else{
+				ret = BE_LPAREN+value1+rootNode.data+value2+BE_RPAREN;
+			}
+		}
+		else{
+			console.log("assembleBeqFromParseTree, error.");
+		}
+	}
+
+	if(ret == BE_LPAREN+BE_RPAREN){
+		ret = "";
 	}
 
 	return ret;
@@ -437,4 +716,6 @@ function parseNode(data){
 	this.data = data;
 	this.left = null;
 	this.right = null;
+	
+	this.extra = [];
 }

@@ -7,23 +7,20 @@ function selectedSameSquare(){
 }
 
 function changeSelected(begin, end){
-	begin.x = Math.floor(begin.x/box);
-	begin.y = Math.floor(begin.y/box);
-	end.x = Math.floor(end.x/box)+1;
-	end.y = Math.floor(end.y/box)+1;
 
-	selected.size.width = end.x - begin.x;
-	selected.size.height = end.y - begin.y;
+	selected.size.width = end.x - begin.x+1;
+	selected.size.height = end.y - begin.y+1;
 
-	selected.begin.x = begin.x + camera.begin.x;
-	selected.begin.y = begin.y + camera.begin.y;
+	selected.begin.x = begin.x;
+	selected.begin.y = begin.y;
+
 	selected.count = 0
 	//console.log(selected.size.width+" "+selected.size.height);
 }
 
 function resetSelected(){
-	selected.begin.x = 0;
-	selected.begin.y = 0;
+	selected.begin.x = -1;
+	selected.begin.y = -1;
 	selected.size.width = 0;
 	selected.size.height = 0;
 }
@@ -37,111 +34,182 @@ canvas.addEventListener("contextmenu", function(e){
 massSelection = []
 
 $("#grid-render").mousedown(function(e){
+	e.preventDefault();
+	
 	if(e.which === 3){ //rightclick
-		downMouse = getMousePos(canvas,e);
+		downMouse = calculateGridXY(canvas,e);
+
  	}
  	if(e.which === 1){ //leftclick
+ 		closeAttributeEditor();
  		if((selected.size.width < 1 && selected.size.height < 1) || selectedSameSquare()){ //nothing selected
- 			closeAttributeEditor();
- 			downMouse = getMousePos(canvas, e);
+ 			if(findAllSelected().length == 0){
+ 				resetSelected();
+ 			}
+
+
+ 			downMouse = calculateGridXY(canvas, e);
  		}
  		else{
- 			downMouse = getMousePos(canvas, e);
- 			massSelection = findAllSelected(grid);
+ 			downMouse = calculateGridXY(canvas, e);
+ 			massSelection = findAllSelected();
  		}
  	}
+});
 
+$("#grid-render").contextmenu(function(){
+	return false;
 });
 
 /*
  * This handles moving components on the screen
  */
 $("#grid-render").mouseup(function(e){
+	e.preventDefault();
 
 	if(e.which === 3){ //rightclick
-		upMouse = getMousePos(canvas,e);
 
+		// get the mouse up grid coordinates
+		upMouse = calculateGridXY(canvas,e);
+
+		// changes the selected region
 		changeSelected(downMouse, upMouse);
+		
+		
+		// trim  the region too
+		trimSelection();
+		massSelection = findAllSelected()
 
-		if(selectedSameSquare()){
-			var pos = $(".grid").offset();
-			openAttributeEditor(selected.begin.x, selected.begin.y, upMouse.x * box + pos.left, upMouse.y * box +pos.top);
+		if(upMouse.x == downMouse.x && upMouse.y == downMouse.y){
+			if(findAllSelected().length == 0){
+				selected.begin.x = upMouse.x
+				selected.begin.y = upMouse.y
+				selected.size.width = 1
+				selected.size.height = 1
+				massSelection = []
+			} else{
+				var pos = $(".grid").offset();
+				openAttributeEditor(selected.begin.x, selected.begin.y, upMouse.x * box+box/2 + pos.left, upMouse.y * box+box/2 +pos.top);
+			}
 		}
+
 	}
 	if(e.which === 1){ //leftclick
-		if((selected.size.width < 1 && selected.size.height < 1) || selectedSameSquare()){ //nothing selected
+		if((selected.size.width < 1 && selected.size.height < 1)){ //nothing selected
 			closeAttributeEditor();
-			upMouse = getMousePos(canvas, e);
+			upMouse = calculateGridXY(canvas, e);			
+			
 
-			var cdom = calculateGridXY(downMouse.x, downMouse.y);
-			var cupm = calculateGridXY(upMouse.x, upMouse.y);
+			if(getAtGrid(downMouse.x, downMouse.y) == null)
+				printPath(downMouse, upMouse)
 
-			if(cdom.x === cupm.x && cdom.y === cupm.y){//upMouse and downMouse are on the same square
+			if(downMouse.x === upMouse.x && downMouse.y === upMouse.y){//upMouse and downMouse are on the same square
+
+				resetSelected()
+				massSelection = []
+				updateGridInterface();
 				//trigger onclick function of component
-				var currSelectedComponent = getAtGrid(cdom.x, cdom.y);
+				var currSelectedComponent = getAtGrid(downMouse.x, downMouse.y);
 				if(currSelectedComponent != null){
 					currSelectedComponent.onclick();
 				}
 			}
 			else{
-				moveComponent(cdom.x, cdom.y, cupm.x, cupm.y);
+				moveComponent(downMouse.x, downMouse.y, upMouse.x, upMouse.y);
 			}
 
  		}
  		else{
-			upMouse = getMousePos(canvas, e);
-			var cdom = calculateGridXY(downMouse.x, downMouse.y);
-			var cupm = calculateGridXY(upMouse.x, upMouse.y);
+			upMouse = calculateGridXY(canvas, e);
 
- 			if((massSelection.length == 0) || ((cupm.x == cdom.x) && (cupm.y == cdom.y))){
- 				console.log("failed")
- 				console.log((selected.begin.x - massSelection[0].x) + " " + (selected.begin.y - massSelection[0].y))
- 			} else{ 				
+ 			if((massSelection.length == 0) || ((upMouse.x == downMouse.x) && (upMouse.y == downMouse.y))){
+ 				console.log(massSelection)
+ 				//console.log((selected.begin.x - massSelection[0].x) + " " + (selected.begin.y - massSelection[0].y))
+ 			} else if(downMouse.x >= selected.begin.x && downMouse.y >= selected.begin.y 
+ 				&& downMouse.x < selected.begin.x + selected.size.width 
+ 					&& downMouse.y < selected.begin.y + selected.size.height){ 				
 				updateUndoList()
 
+
+				newx  = upMouse.x - (downMouse.x - selected.begin.x)
+				newy = upMouse.y - (downMouse.y - selected.begin.y)
+
+				console.log("mass movement")
+
+				var newSelected = {
+				  begin: {
+				    x: newx,
+				    y: newy
+				  },
+
+				  size: {
+				    width: selected.size.width,
+				    height: selected.size.height
+				  }
+				}
+
+				newSelection = findAllSelected(newSelected)
+
+				
 				// loops to see if everything can be moved
 				for(var i = 0; i < massSelection.length; i++){
-					var x1 = massSelection[i].x
-					var y1 = massSelection[i].y
-					var x2 = selected.begin.x
-					var y2 = selected.begin.y
-
-					var newx = cupm.x - (cdom.x - x2) + (x1-x2)
-					var newy = cupm.y - (cdom.y - y2) + (y1-y2)
-
-					// makes a copy of the object, 
-					// don't want to fuck with the orignal
-					var temp = jQuery.extend(true, {}, massSelection[i])
-					temp.x = newx;
-					temp.y = newy;
-
-					if(canComponentBePlaced(temp) == false){
-						console.log("cannot be placed at: (" + newx + ", "+ newy + ")")
-						massSelection = []
-						return false;
+					if(newSelection.indexOf(massSelection[i]) != -1){
+						newSelection.splice(newSelection.indexOf(massSelection[i]), 1)
 					}
+
+				
 				}
+				if(newSelection.length != 0){
+					console.log("new region not empty")
+					return false;
+				}
+				
 				// if it makes it out of the loop everything selected can be moved
 
+				var minx = 0;
+				var miny = 0;
 				for(var i = 0; i < massSelection.length; i++){
 					// should get distance from origin x/y and orgin x y
 					// y2-y1, x2-x1
+
+
 					x1 = massSelection[i].x
 					y1 = massSelection[i].y
 					x2 = selected.begin.x
 					y2 = selected.begin.y
 
-					newx = cupm.x - (cdom.x - x2) + (x1-x2)
-					newy = cupm.y - (cdom.y - y2) + (y1-y2)
+					newx = upMouse.x - (downMouse.x - x2) + (x1-x2)
+					newy = upMouse.y - (downMouse.y - y2) + (y1-y2)
 
-					moveComponent(x1, y1, newx, newy);
-					undoList.pop()
+					if(minx > newx)
+						minx = newx
+					if(miny > newy)
+						miny = newy
+
+					massSelection[i].x = newx;
+					massSelection[i].y = newy;
+
+					//moveComponent(x1, y1, newx, newy);
+					//undoList.pop()
 				}
+				
+				for(var i = 0; i < massSelection.length; i++){
+					massSelection[i].x -= minx
+					massSelection[i].y -= miny
+					massSelection[i].move(massSelection[i].x, massSelection[i].y)
 
-				selected.begin.x = cupm.x - (cdom.x - selected.begin.x)
-				selected.begin.y = cupm.y - (cdom.y - selected.begin.y)
+				}
+				console.log(massSelection)
 
-				massSelection = []
+				selected.begin.x = upMouse.x - (downMouse.x - selected.begin.x)
+				selected.begin.y = upMouse.y - (downMouse.y - selected.begin.y)
+
+				if(selected.begin.x < 0)
+					selected.begin.x = 0
+				if(selected.begin.y < 0)
+					selected.begin.y = 0
+
+				massSelection = findAllSelected();
  			}
 
  		}

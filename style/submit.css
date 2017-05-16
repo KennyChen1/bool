@@ -1,6 +1,7 @@
 .submit-menu{
 	visibility: hidden;
-	background-color: green;
+	border: 0.5px solid #666666;
+	background-color: white;
 	padding: 10px 20px;
 	display: inline-block;
 
@@ -8,7 +9,7 @@
 	position: fixed;
 	text-align: center;
 
-	border-radius: 20px;
+	border-radius: 2px;
 
 	top:100px;
 	left:100px;
@@ -16,6 +17,7 @@
 
 .submit-menu p{
 	font-size: 20px;
+	font-weight: bold;
 }
 
 .submit-menu div{
@@ -25,6 +27,14 @@
 
 .submit-menu #div-submit{
 	float:right;
+}
+
+.submit-menu .desc{
+	padding-right: 5px;
+}
+
+.submit-menu .textbox{
+	float: right;
 }
 
 .blanket{

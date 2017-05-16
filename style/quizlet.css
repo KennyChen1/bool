@@ -1,5 +1,7 @@
 .quizlet-maker{
-	background-color: green;
+	position: fixed;
+	border: 0.5px solid #666666;
+	background-color: white;
 	padding: 20px 20px;
 	display: inline-block;
 
@@ -7,10 +9,59 @@
 	display: inline-block;
 	position: fixed;
 
-	border-radius: 20px;
+	border-radius: 2px;
 
-	top: 600px;
-	left: 1000px;
+	overflow: auto;
 
-	border: ;
+	height: 80%;
+}
+
+.quizlet-maker.show{
+	visibility: visible;
+}
+
+.quizlet-maker .title{
+	font-size: 20px;
+	text-align: center;
+	margin: 8px 5px;
+	font-weight: bold;
+}
+
+.quizlet-maker #constraints .constraint-textbox{
+	width: 4em;
+}
+
+.quizlet-maker #constraints .constraint-input-div{
+	padding: 10px 3px;
+}
+
+.quizlet-maker #constraints .constraint-input-right{
+	padding: 0 0 0 30px;
+	float:right;
+}
+
+.quizlet-maker .non-constraints{
+	padding: 10px 0;
+}
+
+.quizlet-maker .non-constraints div{
+	padding: 5px 0;
+}
+
+.quizlet-maker .non-constraints span{
+}
+
+.quizlet-maker .non-constraints textarea{
+	float: right;
+	width: 14em;
+	height: 1em;
+}
+
+.quizlet-maker .non-constraints input{
+	float:right;
+	width: 14em;
+}
+
+.quizlet-maker #div-submit{
+	float:right;
 }

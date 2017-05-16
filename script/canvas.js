@@ -30,14 +30,16 @@ drawBoard();
 
 function withinCameraView(x,y){
   var curr = getAtGrid(x,y);
-  var cl = curr.locations();
+  if(curr != null){
+    var cl = curr.locations();
 
-  for(var i=0;i<cl.length;i++){
-    var x = cl[i].x;
-    var y = cl[i].y;
+    for(var i=0;i<cl.length;i++){
+      var x = cl[i].x;
+      var y = cl[i].y;
 
-    if(x >= camera.begin.x && x <= camera.end.x && y >= camera.begin.y && y <= camera.end.y){
-      return true;
+      if(x >= camera.begin.x && x <= camera.end.x && y >= camera.begin.y && y <= camera.end.y){
+        return true;
+      }
     }
   }
 
@@ -113,37 +115,41 @@ function setCanvasSize(){
 }
 
 function drawNumbers(){
-  context.clearText
+  if(displayGridNumbers){
+    context.clearText;
 
-  context.font="10px Georgia";
+    context.font="10px sans-serif";
 
-  for(var x = camera.begin.x; x <= camera.end.x; x++) {
-    context.fillText(""+x, box * (x - camera.begin.x) + (box/2), box/5);
-  }
+    for(var x = camera.begin.x; x <= camera.end.x; x++) {
+      context.fillText(""+x, box * (x - camera.begin.x) + (box/2), box/5);
+    }
 
-  for(var y = camera.begin.y; y <= camera.end.y; y++) {
-    context.fillText(""+y, box/5, box * (y - camera.begin.y) + (box/2));
+    for(var y = camera.begin.y; y <= camera.end.y; y++) {
+      context.fillText(""+y, box/12, box * (y - camera.begin.y) + (box/2 + box/25));
+    }
   }
 }
 
 function drawBoard(){
   drawNumbers();
 
-  for(var x = 0; x <= cw; x += 50) {
-      context.moveTo(0.5 + x + p, p);
-      context.lineTo(0.5 + x + p, ch + p);
-  }
+  if(displayGridLines){
+    for(var x = 0; x <= cw; x += 50) {
+        context.moveTo(0.5 + x + p, p);
+        context.lineTo(0.5 + x + p, ch + p);
+    }
 
-  for(var y = 0; y <= ch; y += 50) {
-      context.moveTo(p, 0.5 + y + p);
-      context.lineTo(cw + p, 0.5 + y + p);
-  }
+    for(var y = 0; y <= ch; y += 50) {
+        context.moveTo(p, 0.5 + y + p);
+        context.lineTo(cw + p, 0.5 + y + p);
+    }
 
-  context.strokeStyle = "black";
-  context.stroke();
+    context.strokeStyle = "black";
+    context.stroke();
+  }
 }
 
-function drawOnCanvas(x, y, image, direction){
+function drawOnCanvas(x, y, image, direction, flipped, component){
   //context.drawImage(image, x, y);
   context.save();
 
@@ -155,15 +161,31 @@ function drawOnCanvas(x, y, image, direction){
   //context.drawImage(image, x, y);
   switch(direction){
     case UP:
+      if(flipped){
+        context.scale(-1,1);
+        context.translate(-image.width, 0);
+      }
       context.drawImage(image, 0, 0);
       break;
     case RIGHT:
+      if(flipped){
+        context.scale(-1,1);
+        context.translate(-image.width, 0);
+      }      
       context.drawImage(image, 0, -image.height);
       break;
     case DOWN:
+      if(flipped){
+        context.scale(-1,1);
+        context.translate(image.width, 0);
+      }
       context.drawImage(image, -image.width, -image.height);
       break;
     case LEFT:
+      if(flipped){
+        context.scale(-1,1);
+       context.translate(image.width, 0);
+      } 
       context.drawImage(image, -image.width, 0);
       break;
     default:
@@ -230,7 +252,44 @@ function drawPsuedoComponents(component){
     var curr = component.psuedoComponent[i];
 
     var imgDraw = getImageByComponentType(curr);      
-    drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction);
+    drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction, false, curr);
+  }
+}
+
+function drawLabel(curr){
+  if(displayLabel){
+    context.save();
+    context.clearText;
+
+    context.font="15px sans-serif";
+
+    context.fillStyle = "orange";
+    context.fillText(getFirst3Char(curr.label), ((curr.x - camera.begin.x) * box)+(box/2 - box/4), ((curr.y - camera.begin.y) * box)+(box/2 + box/10));
+
+    context.restore();
+
+  }
+}
+
+function drawDelay(curr){
+  if(displayDelay){
+    context.save();
+    context.clearText;
+
+    if(curr.delay > 0){
+      var toDisplay = curr.delay;
+
+      if(toDisplay > 99){
+        toDisplay =">99";
+      }
+      context.font="15px sans-serif";
+
+      context.fillStyle = "orange";
+      context.fillText(toDisplay, ((curr.x - camera.begin.x) * box)+(box/2 - box/4), ((curr.y - camera.begin.y) * box)+(box/2 + box/3 + box/15));
+
+      context.restore();
+    }
+
   }
 }
 
@@ -243,8 +302,10 @@ function drawComponents(){
         drawPsuedoComponents(curr);
       }
       else{
-        var imgDraw = getImageByComponentType(curr);      
-        drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction);
+        var imgDraw = getImageByComponentType(curr);     
+        drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction, curr.getFlipped(), curr);
+        drawLabel(curr);        
+        drawDelay(curr);
       }
     }
   }
@@ -269,19 +330,22 @@ function updateGridInterface(){
   drawSelected();
 }
 
-function getMousePos(canvas, evt) {
+/*function getMousePos(canvas, evt) {
   var rect = canvas.getBoundingClientRect();
-    
+  console.log((evt.clientX - rect.left) + " " + (evt.clientY - rect.top))  
+
   return {
     x: evt.clientX - rect.left,
     y: evt.clientY - rect.top
   };
-}
+}*/
 
-function calculateGridXY(x,y){
+function calculateGridXY(canvas, evt){
+  var rect = canvas.getBoundingClientRect();
+
   return{
-    x: camera.begin.x + Math.floor(x/50),
-    y: camera.begin.y + Math.floor(y/50)
+    x: camera.begin.x + Math.floor((evt.clientX - rect.left)/50),
+    y: camera.begin.y + Math.floor((evt.clientY - rect.top)/50)
   };
 }
 
@@ -307,8 +371,8 @@ function calculateGridXY(x,y){
 
   canvas.addEventListener('drop',function(e){
 
-    var mp = getMousePos(canvas,e);
-    var gridPos = calculateGridXY(mp.x,mp.y);
+    //var mp = getMousePos(canvas,e);
+    var gridPos = calculateGridXY(canvas,e);
 
     var toPlace = getComponentByType(dragSrcEl.id, gridPos.x, gridPos.y);
 
@@ -321,27 +385,34 @@ function calculateGridXY(x,y){
 
 // Camera movement
 $(document).keydown(function(e){
-  switch(e.which) {
-    case 37: 
-      moveCamera(LEFT, 1);// left
-      break;
+  var tag = e.target.tagName.toLowerCase();
+  //console.log(tag);
 
-    case 38: 
-      moveCamera(UP, 1);// up
-      break;
+  if(tag == "input" || tag == "textarea"){}
+  else{
+    switch(e.which) {
+      case 37: 
+        moveCamera(LEFT, 1);// left
+        break;
 
-    case 39: 
-      moveCamera(RIGHT, 1);// right
-      break;
+      case 38: 
+        moveCamera(UP, 1);// up
+        break;
 
-    case 40: 
-      moveCamera(DOWN, 1);// down
-      break;
+      case 39: 
+        moveCamera(RIGHT, 1);// right
+        break;
 
-    default: 
-      return; // exit this handler for other keys
+      case 40: 
+        moveCamera(DOWN, 1);// down
+        break;
+
+      default: 
+        return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
   }
-  e.preventDefault(); // prevent the default action (scroll / move caret)
+  
 });
 
 // resize grid on window resize

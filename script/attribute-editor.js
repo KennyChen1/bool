@@ -1,7 +1,6 @@
-var attributeEditor = $(".attribute-editor")
+var attributeEditor = $(".attribute-editor");
 
 var currentGridComponent;
-
 
 function openAttributeEditor(x,y, screenX, screenY){
 	var curr = getAtGrid(x,y);
@@ -9,7 +8,7 @@ function openAttributeEditor(x,y, screenX, screenY){
 
 	if(curr != null){
 		//console.log("openedattributeeditor");
-		var details = curr.type+" @ ("+curr.x+","+curr.y+") | direction: "+directionToString(curr.direction)+" | inputs: up "+curr.input[0].toString()+" | right "+curr.input[1].toString()+" | down "+curr.input[2].toString()+" |left"+curr.input[3].toString();
+		var details = curr.type+" @ ("+curr.x+","+curr.y+")"//" | direction: "+directionToString(curr.direction)+" | inputs: up "+curr.input[0].toString()+" | right "+curr.input[1].toString()+" | down "+curr.input[2].toString()+" |left"+curr.input[3].toString();
 		var delay = ""+curr.delay;
 		var message = "";
 		var label = "";
@@ -80,23 +79,33 @@ function saveAttributes(){
 	}
 }
 
-$(".attribute-editor #save").mousedown(function(e){
-	saveAttributes();
-	closeAttributeEditor();
+$(".attribute-editor").contextmenu(function(){
+	return false;
 });
 
-$(".attribute-editor #delete").mousedown(function(e){
+$(".attribute-editor #save").click(function(e){
+	saveAttributes();
+	closeAttributeEditor();
+	updateGridInterface();
+});
+
+$(".attribute-editor #delete").click(function(e){
 	deleteComponent(currentGridComponent.x, currentGridComponent.y);
 	closeAttributeEditor();
 	updateGridInterface();
 });
 
-$(".attribute-editor #rotate").mousedown(function(e){
+$(".attribute-editor #rotate").click(function(e){
 	if(canComponentBeRotated(currentGridComponent)){
-		currentGridComponent.rotate();
+		rotateSelected();
 		//closeAttributeEditor();
 		updateGridInterface();
 	}
+});
+
+$(".attribute-editor #flip").click(function(e){
+	currentGridComponent.flipped = !currentGridComponent.flipped;
+	updateGridInterface();
 });
 
 $(document).mousedown(function(e){
