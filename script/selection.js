@@ -42,12 +42,18 @@ $("#grid-render").mousedown(function(e){
  	}
  	if(e.which === 1){ //leftclick
  		closeAttributeEditor();
+ 		 			downMouse = calculateGridXY(canvas, e);
+
+ 		if(downMouse.x < selected.begin.x || downMouse.y < selected.begin.y || 
+ 			downMouse.x < selected.begin.x  + selected.size.width || downMouse.y < selected.begin.y + selected.size.height){
+ 			resetSelected()
+ 		}
+
+
  		if((selected.size.width < 1 && selected.size.height < 1) || selectedSameSquare()){ //nothing selected
  			if(findAllSelected().length == 0){
  				resetSelected();
  			}
-
-
  			downMouse = calculateGridXY(canvas, e);
  		}
  		else{
