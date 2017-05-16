@@ -103,6 +103,7 @@ $(".attribute-editor").contextmenu(function(){
 $(".attribute-editor #save").click(function(e){
 	saveAttributes();
 	closeAttributeEditor();
+	updateGridInterface();
 });
 
 /* The event handler to delete the selected component from the grid

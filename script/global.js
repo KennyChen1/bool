@@ -33,7 +33,7 @@ var defaultDelayTime = 400; //delay in milliseconds
 var displayDelay = true; // will display delay in the grid
 var displayLabel = true; // will display label in the grid(first 3 letters)
 var displayGridLines = true; // show grid lines
-var displayGridNumbers = true;
+var displayGridNumbers = true; // show grid numbers
 
 undoList = [];
 redoList = [];
@@ -85,4 +85,16 @@ function clearAll(){
     desc: ""
   };
   tags = ""; // tags
+}
+
+function getFirst3Char(str){
+  if(str == null){
+    return "";
+  }
+  else if(str.length <= 3){
+    return str;
+  }
+  else{
+    return str.substring(0,3);
+  }
 }

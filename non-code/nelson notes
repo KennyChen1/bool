@@ -31,9 +31,9 @@ datastore/app server
 	> hot keys for rotate, rotate all, rotate individually, delete, flip
 	> make hot keys not get recognized in input boxes -- reference canvas.js(bottom)
 
-	> get rid of text selection on component menu
+	FIN > get rid of text selection on component menu
 
-	> ctrl-a starts at 0,8
+	FIN > ctrl-a starts at 0,8
 		-ctrl-a and then rotate, it selects wrong and stuff disappears
 
 	FIN > pathfinding takes any arbitrary grid and finds the path from point src to point dest
