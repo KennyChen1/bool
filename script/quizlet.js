@@ -6,7 +6,6 @@ function promptQuizletMaker(){
 	var quizletMaker = $(".quizlet-maker");
 	var blanket = $(".blanket");
 
-
 	setQuizletConstraintsTextbox(quizlet.constraints);
 
 	quizletMaker.addClass("show");
@@ -59,9 +58,9 @@ function initQuizletConstraints(){
 		$(".quizlet-maker #constraints #"+allComponents[i]+"-constraint").val(curr);
 	}
 
-	$(".console #quizlet .problem-desc").text(quizlet.problem);
-	$(".console #quizlet .desc-desc").text(quizlet.desc);
-	$(".console #quizlet .answer-desc").text(quizlet.answer);
+	$(".console #quizlet .problem-desc textarea").val(quizlet.problem);
+	$(".console #quizlet .desc-desc textarea").val(quizlet.desc);
+	$(".console #quizlet .answer-desc textarea").val(quizlet.answer);
 
 }
 
@@ -93,6 +92,12 @@ function setQuizletConstraintsTextbox(){
 
 		var currConstraint = $(".quizlet-maker #constraints #"+allComponents[i]+"-constraint").val(curr);
 	}
+
+	$(".quizlet-maker .non-constraints #div-problem #quizlet-problem").val(quizlet.problem),
+	$(".quizlet-maker .non-constraints #div-answer #quizlet-answer").val(quizlet.answer),
+	$(".quizlet-maker .non-constraints #div-desc #quizlet-desc").val(quizlet.desc)
+
+
 }
 
 function setQuizletConstraints(ql){
