@@ -71,6 +71,8 @@ function loadPacker(obj, loadGrid){
   }
   quizlet = obj.quizletConstraints;
   tags = obj.tags;
+
+  updateQuizletConsole();
 }
 
 function clearAll(){
