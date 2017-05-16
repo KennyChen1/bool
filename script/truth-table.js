@@ -1,26 +1,19 @@
+/* Gets the boolean expression from the text field under the "Truth Table" tab
+ *
+ * 		returns the string representation of the truth table
+ */
 function getTruthTableAsString(){
 	var ttString = $(".console #truth-table #alt-textbox #truth-tb").val();
-	console.log(ttString);
 	return ttString;
 }
 
 
-// changes * to && and + to ||
-// or * to AND and + to OR
-function convert(str){
-
-	//G5E6L6-4L2WWU3UX7
-
-	var x = str.split('*').join(' AND ');
-	// replace + with ||
-	x = x.split('+').join('OR');
-	x = x.split('!').join('NOT ');
-
-	return x;
-}
-
-// returns the unsimplied boolean equation represenation of the truthtable
-// which happens to be sum of minterms
+/* Converts the truth table into a boolean equation that is the simplfied sum of minterms
+ *	If no parameters pssed the table from the Truth Table text box will be passed
+ *	Else the first parameter will be converted
+ *	
+ *	returns the string of the boolean expression if an arguement was passed in
+ */
 function truthTableToBool(){
 	
 	// cleans input takes the table separate by row 
@@ -96,10 +89,9 @@ function truthTableToBool(){
 
 	boolStr = aa.join(" + ")
 
-	//boolStr = boolStr.slice(0,-2)
-
-
-	if(arguments.length == 0){ // nothing was passed in		
+	
+// nothing was passed in		
+	if(arguments.length == 0){ 
 		$("#boolean-tb").val(boolStr)
 	}
 
@@ -107,9 +99,11 @@ function truthTableToBool(){
 }
 
 
-/*
-// https://en.wikipedia.org/wiki/Quine%E2%80%93McCluskey_algorithm
-*/
+/* wrapper function to call the functions needed to simplify an expression
+ * 		eq - the expression that to be simplified
+ *
+ *		returns the simplfied 
+ */
 function simplifyBool(eq){
 	// i need to convert the boolean equation to truth table
 	// from the truth table i get the minterms
@@ -118,122 +112,12 @@ function simplifyBool(eq){
 	// first step is to convert the eq to table
 	var tableStr = eqToTable(eq) // this gets the table
 	return truthTableToBool(tableStr)
-	// second step is to get the minterms from this fucking table
+	// second step is to get the minterms from this  table
 
 	
 }
 
-/*
-	defunt
-	this shit sucks
-*/
-function simpEq(){
-	return;
 
-	// this get the min term
-	x = truthTableToBool();
-	if(x.split("+").length == 1)
-		return x.trim();
-
-	// gets all the variables
-	vars = x.replace(/!/g, "").split("+")[0].split("*");
-
-	// get bin representation of the minterms
-	binrep = x.replace(/![A-Z]+/g, "0").replace(/[A-Z]+/g, "1").replace(/\*/g, "").split("+");
-
-	// sort them by number of 1s
-
-	// instantiated the 2d array
-	sorted = new Array(binrep[0].length+1);
-	for(i = 0; i < sorted.length; i++){
-		sorted[i] = []
-	}
-
-	//sort them by number of 1s
-	for(i = 0; i < binrep.length; i++){
-		sorted[(binrep[i].match(/1/g) || []).length].push(binrep[i])
-	}
-
-	newsol = [];
-	seen = []
-
-	// for combinging check i and i+1 until i-1 and i, start from 1
-	// this loops checks if the minterm differ by 1 char
-	// so only check i and i+1, if i and i+n, n>1 then it differs by n>1 char and not good
-	for(i = 1; i < sorted.length-1; i++){
-		for(j = 0; j < sorted[i].length; j++){
-			for(k = 0; k < sorted[i+1].length; k++){
-				// might as well trim the white spaces
-				sorted[i][j] = sorted[i][j].trim()
-				sorted[i+1][k] = sorted[i+1][k].trim()
-
-				// count keeps track of how many differnt bits
-				count = 0;
-				// pos keeps track where if differs
-				pos = -1
-				// loops checks if they differ by one char
-				for(x = 0; x < sorted[i][j]; x++){
-					if(sorted[i][j][x]  != sorted[i+1][k][x]){
-						count++;
-						pos = x;
-					}
-				}
-
-				// if count > 1 then differ more than 1 bit, so skip
-				if(count != 1){				
-					continue;
-				} else{ // replaces the bit with a '-' and placs into new sol
-					seen.push(sorted[i][j]);
-					seen.push(sorted[i+1][k]);
-					newsol.push(sorted[i][j].substr(0,pos) + "-" + sorted[i][j].substr(pos+1))
-				}
-				count = 0; pos = -1;
-
-				//console.log((""+i+j+k) + " " +sorted[i][j] + " " + sorted[i+1][k])
-			}
-		}
-	} // end for outer most for loop
-
-	// flatted the sorted array
-	merged = [].concat.apply([], sorted);
-
-	// set dif is the shit that isn't able to be matched
-	temparr = $(merged).not(seen).toArray().concat(newsol);
-
-	returnSol = []
-	//conversol final sol
-	for(i = 0; i < temparr.length; i++){
-		splitStr = temparr[i].trim().split("")
-		for(j = 0; j < splitStr.length; j++){
-			
-			switch(splitStr[j]){
-				case "-":
-					//splitStr[j] = "zz"
-					break;
-				case "1":
-					splitStr[j] = vars[j]
-					break;
-				case "0":
-					splitStr[j] = "!"+vars[j]
-					break;
-				default:
-					console.log("should not get here, should only have -,0,1")
-			}
-		}
-		returnSol.push(splitStr.join("*").trim().replace(/\*{1}-{1}/g, ""))
-		//temparr = temparr.join(" ").trim().split(" ").join("*")
-	}
-	returnSol = returnSol.join(" + ")
-
-
-	return returnSol;
-}
-
-//replaced into AND NOT and OR
-function convertString(string){
-	return string.replace(/\*/g, " AND ").replace(/\+/g, " OR ").replace(/!/g, " NOT\ ").trim().replace(/ +/g, " ")
-
-}
 
 /*	
 	converts a boolean equation to it's truth table representation
@@ -245,26 +129,22 @@ function convertString(string){
 */
 function eqToTable(){
 	// gets the unique letters and char
-
-
-
 	if(arguments.length == 0){
 		// gets the variables
-		variables = getFirstBooleanExp().split(/[ +*!()^]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });
+		var variables = getFirstBooleanExp().split(/[ +*!()^]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });
 
-
-		letters = getFirstBooleanExp().replace(/[^a-zA-Z]+/g, '');
+		var letters = getFirstBooleanExp().replace(/[^a-zA-Z]+/g, '');
 
 		// strCopt is the boolean  with || and && instead of + and *
 		// replace * with &&
-		strCopt = getFirstBooleanExp().split('*').join('&&');
+		var strCopt = getFirstBooleanExp().split('*').join('&&');
 		// replace + with ||
 	} else{
-		variables = arguments[0].split(/[ +*!()^]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });
+		var variables = arguments[0].split(/[ +*!()^]/).filter(function(item, i, ar){ if(item != "")return ar.indexOf(item) === i; });
 
-		letters = arguments[0].replace(/[^a-zA-Z]+/g, '');
+		var letters = arguments[0].replace(/[^a-zA-Z]+/g, '');
 
-		strCopt = arguments[0].split('*').join('&&');
+		var strCopt = arguments[0].split('*').join('&&');
 	}
 
 	strCopt = strCopt.split('+').join('||');
@@ -273,10 +153,10 @@ function eqToTable(){
 	//uniques = letters.split('').filter(function(item, i, ar){ return ar.indexOf(item) === i; }).join('');
 
 	// zero array of length of unique char in equation to start pritning
-	printStr = Array.apply(null, Array(variables.length)).map(Number.prototype.valueOf,0);
+	var printStr = Array.apply(null, Array(variables.length)).map(Number.prototype.valueOf,0);
 	printStr[printStr.length-1] = 1
 
-	tableString = "- " + variables.join(' ') + " sol/\n";
+	var tableString = "- " + variables.join(' ') + " sol/\n";
 
 	
 
@@ -289,38 +169,35 @@ function eqToTable(){
 			// want to check if it's time to increment and if it's too soon to increment
 			//(
 			if((i%Math.pow(2,printStr.length-k-1) == 0) && (i+2 > Math.pow(2,printStr.length-k-1)) ){
-				//console.log(Math.pow(2,printStr.length-k-1))
 				printStr[k] = (printStr[k] + 1)%2
 			}
 		}
 
-		tempStr = strCopt;
+		// solution col bit
+		var rowSol = strCopt;
 		var x = variables;
 		// replaces vars with bits
 		for(z = 0; z < printStr.length; z++){
-			tempStr = tempStr.split(x[z]).join(printStr[z])
-			//tempStr = tempStr.split(x[printStr.length-z-1]).join(printStr[z])
+			rowSol = rowSol.split(x[z]).join(printStr[z])
 		}
-			//console.log(printStr+" " + x)
 
 		// prints the bits
 		for(j = 0; j < printStr.length; j++){ 
 			tableString += (" " + printStr[j]);
 		}
-		//console.log(printStr +  " " + tempStr)
+
 		// this changes true false text to 0 and 1
-		if(eval(tempStr) == false)
-			tempStr = 0
-		if(eval(tempStr) == true)
-			tempStr = 1
+		if(eval(rowSol) == false)
+			rowSol = 0
+		if(eval(rowSol) == true)
+			rowSol = 1
 
 		// adds the result and ending
-		tableString+= (" " + tempStr + " /\n");
+		tableString+= (" " + rowSol + " /\n");
 
 
 	}
 
-	//console.log(tableString)
 
 	if(arguments.length == 0){
 		$("#truth-tb").val(tableString)

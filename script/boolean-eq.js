@@ -1,33 +1,30 @@
 /*
-	compares if exp1 and exp2 are logically equivallent
-	exp1 and exp2 are boolean expressions
-
-	true if logically equal
-	false otherwise
-*/
-function booleanIsEqual(exp1, exp2){
-
-
-	// get tt string
+ *	compares if exp1 and exp2 are logically equivallent
+ * exp1 and exp2 are boolean expressions
+ *
+ *	true if logically equal
+ *	false otherwise
+ */
+ function booleanIsEqual(exp1, exp2){
+	// get truth stable tring of the boolean expresion
 	var tt1 = eqToTable(exp1)
 	var tt2 = eqToTable(exp2)
 
-
-	// truth table to simpleifed expression 
+	// converts the truth table string to the simplified expression
+	// conversion to the truth table returns simplifed sum of products
 	var sim1 = truthTableToBool(tt1)
 	var sim2 = truthTableToBool(tt2)
 	
+	// sorts the boolean expression by their variable name
+	// needs to be done because can to handle many logical cases
 	sim1 = mergeSort(sim1.split(" + ")).join(" + ")
 	sim2 = mergeSort(sim2.split(" + ")).join(" + ")
-
-	console.log(sim1)
-	console.log(sim2)
 
 	// make truth table from simplified expression
 	var stt1 = eqToTable(sim1)
 	var stt2 = eqToTable(sim2)
 
-	// split up the rows
+	// split up the rows of the table
 	var str1 = stt1.split("\n")
 	var str2 = stt2.split("\n")
 
@@ -39,28 +36,40 @@ function booleanIsEqual(exp1, exp2){
 	str1 = str1.join("\n")
 	str2 = str2.join("\n")
 
-
-	// return the solutuon
+	// return the solution
 	return str1 == str2
-
 }
 
-function mergeSort(arr){
-    if (arr.length < 2)
-        return arr;
- 
-    var middle = parseInt(arr.length / 2);
-    var left   = arr.slice(0, middle);
-    var right  = arr.slice(middle, arr.length);
+/* merge sorting
+ * 		arr - the array to be sorted ie the terms of the expression
+ *	
+ * returns the sorted boolean expression
+ */
+ function mergeSort(arr){
+ 	if (arr.length < 2)
+ 		return arr;
+ 	
+ 	var middle = parseInt(arr.length / 2);
+ 	var left   = arr.slice(0, middle);
+ 	var right  = arr.slice(middle, arr.length);
 
-    return merge(mergeSort(left), mergeSort(right));
-}
+ 	return merge(mergeSort(left), mergeSort(right));
+ }
  
-function merge(left, right)
-{
-    var result = [];
-	var	il = 0;
+/* The helper function of the merge sorter, sorts by first element
+ *		left - the left half the array 
+ *		right - the right half the array 
+ *
+ *	returns partially/fully sorted array
+ */
+ function merge(left, right){
+	// the solution to be returned
+	var result = [];
+
+    // the first element of the left and right array
+    var	il = 0;
     var ir = 0;
+
     while (il < left.length && ir < right.length){
     	var ll = left[il]
     	var rr = right[ir]
@@ -71,18 +80,16 @@ function merge(left, right)
     		rr = right[ir].substring(1)
     	}
 
-        if (ll < rr){
-            result.push(left[il++]);
-        } else {
-        	console.log(right[ir])
-            result.push(right[ir++]);
-        }
+    	if (ll < rr){
+    		result.push(left[il++]);
+    	} else {
+    		console.log(right[ir])
+    		result.push(right[ir++]);
+    	}
     }
- 
+    
     return result.concat(left.slice(il)).concat(right.slice(ir));
 }
-
-
 
 
 /* Syntax for Boolean Equations Parser*/
@@ -98,42 +105,45 @@ var BE_RPAREN = ")";
 var BE_END = ";";
 var BE_EQ = "=";
 
-function getBooleanEquation(){
-	var booleq = $(".console #boolean #textbox #boolean-tb").val();
+/* Gets the boolean expression from the text field under the "Boolean Equations" tab
+ *
+ * 		returns the string representation of the boolean expression/equation
+ */
+ function getBooleanEquation(){
+ 	var booleq = $(".console #boolean #textbox #boolean-tb").val();
+ 	return booleq;
+ }
 
-	console.log(booleq);
+/* Changes the text inside the text field under the "Boolean Equations" tab
+ *		booleq - the string to be set inside the textfield
+ */
+ function setBooleanEquation(boolEq){
+ 	var booleq = $(".console #boolean #textbox #boolean-tb").val(boolEq);
+ }
 
-	return booleq;
-}
+ function getFirstBooleanExp(){
+ 	var boolEq = getBooleanEquation();
+ 	var allBeq = splitBoolEqProg(boolEq);
+ 	if(allBeq.length >= 1){
+ 		return allBeq[0].exp;
+ 	}
+ 	return "";
+ }
 
-function setBooleanEquation(boolEq){
-	var booleq = $(".console #boolean #textbox #boolean-tb").val(boolEq);
-}
+ function makeCircuitFromBoolEq(){
+ 	var boolEq = getBooleanEquation();
+ 	var allBeq = splitBoolEqProg(boolEq);
+ 	if(allBeq.length >= 1){
+ 		clipboard = buildCircuit(allBeq[0].exp);
+ 	}
+ }
 
-function getFirstBooleanExp(){
-	var boolEq = getBooleanEquation();
-	var allBeq = splitBoolEqProg(boolEq);
-	if(allBeq.length >= 1){
-		return allBeq[0].exp;
-	}
-	return "";
-}
-
-function makeCircuitFromBoolEq(){
-	var boolEq = getBooleanEquation();
-	var allBeq = splitBoolEqProg(boolEq);
-	if(allBeq.length >= 1){
-		clipboard = buildCircuit(allBeq[0].exp);
-	}
-}
-
-function makeBoolEqFromCircuit(){
-	setBooleanEquation(assembleAllBeqInSequence(findAllSelected()));
+ function makeBoolEqFromCircuit(){
+ 	setBooleanEquation(assembleAllBeqInSequence(findAllSelected()));
 	//traverseDownwardFromRoot();
 }
 
 /* Boolean Equation to Circuit */
-
 function breadthTraversal(list, count){
 	var nextList = [];
 
