@@ -41,17 +41,17 @@ $("#grid-render").mousedown(function(e){
 
  	}
  	if(e.which === 1){ //leftclick
- 		// get the mouse coords
- 		downMouse = calculateGridXY(canvas, e);
-
  		closeAttributeEditor();
- 		if(getAtGrid(downMouse.x, downMouse.y) == null){
-			resetSelected();
- 		}
  		if((selected.size.width < 1 && selected.size.height < 1) || selectedSameSquare()){ //nothing selected
- 			
+ 			if(findAllSelected().length == 0){
+ 				resetSelected();
+ 			}
+
+
+ 			downMouse = calculateGridXY(canvas, e);
  		}
  		else{
+ 			downMouse = calculateGridXY(canvas, e);
  			massSelection = findAllSelected();
  		}
  	}
@@ -103,8 +103,6 @@ $("#grid-render").mouseup(function(e){
 			if(getAtGrid(downMouse.x, downMouse.y) == null)
 				printPath(downMouse, upMouse)
 
-			console.log(downMouse)
-			console.log(upMouse)
 			if(downMouse.x === upMouse.x && downMouse.y === upMouse.y){//upMouse and downMouse are on the same square
 
 				resetSelected()
@@ -132,7 +130,6 @@ $("#grid-render").mouseup(function(e){
 					}
  				}
  				//console.log(massSelection)
- 				//resetSelected()
  				//console.log((selected.begin.x - massSelection[0].x) + " " + (selected.begin.y - massSelection[0].y))
  			} else if(downMouse.x >= selected.begin.x && downMouse.y >= selected.begin.y 
  				&& downMouse.x < selected.begin.x + selected.size.width 
