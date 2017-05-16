@@ -145,6 +145,7 @@ function submitQuizletConstraints(){
 function hideAllMenus(){
 	hideSubmitMenu();
 	hideQuizletMaker();
+	hideSettingsMenu();
 }
 
 /* Quizlet console functions */

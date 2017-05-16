@@ -11,6 +11,7 @@
 	<link rel = "stylesheet" type="text/css" href="style/submit.css">
 	<link rel = "stylesheet" type="text/css" href="style/user-menu.css">
 	<link rel = "stylesheet" type="text/css" href="style/quizlet.css">
+	<link rel = "stylesheet" type="text/css" href="style/settings-menu.css">
 
 	<link rel="icon" 
 	type="favicon.ico" 
@@ -30,6 +31,7 @@
 	<script src = "script/images.js"></script>
 	<script src = "script/grid.js"></script>
 	<script src = "script/submit.js"></script>
+	<script src = "script/settings-menu.js"></script>
 
 
 </head>
@@ -56,6 +58,7 @@
 				<a href="#" class="dropbtn">File</a>
 				<div class="dropdown-content">
 		  			<a href="">New Circuit Workspace</a>
+		  			<a href="#" onclick = "promptSettingsMenu()">Settings</a>
 		  			<a href="#" onclick = "promptQuizletMaker()">Quizlet Constraints</a>
 		  			<a href="#" onclick = "writetofile()">Save</a>
 		  			<a href="#">
@@ -392,6 +395,46 @@
 		<div id = "div-submit">
 			<button type = "button" onclick = "submitQuizletConstraints()">Submit</button>
 			<button type = "button" onclick = "hideQuizletMaker()">Cancel</button>
+		</div>
+	</div>
+
+	<div class = "settings">
+		
+		<p class = "title">Settings</p>
+
+		<div id = "loops">
+			<span class = "desc">Loop before end evaluation</span>
+			<input class = "textbox" type = "text" name = "circuit-tags" value = "">				
+		</div>
+
+		<div id = "delay-time">
+			<span class = "desc">Default Delay Time</span>
+			<input class = "textbox" type = "text" name = "circuit-tags" value = "">				
+		</div>
+
+		<div id = "display-delay">
+			<span class = "desc">Display Delays</span>
+			<input type="checkbox"> 				
+		</div>
+
+		<div id = "display-labels">
+			<span class = "desc">Display Labels</span>
+			<input type="checkbox"> 				
+		</div>
+
+		<div id = "display-lines">
+			<span class = "desc">Display Grid Lines</span>
+			<input id="display-delay" type="checkbox"> 				
+		</div>
+
+		<div id = "display-numbers">
+			<span class = "desc">Display Grid Numbers</span>
+			<input type="checkbox"> 				
+		</div>
+
+		<div id = "div-submit">
+			<button type = "button" onclick = "submitSettings()">Submit</button>
+			<button type = "button" onclick = "hideSettingsMenu()">Cancel</button>
 		</div>
 	</div>
 

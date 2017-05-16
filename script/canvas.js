@@ -116,7 +116,7 @@ function setCanvasSize(){
 
 function drawNumbers(){
   if(displayGridNumbers){
-    context.clearText
+    context.clearText;
 
     context.font="10px sans-serif";
 
@@ -149,7 +149,7 @@ function drawBoard(){
   }
 }
 
-function drawOnCanvas(x, y, image, direction, flipped){
+function drawOnCanvas(x, y, image, direction, flipped, component){
   //context.drawImage(image, x, y);
   context.save();
 
@@ -252,7 +252,44 @@ function drawPsuedoComponents(component){
     var curr = component.psuedoComponent[i];
 
     var imgDraw = getImageByComponentType(curr);      
-    drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction, false);
+    drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction, false, curr);
+  }
+}
+
+function drawLabel(curr){
+  if(displayLabel){
+    context.save();
+    context.clearText;
+
+    context.font="15px sans-serif";
+
+    context.fillStyle = "orange";
+    context.fillText(getFirst3Char(curr.label), ((curr.x - camera.begin.x) * box)+(box/2 - box/4), ((curr.y - camera.begin.y) * box)+(box/2 + box/10));
+
+    context.restore();
+
+  }
+}
+
+function drawDelay(curr){
+  if(displayDelay){
+    context.save();
+    context.clearText;
+
+    if(curr.delay > 0){
+      var toDisplay = curr.delay;
+
+      if(toDisplay > 99){
+        toDisplay =">99";
+      }
+      context.font="15px sans-serif";
+
+      context.fillStyle = "orange";
+      context.fillText(toDisplay, ((curr.x - camera.begin.x) * box)+(box/2 - box/4), ((curr.y - camera.begin.y) * box)+(box/2 + box/3 + box/15));
+
+      context.restore();
+    }
+
   }
 }
 
@@ -266,7 +303,9 @@ function drawComponents(){
       }
       else{
         var imgDraw = getImageByComponentType(curr);     
-        drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction, curr.getFlipped());        
+        drawOnCanvas((curr.x - camera.begin.x) * box, (curr.y - camera.begin.y) * box, imgDraw, curr.direction, curr.getFlipped(), curr);
+        drawLabel(curr);        
+        drawDelay(curr);
       }
     }
   }

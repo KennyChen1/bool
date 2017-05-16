@@ -86,6 +86,7 @@ $(".attribute-editor").contextmenu(function(){
 $(".attribute-editor #save").click(function(e){
 	saveAttributes();
 	closeAttributeEditor();
+	updateGridInterface();
 });
 
 $(".attribute-editor #delete").click(function(e){
