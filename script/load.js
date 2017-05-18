@@ -8,10 +8,17 @@ function getOwnerAndName(){
 	// /workspace/<owner>/<name>
 
 	if(urlChunks.length == 4){
-		return {
-			circuitOwner: urlChunks[2],
-			circuitName: urlChunks[3]
-		}
+	    var toRet = {
+                owner: urlChunks[2],
+                shared: "",
+                name: urlChunks[3].replace(/"%20'/g, '+'),
+                circuitContent: "",
+                quizletConstraints: "",
+                tags: ""
+            };
+
+        console.log(toRet);
+		return toRet;
 	}
 	else{
 		return false;
@@ -28,13 +35,13 @@ function loadFromDatastore(){
 
 	$.ajax({
 		url: "/workspace/loadData",
-		method: "GET",
-		data: ownerAndName,
+		method: "POST",
+		data: JSON.stringify(ownerAndName),
 		contentType: "application/json",
 		success: function(data){
 			console.log(data);
 
-			if(data == "Circuit Unavailable"){
+			if(data == "Circuit Unavailable" || data == "Invalid Circuit Name or Circuit Owner"){
 				consoleDisplayString(data);
 			}
 			else{
