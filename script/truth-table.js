@@ -41,7 +41,8 @@ function truthTableToBool(){
 	for(i =1; i < tString.length; i++){
 
 		if(solCol[i] == "1"){
-			minterms.push(i-1)
+			console.log()
+			minterms.push(parseInt(tString[i].join("").substring(1,tString[i].length-1),2))
 			// check for the col that has 1 
 			// check from 1 to n-1; don't check frsti and last
 			for(j = 1; j < tString[i].length-1; j++){
