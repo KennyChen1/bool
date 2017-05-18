@@ -1,0 +1,54 @@
+-- Notes for when we decide to continue the project --
+
+-- Workspace --
+	** > Optimize Circuit evaluator
+		- Without a delay - iterate the components(without recursion/calling next()) 
+		- With a delay - recursively call through setTimeout then next iteration using next() function
+
+		- Make CROSS and T wires able to take 2 inputs without glitching out.
+			- Prob won't fix unless we are doing this after project over
+			> CROSS and T wires CANNOT be used as OR gates, two inputs into them is very buggy!
+
+	> Make boolean equation blocks a passthrough, rather than a dead end.
+		- similar to buffer or print block
+
+	> fix clipOnPlace
+		- L wires, cross wires, checking if a component can be rotated
+
+	> sort quizlet counter components by number which ones have finite amounts(don't show ones that are infinite)
+
+	> change attribute editor to only show needed inputs(textbox, etc)
+		- remove delay from all wires
+		- remove message from all but print
+
+	> Slider toggle for delay(since delays are all the same)
+		or
+	> Make delays in milliseconds(complications due to async and timing)
+
+	> Optimize truth-table to boolean equations
+
+	> Add wires and have the same variables hook up to the same inputs on boolean equation to circuit
+
+	(HARD) > Allow for multi users to edit the same workspace(HARD)
+
+-- Profile --
+	> save/save as feature, 
+		> allow overwriting of a certain circuit when you press save and name it the same name as something else
+		> if same as and is the same name then rename it <name>(1).
+
+	> Optimize search bar, use ancestor queries to store tags and shared.
+		- use database query functions to search through Circuit files in the datastore, rather loading all of them and search it 	string by string.
+
+	> Redo profile page - making more maintainable, cleaner looking, more mobile friendly
+		- Make look better: Shareable link prompt menu, Share option prompt menu
+
+-- Splash --
+	> Redo splash screen - more maintainable, cleaner looking, more pictures
+
+	> On site documentation, tutorials, videos, demo circuit downloads, etc
+
+
+
+
+
+
