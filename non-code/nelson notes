@@ -1,9 +1,7 @@
 Nelson's notes
  
-> submitting and loading for circuits(in workspace) -- POST request
-
-> slider toggle for delay
-
+- help menu
+- fix clone as owner
 
 VERY LOW PRIORITY
 > fix clipOnPlace
@@ -14,6 +12,8 @@ VERY LOW PRIORITY
 > change attribute editor to only show needed inputs(textbox, etc)
 	- remove delay from all wires
 	- remove message from all but print
+
+> slider toggle for delay
 
 datastore/app server
 	> save to datastore
@@ -152,6 +152,8 @@ finished
 	> saving needs to save quizlet constraints
 
 	> new images for crossing, light_bulb, switch, reskin everything
+
+	> submitting and loading for circuits(in workspace) -- POST request
 
 
 
