@@ -8,3 +8,5 @@ http://nelnel33.github.io/bool/
 
 Adder:
 http://5-dot-bool-163515.appspot.com/workspace/nelson.tsui@stonybrook.edu/fulladder
+
+Documentation: https://nelnel33.github.io/bool/doc/bool-doc.pdf
